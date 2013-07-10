@@ -2,7 +2,8 @@
 var fs = require('fs');
 var program=require('commander');
 var cheerio=require('cheerio');
-var HTMLFILE_DEFAULT="index.htmlzzz";
+var rest=require('restler');
+var HTMLFILE_DEFAULT="index.html";
 var CHECKFILE_DEFAULT="checks.json";
 
 var assertFileExists=function(infile) {
@@ -14,7 +15,7 @@ var assertFileExists=function(infile) {
     return instr;
 };
 var assertURL=function(inURL){
-    return inURL;
+    return inURL.toString();
 };
 var cheerioHtmlFile=function(htmlfile) {
     return cheerio.load(fs.readFileSync(htmlfile));
@@ -43,7 +44,17 @@ if(require.main==module){
 	.option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
 	.option('-u, --url <url>', 'Path to the URL', clone(assertURL))
 	.parse(process.argv);
-    var checkJson=checkHtmlFile(program.file || program.url, program.checks);
+    if (program.url){
+        rest.get(program.url.toString()).on('complete', function(data){
+            fs.writeFileSync("urlFile.html", data);
+            //console.log(data);
+        });
+        var checkJson=checkHtmlFile("urlFile.html", program.checks);
+        console.log("doing URL");
+    }
+    else {
+        var checkJson=checkHtmlFile(program.file, program.checks);
+    }
     var outJson=JSON.stringify(checkJson, null, 4);
     console.log(outJson);
 } else {
