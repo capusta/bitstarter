@@ -3,60 +3,106 @@
 <head>
     <meta charset="utf-8">
     <title>My First Bitstarter</title>
-    <link type="text/css" rel="stylesheet"
-          href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-2.3.2.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+
     <style type="text/css">
         body {
-            padding-top: 20px;
-            padding-bottom: 40px;
-        }
-        .container {
-            width: 960px;
+            padding-top: 60px;
+            border: 5px;
         }
         p.lead {
-            padding-top: 15px;
+            padding-top: 5px;
+            text-align: right;
         }
-        .navigation, .pitch, .section1, .section2, .faq, .footer {
-            padding: 10px 0px 10px 0px;
+        .navigation, .pitch, .section1, .section2, .faq {
+            padding: 1% 0px 1% 0px;
         }
-        .video, .thermometer, .order, .social {
+        .smallround {
+            padding: 2px;
+            border: 1px solid;
+            border-color: #888888;
+            border-radius: 3px;
+        }
+        .video, .thermometer, .social {
             border: 1px dotted;
+            border-color: #000000;
+            text-align: center;
+            background-color: azure;
+        }
+        .order {
+            padding: 2%;
             text-align: center;
         }
         .video {
            height: 124px;
-           line-height: 40px;
+           line-height: 124px;
+           background-color: bisque;
         }
         div.row {
-            border: 1px solid;
+            border: 0px solid;
+        }
+        .footer{
+            background-color: #1b1b1b;
+            text-align: center;
+            color: azure;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="row navigation">
-            <div class="span2 logo">
-                Logo
-            </div>
-            <div class="span6 blank">
-                Blank
-            </div>
-            <div class="span4 about">
-                About
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="#">naha</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Link one</a></li>
+                            <li><a href="#">Lnk two</a></li>
+                            <li><a href="#">Link 3</a></li>
+                            <li class="divider"></li>
+                            <li class="nav-header">Nav header</li>
+                            <li><a href="#">Separated link</a></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form pull-right">
+                    <input class="span2" type="text" placeholder="Email">
+                    <input class="span2" type="password" placeholder="Password">
+                    <button type="submit" class="btn">Sign in</button>
+                </form>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+<div class="container">
+
+        <div class="hero-unit row-fluid visible-desktop">
+    <h3>a revolution</h3>
+    <p>jsut another one of those things that you are able to learn and apply ... regardless of what
+    the impact, opinion, and otherwise others in the stream might say ... </p>
+    <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+</div>
+        <div class="row-fluid subheading">
+            <div class="smallround">
+                <p class="lead">not another health app</p>
             </div>
         </div>
-        <div class="row heading">
-            <div class="span12">
-                <h1>Bitstarter Title</h1>
-            </div>
-        </div>
-        <div class="row subheading">
-            <div class="span12">
-                <p class="lead">This is my first bitstarter project.</p>
-            </div>
-        </div>
-        <div class="row pitch">
-            <div class="span6 video">
+        <div class="row-fluid pitch">
+            <div class="span6 video hidden-phone">
                 Video
             </div>
             <div class="span6">
@@ -64,32 +110,48 @@
                     Thermometer
                 </div>
                 <div class="order">
-                    Order
+                    <a href="#" class="btn btn-primary btn-mini"> Sign in &raquo;</a>
                 </div>
                 <div class="social">
-                    Social
+                    <img src="http://www.teachthought.com/wp-content/uploads/2012/10/twitter-logo-break.png" height="50"
+                            width="50">
+                    <img src="http://www.idsystems.com/images/facebook.png">
                 </div>
             </div>
         </div>
-        <div class="row section1">
-            <div class="span16">
-                Marketing Section 1
+        <div class="row-fluid section1">
+            <div class="span12">
+            <div class="span4">
+                <h3>Its one thing </h3> skdflsk das flsdf ksdf sdf kkjdf lksdjf kjso
+                df ksdf lskaf skfj laksjdf lk asfj jin fin ths o thyer jsdkf
+                df ksdf lskaf skfj laksjdf lk asfj jin fin ths o thyer jsdkfdf ksdf lskaf skfj laksjdf lk asfj jin fin ths o thyer jsdkf
+                df ksdf lskaf skfj laksjdf lk asfj jin fin ths o thyer jsdkfdf ksdf lskaf skfj laksjdf lk asfj jin fin ths o thyer jsdkfweiruoe akdsjf ilsdif
+                sdfkj sidf sldfk j
+            </div>
+            <div class="span4">
+                <h3>or something </h3> sdf ksdf lskaf skfj laksjdf lk asfj jin fin ths o thyer jsdkf kjs
+                    df ksdf lskaf skfj laksjdf lk asfj jin fin ths o thyer jsdkfdf ksdf lskaf skfj laksjdf lk asfj jin fin ths o thyer jsdkf
+                    df ksdf lskaf skfj laksjdf lk asfj jin fin ths o thyer jsdkfdf ksdf lskaf skfj laksjdf lk asfj jin fin ths o thyer jsdkf
+                    df ksdf lskaf skfj laksjdf lk asfj jin fin ths o thyer jsdkfd
+            </div>
+                <div class="span4">
+                    <h3>or something else</h3>
+                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut
+                        fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                </div>
             </div>
         </div>
-        <div class="row section2">
-            <div class="span12">
-                Marketing Section 2
-            </div>
-        </div>
-        <div class="row faq">
-            <div class="span12">
+
+        <div class="row-fluid faq">
+            <div class="smallround">
                 FAQ
+                <p> you have question?</p>
             </div>
         </div>
-        <div class="row footer">
-            <div class="span12">
-                Footer
-            </div>
+        <div class="smallround row-fluid footer ">
+
+               Made for the Summer session of Stanford's Startup Engineering
+
         </div>
     </div>
 </body>
