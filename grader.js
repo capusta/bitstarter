@@ -50,7 +50,7 @@ if(require.main==module){
             //console.log(data);
         });
         var checkJson=checkHtmlFile("urlFile.html", program.checks);
-        console.log("doing URL");
+        //console.log("doing URL");
     }
     else {
         var checkJson=checkHtmlFile(program.file, program.checks);
