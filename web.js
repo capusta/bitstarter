@@ -3,6 +3,7 @@ var fs = require('fs');
 var htmlfile = "index.html";
 
 var app = express.createServer(express.logger());
+//app.use(express.static("/assets/css/"));
 
 app.get('/', function(request, response) {
     var html = fs.readFileSync(htmlfile).toString();
