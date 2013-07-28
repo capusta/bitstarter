@@ -5,11 +5,11 @@
     <title>My First Bitstarter</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
-    <link href="http://twitter.github.io/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="http://twitter.github.com/bootstrap/2.3.2/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="http://twitter.github.io/bootstrap/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
-    <script src="http://twitter.github.io/bootstrap/assets/js/bootstrap.js"></script>
-    <script src="http://twitter.github.io/bootstrap/assets/js/jquery.js"></script>
+    <script src="http://twitter.github.io/bootstrap/2.3.2/assets/js/bootstrap.js"></script>
+    <script src="http://twitter.github.io/bootstrap/2.3.2/assets/js/jquery.js"></script>
 
 
     <style type="text/css">
@@ -30,8 +30,8 @@
             border-color: #888888;
             border-radius: 3px;
         }
-        .video, .thermometer, .social {
-            border: 1px dotted;
+        .thermometer, .social {
+            border: 0px dotted;
             border-color: #000000;
             text-align: center;
             background-color: azure;
@@ -40,11 +40,7 @@
             padding: 2%;
             text-align: center;
         }
-        .video {
-           height: 124px;
-           line-height: 124px;
-           background-color: bisque;
-        }
+
         div.row {
             border: 0px solid;
         }
@@ -53,6 +49,16 @@
             text-align: center;
             color: azure;
         }
+        .video-container {
+            position: relative; /* keeps the aspect ratio */
+            padding-bottom: 25%;
+            padding-top: 60px; overflow: hidden;
+        }
+        .video-container iframe,
+        .video-container object,
+        .video-container embed { position: absolute; top: 1%; left: 0; width: 100%; height: 100%;}
+
+
     </style>
 </head>
 
@@ -97,24 +103,22 @@
 
 <div class="container">
 
-        <div class="row-fluid visible-desktop">
-    <h3>a revolution</h3>
-    <p>jsut another one of those things that you are able to learn and apply ... regardless of what
-    the impact, opinion, and otherwise others in the stream might say ... </p>
+        <div class="row-fluid">
+    <h3>suica | passmo | bitcoin</h3>
+    <p>Got Bitcoins?  Traveling to Japan? We can help </p>
     <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 </div>
-        <div class="row-fluid subheading">
-            <div class="smallround">
-                <p class="lead">not another health app</p>
-            </div>
-        </div>
+
         <div class="row-fluid pitch">
-            <div class="span6 video hidden-phone">
-                Video
-            </div>
+            <div class="span6 hidden-phone video-container">
+
+                    <iframe src="http://www.youtube.com/embed/qJ_ppLeKAKk" frameborder="0" allowfullscreen=""></iframe>
+
+                </div>
             <div class="span6">
                 <div class="thermometer">
                     Thermometer
+                    <br><br><br><br>
                 </div>
                 <div class="order">
                     <a href="#" class="btn btn-primary btn-mini"> Sign in &raquo;</a>
@@ -162,8 +166,8 @@
         </div>
     </div>
 
-<script src="http://twitter.github.io/bootstrap/assets/js/bootstrap-collapse.js"></script>
-<script src="http://twitter.github.io/bootstrap/assets/js/bootstrap-dropdown.js"></script>
+<script src="http://twitter.github.io/bootstrap/2.3.2/assets/js/bootstrap-collapse.js"></script>
+<script src="http://twitter.github.io/bootstrap/2.3.2/assets/js/bootstrap-dropdown.js"></script>
 
 </body>
 </html>
