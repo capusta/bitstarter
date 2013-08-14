@@ -2,7 +2,7 @@ if (!global.hasOwnProperty('db')) {
     var Sequelize = require('sequelize');
     var sq = null;
     var fs = require('fs');
-    var PGPASS_FILE = '../.pgpass';
+    var PGPASS_FILE = './.pgpass';
     if (process.env.DATABASE_URL) {
         /* Remote database
            Do `heroku config` for details. We will be parsing a connection
@@ -34,7 +34,7 @@ if (!global.hasOwnProperty('db')) {
         var port = pgtokens[1];
         var dbname = pgtokens[2];
         var user = pgtokens[3];
-        var password = pgtokens[4];
+        var password = pgtokens[4].trim();
         var config =  {
             dialect:  'postgres',
             protocol: 'postgres',
