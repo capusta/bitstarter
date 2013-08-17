@@ -1,0 +1,58 @@
+p.lead {
+    padding-top: 5px;
+    text-align: right;
+}
+div.addthis_toolbox {
+    width:180px;
+    margin: 0 auto;
+}
+div.nudgeleft {
+    padding-right: 30px;
+}
+.navigation, .pitch, .section1, .section2, .faq {
+    padding: 1% 0px 1% 0px;
+}
+.smallround {
+    padding: 2px;
+    border: 1px solid;
+    border-color: #888888;
+    border-radius: 3px;
+}
+.thermometer {
+    padding: 1%;
+    border-radius: 7px;
+    border: 5px solid;
+    background-color: rgba(35, 221, 24, 0.54);
+    border-color: #a4aa9e;
+}
+.order {
+    padding: 1%;
+    border: 5px solid;
+    border-radius: 7px;
+    background-color: rgba(240, 135, 137, 0.44);
+    border-color: #a4aa9e;
+}
+.social {
+    padding: 2%;
+    text-align: center;
+}
+
+div.row {
+    border: 0px solid;
+}
+.footer{
+    background-color: #1b1b1b;
+    text-align: center;
+    color: azure;
+}
+.video-container {
+    position: relative; /* keeps the aspect ratio */
+    padding-bottom: 25%;
+    padding-top: 60px; overflow: hidden;
+}
+.cool-font {
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+}
+.video-container iframe,
+.video-container object,
+.video-container embed { position: absolute; top: 1%; left: 0; width: 100%; height: 100%;}

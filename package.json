@@ -1,7 +1,7 @@
 {
-  "name": "bitstarter-ssjs-orders",
+  "name": "Suimo -> Suica Passmo Bitcoin",
   "version": "0.0.1",
-  "description": "Simple server-side JS order processing",
+  "description": "Trade in your bitcoins for e-cash cards",
   "main": "web.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

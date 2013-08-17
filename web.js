@@ -8,14 +8,18 @@ var async   = require('async')
   , db      = require('./models');
 
 var app = express();
+
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.set('port', process.env.PORT || 8080);
 
+app.use(express.static(__dirname + '/public'));
+
 // Render homepage (note trailing slash): example.com/
 app.get('/', function(request, response) {
-  var data = fs.readFileSync('index.html').toString();
-  response.send(data);
+//  var data = fs.readFileSync('index.html').toString();
+  // response.send(data);
+    response.render("_index");
 });
 
 // Render example.com/orders
