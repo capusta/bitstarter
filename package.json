@@ -1,5 +1,5 @@
 {
-  "name": "Suimo -> Suica Passmo Bitcoin",
+  "name": "Suimo-Suica-Passmo-Bitcoin",
   "version": "0.0.1",
   "description": "Trade in your bitcoins for e-cash cards",
   "main": "web.js",
