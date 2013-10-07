@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>SuiMo!</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link rel='stylesheet' href="/site.css" />
+
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" type="text/css" />
+
+    <!-- analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-43032480-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+    <!-- end analytics -->
+
+    <style type="text/css">
+
+        @media (min-width: 980px) {
+            body {
+                padding-top: 60px;
+                border: 5px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<% include _navbar.ejs %>
+<% var valu = "tests" %>
+
+<div class="container starter-template">
+<table>
+    <form method="post" action="/signup">
+        <tr><td>Username:</td><td><input type="text" name="username" value="<%= oldname %>"></td></tr>
+        <tr><td>Password:</td><td><input type="password" name="password"></td></tr>
+
+        <tr><td></td><td><input type="submit" class="btn btn-primary btn-large" value="Signup"></td></tr>
+    </form>
+</table>
+
+    <% if (message) { %>
+    <p><%= message %></p>
+    <% } %>
+
+</div>
+</body>
+</html>

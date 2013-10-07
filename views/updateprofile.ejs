@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Update Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css">
+
+    <!--<link href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css" rel="stylesheet">-->
+
+    <link rel='stylesheet' href='/site.css' />
+
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" type="text/css" />
+
+    <script type="text/javascript" src="/jquery.js"></script>
+
+    <script type="text/javascript" src="/bootstrap.js"></script>
+    <link rel="stylesheet" href="/animate.css" />
+      <link rel="stylesheet" href="/bootstrap-responsive.css" />
+
+      <style type="text/css">
+          @media (min-width: 980px) {
+              body {
+                  padding-top: 60px;
+                  border: 5px;
+              }
+          }
+      </style>
+
+  </head>
+  <body>
+     <% include _navbar.ejs %>
+
+    <div class="container-fluid">
+
+        <div id="logo" class="row-fluid cool-font">
+            <h4><%= user.dataValues.username %> profile update</h4>
+        </div>
+        <br>
+        <div class="row-fluid cool-font">
+            <form class="row-fluid span6 smallround" action="/settings" method="post">
+                <div class="row-fluid controls controls-row">
+                    <div class="span3">Name:</div>
+                    <input type="text" name="nameUpdate" value="<%= user.dataValues.name %>">
+                </div>
+                <div class="controls controls-row">
+                    <div class="span3">Email:</div>
+                    <input type="text" name="emailUpdate" value="<%= user.dataValues.email %>">
+
+                </div>
+                <div class="controls controls-row">
+                    <div class="span3">Address 1:</div>
+                    <input type="text" name="addrOneUpdate" value="<%= user.dataValues.addressOne %>">
+                </div>
+                <div class="controls controls-row">
+                    <div class="span3">Address (Optional)</div>
+                    <input type="text" name="addrTwoUpdate" value="<%= user.dataValues.addressTwo %>">
+                </div>
+                <div class="controls controls-row">
+                    <div class="span3">Refund Bitcoin Address: </div>
+                    <input type="text" name="homeBTCUpdate" value="<%= user.dataValues.homeBTC %>">
+                </div>
+            <br>
+            <input type="submit" class="btn btn-info btn-mini" value="update">
+            </form>
+            <form class="row-fluid span6 smallround" action="/settings/sendmessege" method="post">
+                <div class="row-fluid controls controls-row">
+                    <div class="row-fluid controls controls-row">
+                     <div class="span3">From: <%= user.dataValues.username %></div>
+                    </div>
+                    <div class="row-fluid controls controls-row">
+                          <div class="span3">To: Site Admin</div>
+                    </div>
+                    <div class="row-fluid controls controls-row">
+                        <div class="span3">Messege:</div>
+                        <div class="span3">
+                            <textarea rows="3" name="messegeToAdmin">sdf</textarea>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <input type="submit" class="btn btn-info btn-mini" value="send">
+            </form>
+        </div>
+
+    </div>
+     <script>
+         $( "#logo").addClass('animated fadeInLeft');
+
+     </script>
+  </body>
+</html>
