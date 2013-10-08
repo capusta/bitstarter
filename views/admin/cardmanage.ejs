@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Update Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css">
+
+    <!--<link href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css" rel="stylesheet">-->
+
+    <link rel='stylesheet' href='/site.css' />
+
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" type="text/css" />
+
+    <script type="text/javascript" src="/jquery.js"></script>
+
+    <script type="text/javascript" src="/bootstrap.js"></script>
+    <link rel="stylesheet" href="/animate.css" />
+      <link rel="stylesheet" href="/bootstrap-responsive.css" />
+
+      <style type="text/css">
+          @media (min-width: 980px) {
+              body {
+                  padding-top: 60px;
+                  border: 5px;
+              }
+          }
+      </style>
+
+  </head>
+  <body>
+     <% include ../_navbar.ejs %>
+
+    <div class="container-fluid">
+        <div id="logo" class="row-fluid cool-font">
+            <h4>admin Card Management</h4>
+            <br> <% if (message) { %>
+            <p><%= message %></p>
+            <% } %>
+        </div>
+        <div class="row-fluid cool-font">
+            <div class="span6 smallround">
+                <form action="/admin/addcard" method="post">
+                    <span class="label label-important">Issue a Card</span>
+                    <br>      <br>
+                <div class="controls controls-row">
+                    <div class="span3">Username:</div>
+                    <input type="text" name="username" value="">
+                </div>
+                <div class="controls controls-row">
+                    <div class="span3">Card ID:</div>
+                    <input type="text" name="cardID" value="">
+
+                </div>
+                <div class="controls controls-row">
+                    <div class="span3">Card Type:</div>
+                    <input type="text" name="cardType" value="">
+                </div>
+                <div class="controls controls-row">
+                    <div class="span3">Card Amount:</div>
+                    <input type="text" name="cardAmount" value="">
+                </div>
+                <div class="controls controls-row">
+                    <div class="span3">Card Condition:</div>
+                    <input type="text" name="cardCondition" value="">
+                </div>
+
+            <input type="submit" class="btn btn-info btn-mini" value="add">
+            </form>
+            </div>
+            <div class="span6 smallround">
+                <span class="label label-important">Card Swap</span>
+                <br><br>
+                <form action="/admin/swapcard" method="post">
+
+
+                        <div class="controls controls-row">
+                            <div class="span3">Card ID:</div>
+                            <input type="text" name="cardID" value="ID">
+                        </div>
+                        <div class="row-fluid controls controls-row">
+                            <div class="span3">from:</div>
+                            <input type="text" name="fromUser" value="">
+                        </div>
+                        <div class="controls controls-row">
+                            <div class="span3">TO: </div>
+                            <input type="text" name="toUser" value="">
+                        </div>
+                        <input type="submit" class="btn btn-info btn-mini" value="swap">
+                    </form>
+                </form>
+            </div>
+        </div>
+
+     <br>
+
+        <div class="row-fluid cool-font">
+            <div class="span6 smallround">
+                <span class="label label-important" id="cardsLabel">Send Messege</span>
+                <br><br>
+                <form action="/admin/sendmessege" method="post">
+                    <div class="controls controls-row">
+                        <div class="span3">To:</div>
+                        <input type="text" name="toUser" value="">
+                    </div>
+                    <div class="controls controls-row">
+                        <div class="span3">From:  </div>
+                        <input type="text" name="fromUser" value="<%= user.username %>">
+                    </div>
+                    <div class="controls controls-row">
+                        <div class="span3">Message: </div>
+                        <input type="text" name="m" value="">
+                    </div>
+                    <input type="submit" class="btn btn-info btn-mini" value="send">
+                </form>
+            </div>
+            <div class="span6 smallround">
+                <span class="label label-importan">All Cards</span><br><br>
+                <table class="table table-striped">
+                    <thead>
+                    <th>Card ID</th>
+                    <th>Type</th>
+                    <th>Condition</th>
+                    <th>amount</th>
+                    <th>user</th>
+                    </thead>
+                    <tbody>
+                    Total # of cards: <%= allcards.length %>
+                    <% for(var i=0; i<allcards.length; i++) {%>
+                    <tr>
+                        <td><%= allcards[i].cid %></td>
+                        <td><%= allcards[i].ct %></td>
+                        <td><%= allcards[i].ccond %></td>
+                        <td><%= allcards[i].camt %></td>
+                        <td><%= allcards[i].usr %></td>
+                    </tr>
+                    <% } %>
+                </table>
+                <!--<-- cid: c.cardID, ct: c.type, ccond: c.condition, camt: c.amount, usr: u.username} &ndash;&gt;-->
+            </div>
+        </div>
+        <br>
+
+        <div class="row-fluid cool-font">
+            <div class="span6 smallround">
+                <!--({user: p.username, pid: p.payment_ID, amount: p.amount, pname: p.productName})-->
+                <table class="table table-striped">
+                    <thead>
+                    <th>User</th>
+                    <th>Payment ID</th>
+                    <th>Amount</th>
+                    <th>Product</th>
+                    </thead>
+                    <tbody>
+                    Total # of payments: <%= allpayments.length %>
+                    <% for(var i=0; i<allpayments.length; i++) {%>
+                    <tr>
+                        <td><%= allpayments[i].user %></td>
+                        <td><%= allpayments[i].pid %></td>
+                        <td><%= allpayments[i].amount %></td>
+                        <td><%= allpayments[i].pname %></td>
+                    </tr>
+                    <% } %>
+                </table>
+            </div>
+        </div>
+    </div>
+     <script>
+         $( "#logo").addClass('animated fadeInLeft');
+
+     </script>
+  </body>
+</html>

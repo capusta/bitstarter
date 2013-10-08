@@ -1,6 +1,30 @@
 p.lead {
     padding-top: 5px;
-    text-align: right;
+    text-align: center;
+}
+div.center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+.centermebitch {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.centered-pills { text-align:center; }
+.centered-pills ul.nav-pills { display: inline-block; }
+.centered-pills li { display: inline; }
+.centered-pills a { float:left; }
+* html .centered-pills ul.nav-pills { display:inline; } /* IE6 */
+*+html .centered-pills ul.nav-pills { display:inline; } /* IE7 */
+
+IMG.displayed {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+    height: 100px;
 }
 div.addthis_toolbox {
     width:180px;
@@ -56,3 +80,19 @@ div.row {
 .video-container iframe,
 .video-container object,
 .video-container embed { position: absolute; top: 1%; left: 0; width: 100%; height: 100%;}
+
+#cardsLabel {
+    -webkit-animation-delay: 1.5s;
+}
+#profileLabel {
+    -webkit-animation-delay: 2s;
+}
+#settings {
+    -webkit-animation-delay: 3s;
+}
+#messeges {
+    -webkit-animation-delay: 2.5s;
+
+
+}
+

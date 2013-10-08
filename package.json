@@ -11,7 +11,10 @@
     "pg": "~2.3.1",
     "ejs": "~0.8.4",
     "express": "~3.3.4",
-    "async": "~0.2.9"
+    "passport": "0.1.x",
+    "passport-local": "0.1.x",
+    "async": "~0.2.9",
+    "connect-roles": "git://github.com/ForbesLindesay/connect-roles#master"
   },
   "engines": {
     "node": "0.10.12",

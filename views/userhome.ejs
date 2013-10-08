@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Main</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css">
+
+    <!--<link href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css" rel="stylesheet">-->
+
+    <link rel='stylesheet' href='/site.css' />
+
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" type="text/css" />
+
+    <script type="text/javascript" src="/jquery.js"></script>
+
+    <script type="text/javascript" src="/bootstrap.js"></script>
+    <link rel="stylesheet" href="/animate.css" />
+      <link rel="stylesheet" href="/bootstrap-responsive.css" />
+
+      <style type="text/css">
+          @media (min-width: 980px) {
+              body {
+                  padding-top: 60px;
+              }
+          }
+      </style>
+
+  </head>
+  <body>
+     <% include _navbar.ejs %>
+
+    <div class="container nudgeleft">
+        <div class="row-fluid">
+            <div id="logo" class="cool-font span10">
+                <h4>Welcome <%= user.username %>  </h4>
+            </div>
+
+            <div class="span1 cool-font animated fadeInRight">
+                <% if (user.usertype === 'admin') { %>
+                <a href="/admin" class="btn btn-info btn-mini"><i class="icon-home"></i></a><br>
+                <% } %>
+                <a href="/logout">Log Out</a></div>
+        </div>
+
+        <div class="row-fluid cool-font well well-small">
+            <div class="span3">
+            <span class="label label-important" id="cardsLabel">My Cards</span>
+                <% if (cards.length == 0) { %>
+                <br> <br>
+                No Cards :(
+                <% } else { %>
+                <table class="table table-striped">
+                    <thead>
+                    <th>Card ID</th>
+                    <th>Type</th>
+                    </thead>
+                    <tbody>
+                    <% for(var i=cards.length-1; i>=0; i--) {%>
+                    <tr>
+                        <td><%= cards[i].cid %></td>
+                        <td><%= cards[i].ct %></td>
+                    </tr>
+                    <% } %>
+                </table>
+                <% } %>
+            </div>
+            <div class="span9 ">
+                <div class="row-fluid">
+                    <span class="label" id="profileLabel" data-toggle="tooltip"
+                            title="Keep me up to date">Profile</span>
+                    <a href="/settings" class="btn btn-info btn-mini" id="settings"
+                            data-toggle="tooltip" title="Account Settings"><i class="icon-edit"></i></a>
+                </div>
+                <div class="row-fluid">
+                    <table class="table">
+                    <tbody>
+                    <tr><td><p>Name:</p></td>
+                        <td><p><%= user.dataValues.name %></p></td></tr>
+                    <tr><td><p>Address:</p></td>
+                        <td><p><%= user.dataValues.addressOne %></p></td></tr>
+                    <tr><td><p>(optional):</p></td>
+                        <td><p><%= user.dataValues.addressTwo %></p></td></tr>
+                    <tr><td><p>Refund Bitcoin Address:</p></td>
+                        <td><div class="hidden-phone"><p>
+                            <a href="http://blockchain.info/address/<%= user.dataValues.homeBTC %>">
+                                <%= user.dataValues.homeBTC %></a></p>
+                            </div>
+                            <div class="visible-phone">
+                                <p> <a href="http://blockchain.info/address/<%= user.dataValues.homeBTC %>">
+                                    <img src="http://blockchain.info/qr?data=<%= user.dataValues.homeBTC %>&size=100">
+                                </a></p>
+                            </div>
+
+                        </td></tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="row-fluid cool-font well well-small">
+            <span class="label" id="messeges" data-toggle="tooltip"
+                  title="Check Back often :)">Messeges</span>
+            <% if (!locals.messeges) { %>
+            <br>No Messeges :(
+            <% } else { %>
+            <table class="table table-striped">
+                <thead>
+                <th>Time</th>
+                <th>From</th>
+                <th>Messege</th>
+                </thead>
+                <tbody>
+                <% for(var i=messeges.length-1; i>=0; i--) {%>
+                <tr>
+                    <td><%= messeges[i].time %></td>
+                    <td><%= messeges[i].from %></td>
+                    <td><%= messeges[i].message %></td>
+                </tr>
+                <% } %>
+            </table>
+            <% } %>
+        </div>
+
+        <p class="text-center"><a href="/goshopping"><button class="btn, btn-large btn-success" type="button">
+            Get some Cards !!!
+        </button></a></p>
+    </div>
+     <script>
+         $( "#logo").addClass('animated fadeInLeft');
+         $('#cardsLabel').addClass('animated fadeInUp');
+         $('#profileLabel').addClass('animated fadeInUp');
+         $('#settings').addClass('animated bounceIn');
+         $('#pageMesseges').addClass('animated fadeInUp');
+         $('#profileLabel').tooltip({ animation: true, html: true})
+         $('#messeges').tooltip({ animation: true, html: true})
+         $('#settings').tooltip({ animation: true, html: true})
+     </script>
+  </body>
+</html>

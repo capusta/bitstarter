@@ -40,13 +40,22 @@ if (!global.hasOwnProperty('db')) {
             protocol: 'postgres',
             port:     port,
             host:     host,
+            logging:  false
         };
         var sq = new Sequelize(dbname, user, password, config);
     }
     global.db = {
         Sequelize: Sequelize,
         sequelize: sq,
-        Order: sq.import(__dirname + '/order')
+        Order: sq.import(__dirname + '/order'),
+        User: sq.import(__dirname + '/user'),
+        Payment: sq.import(__dirname + '/payment'),
+        Message: sq.import(__dirname + '/message'),
+        Moneycard: sq.import(__dirname + '/moneycard')
     };
+
 }
 module.exports = global.db;
+global.db.User.hasMany(global.db.Payment, {as: 'Payments'});
+global.db.User.hasMany(global.db.Message, {as: "Messeges"});
+global.db.User.hasMany(global.db.Moneycard, {as: "Moneycards"});
