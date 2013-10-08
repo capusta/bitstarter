@@ -17,13 +17,14 @@ module.exports = function(app, passport, usr){
 
     app.post('/paymentcomplete?', function(req, res) {
         if ((process.env.PAYMENT_COMPLETE_SECRET != req.query.secret)) {
-                res.status(404).send("bad kitty")
+                console.log("error - bad secret number")
+                res.status(403).send("bad kitty")
         } else {
             var b = req.body;
             console.log("parsing paymebnt " + b.order.status);
             if (b.order.status != "completed") {
                     console.log("status is not completed ");
-                    res.status(404).send("bad kitty")}
+                    res.status(403).send("bad kitty")}
             var p = global.db.Payment;
             try {
                 var new_payment_instance = p.build({
@@ -60,6 +61,7 @@ module.exports = function(app, passport, usr){
                     });
             }
             catch(err) {
+                console.log("general error occured")
                 setTimeout(function(){
                     res.status(404).send("bad kitty")}, 5000)
             }}});
