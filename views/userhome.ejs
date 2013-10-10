@@ -36,6 +36,9 @@
         <div class="row-fluid">
             <div id="logo" class="cool-font span10">
                 <h4>Welcome <%= user.username %>  </h4>
+                <br> <% if (message) { %>
+                <p><%= message %></p>
+                <% } %>
             </div>
 
             <div class="span1 cool-font animated fadeInRight">

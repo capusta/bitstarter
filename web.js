@@ -21,8 +21,6 @@ app.use(express.bodyParser());
 app.use(express.session({ secret: process.env.SESSION_SECRET }));
 app.use(flash());
 
-
-
 app.use(passport.initialize());
 
 app.use(express.static(__dirname + '/public'));
