@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css">
-
+    <link rel="stylesheet" href="/font/font-awesome.css" />
     <!--<link href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css" rel="stylesheet">-->
 
     <link rel='stylesheet' href='/site.css' />
@@ -41,7 +41,7 @@
             <% } %>
         </div>
         <div class="row-fluid cool-font">
-            <div class="span6 smallround">
+            <div class="span4 smallround">
                 <form action="/admin/addcard" method="post">
                     <span class="label label-important">Issue a Card</span>
                     <br>      <br>
@@ -70,12 +70,10 @@
             <input type="submit" class="btn btn-info btn-mini" value="add">
             </form>
             </div>
-            <div class="span6 smallround">
+            <div class="span4 smallround">
                 <span class="label label-important">Card Swap</span>
                 <br><br>
                 <form action="/admin/swapcard" method="post">
-
-
                         <div class="controls controls-row">
                             <div class="span3">Card ID:</div>
                             <input type="text" name="cardID" value="ID">
@@ -90,6 +88,22 @@
                         </div>
                         <input type="submit" class="btn btn-info btn-mini" value="swap">
                     </form>
+                </form>
+            </div>
+            <div class="span4 smallround">
+                <span class="label label-important">password reset</span>
+                <br><br>
+                <form action="/admin/changepassword" method="post">
+                    <div class="controls controls-row">
+                        <div class="span3">username</div>
+                        <input type="text" name="username" value="">
+                    </div>
+                    <div class="row-fluid controls controls-row">
+                        <div class="span3">new password</div>
+                        <input type="text" name="newpass" value="">
+                    </div>
+                    <input type="submit" class="btn btn-info btn-mini" value="change">
+                </form>
                 </form>
             </div>
         </div>
@@ -165,6 +179,7 @@
                     <% } %>
                 </table>
             </div>
+
         </div>
     </div>
      <script>
