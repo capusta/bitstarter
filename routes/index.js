@@ -36,9 +36,8 @@ module.exports = function(app, passport, usr){
                          messeges.forEach(function(c){
                              messeges_json.push({time: c.time, from: c.from, message: c.message})
                          })
-                        res.render("userhome", { user : req.user, cards : cards_json, messeges: messeges_json})
+                        res.render("userhome", { user : req.user, cards : cards_json, messeges: messeges_json, message: req.flash('info')})
                     })
-
                 })
             })
 
@@ -65,12 +64,12 @@ module.exports = function(app, passport, usr){
                 u.addressTwo = req.body.addrTwoUpdate;
                 u.homeBTC = req.body.homeBTCUpdate;
                 u.save().success(function() {
-                    global.db.Message.sendMessege("admin",u.username,"Profile Updated")
-
-                })
-              console.log(u.username + " " + u.dataValues.username)
-            })
-            res.redirect("userhome")
+                    global.db.Message.sendMessege("admin",u.username,"Profile Updated",function(isOK){
+                        if(isOK){
+                            req.flash('info','profile updated')
+                            res.redirect("userhome")
+                            console.log(u.username + " " + u.dataValues.username)
+                        }})})})
         } else {
             res.redirect("login")
         }
@@ -79,10 +78,13 @@ module.exports = function(app, passport, usr){
     app.post('/settings/sendmessege', function(req, res){
         if(req.isAuthenticated()){
             global.db.User.find( { where: {username: req.user.username}}).success(function(u){
-                global.db.Message.sendMessege(u.username, 'admin', req.body.messegeToAdmin);
-                global.db.Message.sendMessege('admin', u.username, 'Thank you, your messege has been received.')
+                global.db.Message.sendMessege(u.username, 'admin', req.body.messegeToAdmin,
+                    function(isOK){
+                        if(isOK){req.flash('info','messege sent')}
+                    });
+                global.db.Message.sendMessege('admin', u.username, 'Thank you, your messege has been received.', function(isOK){})
+                res.redirect("userhome")
             })
-            res.redirect("userhome")
         } else {
             res.redirect("login")
         }

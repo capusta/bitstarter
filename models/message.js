@@ -13,10 +13,16 @@ module.exports = function(sequelize, DataTypes) {
                     .success(function(m){
                         u.addMessege(m);
                     })},
-             sendMessege: function(from, to, m){
+             sendMessege: function(from, to, m, callback){
                   global.db.Message.create({to: to, from: from, message: m}).success(function(m){
                      global.db.User.find({ where: {username: to}}).success(function(u){
-                         u.addMessege(m);
+                         if (u != null) {
+                             u.addMessege(m);
+                             callback(true)
+                         }
+                         else {
+                            callback(false)
+                         }
                      })
                   })
               }
