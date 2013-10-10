@@ -17,7 +17,6 @@ module.exports = function(app, passport, usr){
 
     app.post('/paymentcomplete?', function(req, res) {
         if (process.env.PAYMENT_COMPLETE_SECRET != req.param('secret')) {
-                console.log("error - bad secret number got." + req.query.secret + ".needed." + process.env.PAYMENT_COMPLETE_SECRET + ".")
                 res.status(403).send("bad kitty")
         } else {
             var b = req.body;

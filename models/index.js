@@ -40,7 +40,7 @@ if (!global.hasOwnProperty('db')) {
             protocol: 'postgres',
             port:     port,
             host:     host,
-            logging:  false
+            logging:  true
         };
         var sq = new Sequelize(dbname, user, password, config);
     }

@@ -27,19 +27,11 @@ app.use(passport.initialize());
 
 app.use(express.static(__dirname + '/public'));
 app.use(passport.session())
-
 app.use(app.router);
-
-
-
 app.use(usr);
-
 require('./config/passport')(passport)
 require('./config/connectroles')(usr)
 require('./routes')(app, passport, usr);
-
-
-
 
 // sync the database and start the server
 db.sequelize.sync().complete(function(err) {
@@ -47,7 +39,9 @@ db.sequelize.sync().complete(function(err) {
     throw err;
   } else {
       console.log("Sequelize sync complete on  " + app.get('port'));
-    http.createServer(app).listen(app.get('port'), function() {    });
+    http.createServer(app).listen(app.get('port'), function() {
+       //global.db.User.sync({force: true})
+    });
   }
 });
 
