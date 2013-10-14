@@ -37,6 +37,9 @@
 
         <div id="logo" class="row-fluid cool-font">
             <h4><%= user.dataValues.username %> profile update</h4>
+            <br> <% if (message) { %>
+            <p><%= message %></p>
+            <% } %>
         </div>
         <br>
         <div class="row-fluid cool-font">
