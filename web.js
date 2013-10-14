@@ -32,7 +32,7 @@ require('./config/connectroles')(usr)
 require('./routes')(app, passport, usr);
 
 // sync the database and start the server
-db.sequelize.sync({force: true}).complete(function(err) {
+db.sequelize.sync().complete(function(err) {
   if (err) {
     throw err;
   } else {
