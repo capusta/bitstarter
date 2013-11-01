@@ -7,8 +7,9 @@ var express = require('express')
   , passport = require("passport")
   , flash = require('connect-flash')
   , util = require('util')
-  , fs      = require('fs'),
-    usr = require('connect-roles');
+  , fs      = require('fs')
+  , usr = require('connect-roles');
+
 
 
 var app = express();
@@ -27,6 +28,8 @@ app.use(express.static(__dirname + '/public'));
 app.use(passport.session())
 app.use(app.router);
 app.use(usr);
+var io = require('socket.io');
+
 require('./config/passport')(passport)
 require('./config/connectroles')(usr)
 require('./routes')(app, passport, usr);
@@ -37,11 +40,34 @@ db.sequelize.sync().complete(function(err) {
     throw err;
   } else {
       console.log("Sequelize sync complete on  " + app.get('port'));
-    http.createServer(app).listen(app.get('port'), function() {
+    srv = http.createServer(app).listen(app.get('port'), function() {
        //global.db.User.sync({force: true})
     });
+
+      // socket server listening for events
+      io.listen(srv).sockets.on('connection', function(socket){
+          console.log("connected");
+
+          socket.on('set username', function(data){
+              console.log("setting username " + data.username)
+              socket.set('username', data.username, function () {
+                  socket.emit('my_username', {username: data.username});
+                  console.log("logged in: " + data.username);
+              })
+          })
+          socket.on('get username', function(){
+              socket.get('username', function(err, u){
+                  if(err){console.log("error - cannot get socket username")}
+                  else {
+                      socket.emit('my_username', {username: u});
+                  }
+              })
+          })
+      })
   }
 });
+
+
 
 
 

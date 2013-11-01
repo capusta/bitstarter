@@ -28,6 +28,19 @@
           }
       </style>
 
+
+      <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+      <script>
+          var socket = io.connect();
+          $(document).ready(function() {
+              socket.emit('set username', {username: user.dataValues.username})})
+
+          socket.on('my_username', function(u){
+              $('#customText').html(u.username)
+          })
+
+      </script>
+
   </head>
   <body>
      <% include _navbar.ejs %>
@@ -35,7 +48,10 @@
     <div class="container nudgeleft">
         <div class="row-fluid">
             <div id="logo" class="cool-font span10">
-                <h4>Welcome <%= user.username %>  </h4>
+                <h4>Welcome
+
+                    <%= user.username %>  </h4>
+                <div id="customText"></div>
                 <br> <% if (message) { %>
                 <p><%= message %></p>
                 <% } %>
