@@ -15,15 +15,17 @@ module.exports = function(sequelize, DataTypes) {
                     }
             },
             usertype: {type: DataTypes.STRING, allowNull: false, defaultValue: "user"},
-            name: {type: DataTypes.STRING, allowNull: true, defaultValue: "Anon Smith"},
-            addressOne: {type: DataTypes.STRING, allowNull: true, defaultValue: "123 Parkside Drive"},
-            addressTwo: {type: DataTypes.STRING, allowNull: true, defaultValue: "San Francisco, CA, 94519"},
+            name: {type: DataTypes.STRING, allowNull: true, defaultValue: "Anon"},
+            addressOne: {type: DataTypes.STRING, allowNull: true, defaultValue: "123 Anon Drive"},
+            addressTwo: {type: DataTypes.STRING, allowNull: true, defaultValue: "City, State, Country, Zip"},
             email: {type: DataTypes.STRING, allowNull: true, defaultValue: "user@domain.com",
             validate: {
                 isEmail: true
             }},
             homeBTC: {type: DataTypes.STRING, allowNull: false, defaultValue: "1BTCorgHwCg6u2YSAWKgS17qUad6kHmtQW"},
-            oneTimeSecret: {type: DataTypes.STRING, allowNull:true}
+            paymentBTC: {type: DataTypes.STRING, allowNull: true, defaulValue: "0"},
+            oneTimeSecret: {type: DataTypes.STRING, allowNull:true},
+            stepNumber: {type: DataTypes.STRING, allowNull: false, defaultValue: "0"}
     }, {
         setterMethods: {
           phash: function(p) { this.setDataValue('phash', p)}
@@ -51,7 +53,6 @@ module.exports = function(sequelize, DataTypes) {
                      hash(pword, process.env.SALT, function (err, ret_hash) {
                         if (err) {return answer(false);}
                         if (ret_hash.toString('base64') != myhash) {
-                            //console.log("expected " + myhash.toString('base64') + " \n got " + ret_hash.toString('base64'))
                             answer(false);
                      }
                      else {

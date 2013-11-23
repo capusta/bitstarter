@@ -5,13 +5,13 @@ module.exports = function(user){
 
     /*anon users only have access to public page if they are not authenticated*/
     user.use(function(req, action){
-        if (!req.isAuthenticated()){
+       /* if (!req.isAuthenticated()){
+            console.log("request not authenticated")
         return action === 'access public page';
-        }
+        }*/
     })
 
     user.use('access profile', function(req){
-          console.log("access given req params are " + req.params)
           if (req.isAuthenticated()) { return true;}
     })
 
@@ -30,7 +30,7 @@ module.exports = function(user){
     })
 
     user.setFailureHandler(function(req, res, action){
-        console.log("failure occured")
+        console.log("connect roles failure:  " + action)
         var accept = req.headers.accept || '';
         //res.status(403);
         if (~accept.indexOf('html')) {
