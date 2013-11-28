@@ -1,0 +1,23 @@
+<div><span class="label" id="messeges" data-toggle="tooltip"
+                  title="Check Back often :)">Messeges</span> </div>
+<div>
+<% if (!locals.messeges) { %>
+    <br>No Messeges :(
+    <% } else { %>
+    <table class="table table-striped">
+        <thead>
+        <th>Time</th>
+        <th>From</th>
+        <th>Messege</th>
+        </thead>
+        <tbody>
+        <% for(var i=messeges.length-1; i>=0; i--) {%>
+        <tr>
+            <td><%= messeges[i].time %></td>
+            <td><%= messeges[i].from %></td>
+            <td><%= messeges[i].message %></td>
+        </tr>
+        <% } %>
+    </table>
+    <% } %>
+</div>

@@ -26,38 +26,52 @@ module.exports = function(app, passport, usr){
                     res.status(403).send("bad kitty")}
             var p = global.db.Payment;
             try {
-                var new_payment_instance = p.build({
-                    time: b.order.created_at,
-                    username: b.order.custom,
-                    payment_ID: b.order.id,
-                    amount: b.order.total_native.cents,
-                    productName: b.order.button.name
-                });
-                new_payment_instance.save().success(function(i) {
-                    console.log("instance " + i.payment_ID + " saved for user " + i.username);
-                    if (i.username == null){
-                        console.log("error - null user making a payment")}
+                var hsh = b.order.transaction.hash;
+                var sourceBTCAddr = "0";
+                https.get("https://blockchain.info/rawtx/hsh?format=json", function(rr) {
+                     var body = '';
+                     rr.on('data', function(chunk) {body += chunk;});
+                     rr.on('end', function() {
 
-                    global.db.User.find( { where: { username: i.username}})
-                        .success(function(u){
-                            if (u != null) {
-                            u.addPayment(i);
-                            global.db.Message.sendMessege("admin", i.username,
-                                "Order " + i.payment_ID + " for " + i.productName + " Received");
-                            } else {
-                                console.log("Error - null user");
-                            }})
-                        .error(function(err){
-                            console.log("error happened while looking for " + i.username + " not found")
-                        })
+                        try {
+                            var x = JSON.parse(body);
+                             sourceBTCAddr = x.inputs.prev_out.addr;
+                        } catch(err){
+                            console.log("unable to parse blockchain response " + x);
+                        }
+                            var new_payment_instance = p.build({
+                             time: b.order.created_at,
+                             username: b.order.custom,
+                             payment_ID: b.order.id,
+                             amount: b.order.total_native.cents,
+                             productName: b.order.button.name,
+                             paymentBTCAddress: sourceBTCAddr
+                         });
+                            new_payment_instance.save().success(function(i) {
+                             console.log("instance " + i.payment_ID + " saved for user " + i.username);
+                             if (i.username == null){
+                                 console.log("error - null user making a payment")}
+                             global.db.User.find( { where: { username: i.username}})
+                                 .success(function(u){
+                                     if (u != null) {
+                                         u.addPayment(i);
+                                         u.stepNumber = u.stepNumber.concat('d')
+                                         global.db.Message.sendMessege("admin", i.username,
+                                             "Order " + i.payment_ID + " for " + i.productName + " Received");
+                                     } else {
+                                         console.log("Error - null user");
+                                     }})
+                                 .error(function(err){
+                                     console.log("error happened while looking for " + i.username + " not found")
+                                 })
+                             res.status(200).send();
+                         }).error(function(err) {
+                                 console.log("instance not saved for some reason");
+                                 res.status(404).send("bad kitty");
+                             });
 
-
-
-                    res.status(200).send();
-                }).error(function(err) {
-                        console.log("instance not saved for some reason");
-                        res.status(404).send("bad kitty");
-                    });
+                     })
+                })
             }
             catch(err) {
                 console.log("general error occured")

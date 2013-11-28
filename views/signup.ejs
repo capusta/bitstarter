@@ -10,6 +10,8 @@
 
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" type="text/css" />
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" type="text/css" />
+    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
     <!-- analytics -->
     <script type="text/javascript">
@@ -26,35 +28,80 @@
 
     </script>
     <!-- end analytics -->
-
     <style type="text/css">
 
         @media (min-width: 980px) {
             body {
                 padding-top: 60px;
                 border: 5px;
+                background-color: #f5f5f5;
             }
         }
-
+        .form-login {
+            max-width: 300px;
+            padding: 2%;
+            margin: 0 auto 20px;
+            background-color: #fff;
+            border: 1px solid #e5e5e5;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        }
     </style>
+    <script>
+        var socket = io.connect(window.location.hostname);
+        socket.on('username_good', function(){
+            $('#custommessege').text("Username OK")
+        })
+        socket.on('username_bad', function(){
+            $('#custommessege').text("Username Taken")
+        })
+
+    </script>
 </head>
 <body>
 <% include _navbar.ejs %>
 
-<div class="container starter-template">
+<div class="container starter-template form-login" >
 <table>
     <form method="post" action="/signup">
-        <tr><td>Username:</td><td><input type="text" name="username" value="<%= oldname %>"></td></tr>
-        <tr><td>Password:</td><td><input type="password" name="password"></td></tr>
-
+        <tr><td>Username:</td><td><input type="text" id="username" name="username" value="<%= oldname %>"></td></tr>
+        <tr><td>Password:</td><td><input type="password" id="pass1" name="password1"></td></tr>
+        <tr><td>Password:</td><td><input type="password" id="pass2" name="password2"></td></tr>
         <tr><td></td><td><input type="submit" class="btn btn-primary btn-large" value="Signup"></td></tr>
     </form>
 </table>
+    <br>
+    <div id="custommessege" style="margin: auto; text-align: center">
 
-    <% if (message) { %>
-    <p><%= message %></p>
-    <% } %>
-
+        <% if (message) { %>
+        <p><%= message %></p>
+        <% } %>
+    </div>
 </div>
+<script>
+    var t;
+    var check_username = function(){
+        socket.emit('check_username', {username: $('#username').val()});
+    }
+    var check_password = function(){
+        if($('#pass1').val() != $('#pass2').val()){
+            $('#custommessege').text("Passwords do not Match");
+        } else {
+            $('#custommessege').text("Passwords OK");
+        }
+    }
+    $('#username').keypress(function(event){
+        clearTimeout(t);
+        t = setTimeout(check_username, 1000)
+    })
+    $('#pass2').keypress(function(event){
+        clearTimeout(t)
+        t = setTimeout(check_password, 500)
+    })
+</script>
 </body>
 </html>
