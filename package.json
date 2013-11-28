@@ -16,7 +16,11 @@
     "async": "~0.2.9",
     "connect-roles": "git://github.com/ForbesLindesay/connect-roles#master",
     "connect-flash": "~0.1.1",
-    "connect": "2.11.x"
+    "connect": "2.11.x",
+    "cookie": "0.1.x",
+    "passport.socketio": "~2.2.0",
+    "socket.io": "~1.0.0",
+    "connect-session-sequelize": "~0.0.3"
   },
   "engines": {
     "node": "0.10.12",
