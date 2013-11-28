@@ -19,7 +19,7 @@
     "connect": "2.11.x",
     "cookie": "0.1.x",
     "passport.socketio": "~2.2.0",
-    "socket.io": "~1.0.0",
+    "socket.io": "~0.9.16",
     "connect-session-sequelize": "~0.0.3"
   },
   "engines": {
