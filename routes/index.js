@@ -7,7 +7,7 @@ module.exports =    global.https   = require('https'),
 module.exports = function(app, passport, usr){
 
     require('./money.js')(app, passport, usr);
-    require('./cards.js')(app, passport, usr);
+    require('./admin.js')(app, passport, usr);
     require('./messeges.js')(app, passport, usr);
 
     app.get('/', function(req, res) {
@@ -25,28 +25,15 @@ module.exports = function(app, passport, usr){
 
     app.get('/userhome', usr.can('access profile'), function(req, res) {
         if(req.isAuthenticated()){
-            var cards_json = [];
-            var messeges_json = [];
-            global.db.User.find( { where: {username: req.user.username}}).success(function(u){
-                u.getMoneycards().success(function(cards){
-                    cards.forEach(function(c){
-                        cards_json.push({cid: c.cardID, ct: c.type})
-                    })
-                    u.getMesseges().success(function(messeges){
-                         messeges.forEach(function(c){
-                             messeges_json.push({time: c.time, from: c.from, message: c.message})
-                         })
-                        res.render("userhome", { user : req.user, cards : cards_json, messeges: messeges_json, message: req.flash('info')})
-                    })
-                })
-            })
 
+            res.render("userhome", { message: req.flash('info'), user: true})
         } else {
+
             res.redirect("login")
         }
     });
 
-    app.get('/settings', function(req, res) {
+    app.get('/settings', usr.can('access profile'), function(req, res) {
         if(req.isAuthenticated()) {
             res.render("updateprofile", { user : req.user, message: req.flash('info')})
         } else {
@@ -54,7 +41,7 @@ module.exports = function(app, passport, usr){
         }
     })
 
-    app.post('/settings', function(req, res) {
+    app.post('/settings', usr.can('access profile'), function(req, res) {
         if(req.isAuthenticated()) {
 
             global.db.User.find( { where: {username: req.user.username}})
@@ -64,13 +51,13 @@ module.exports = function(app, passport, usr){
                 u.addressOne = req.body.addrOneUpdate;
                 u.addressTwo = req.body.addrTwoUpdate;
                 u.homeBTC = req.body.homeBTCUpdate;
+                u.stepNumber = u.stepNumber.concat('a')
                 u.save()
                     .success(function() {
+
                     global.db.Message.sendMessege("admin",u.username,"Profile Updated",function(isOK){
                         if(isOK){
-                            req.flash('info','profile updated')
                             res.redirect("userhome")
-                            console.log(u.username + " " + u.dataValues.username)
                         }})})
                     .error(function(err){
                        req.flash('info','invalid email')
@@ -85,7 +72,7 @@ module.exports = function(app, passport, usr){
         }
     })
 
-    app.post('/settings/sendmessege', function(req, res){
+    app.post('/settings/sendmessege', usr.can('access profile'), function(req, res){
         if(req.isAuthenticated()){
             global.db.User.find( { where: {username: req.user.username}}).success(function(u){
                 global.db.Message.sendMessege(u.username, 'admin', req.body.messegeToAdmin,
@@ -125,7 +112,13 @@ module.exports = function(app, passport, usr){
                 res.render("signup", {message: req.flash('error')});
 
             } else {
-                global.db.User.signup(req.body.username.toLowerCase().trim(), req.body.password, function(err, user){
+                if(req.body.password1 != req.body.password2){
+                    console.log("passwords do not match");
+                    req.flash('error', "Passwords does not match");
+                    res.redirect("signup")
+                    return;
+                }
+                global.db.User.signup(req.body.username.toLowerCase().trim(), req.body.password1, function(err, user){
                     if(err) {
                         console.log("got error on signup " + err)
                         req.flash('error', "Username must be alphanumeric, " + err)

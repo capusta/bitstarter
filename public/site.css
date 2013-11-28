@@ -77,22 +77,32 @@ div.row {
 .cool-font {
     font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
 }
+.font-announce
+     {
+         font-family: Ubuntu;
+         color: #2E2E2E;
+         font-size: 15px;
+         text-align: center;
+         letter-spacing: 0pt;
+         line-height: 1.2;
+         padding: 8px;
+         text-shadow: 0px 0px 3px #666666;
+     }
 .video-container iframe,
 .video-container object,
 .video-container embed { position: absolute; top: 1%; left: 0; width: 100%; height: 100%;}
 
 #cardsLabel {
-    -webkit-animation-delay: 1.5s;
+    -webkit-animation-delay: 1s;
 }
 #profileLabel {
-    -webkit-animation-delay: 2s;
+    -webkit-animation-delay: 1s;
 }
 #settings {
-    -webkit-animation-delay: 3s;
+    -webkit-animation-delay: 1s;
 }
 #messeges {
-    -webkit-animation-delay: 2.5s;
-
+    -webkit-animation-delay: 1s;
 
 }
 

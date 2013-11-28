@@ -25,6 +25,7 @@ if (!global.hasOwnProperty('db')) {
             logging:  true //false
         };
         sq = new Sequelize(dbname, user, password, config);
+        module.exports = sq;
     } else {
         /* Local database
            We parse the .pgpass file for the connection string parameters.
@@ -44,6 +45,7 @@ if (!global.hasOwnProperty('db')) {
         };
         var sq = new Sequelize(dbname, user, password, config);
     }
+    global.sq = sq;
     global.db = {
         Sequelize: Sequelize,
         sequelize: sq,
@@ -56,6 +58,9 @@ if (!global.hasOwnProperty('db')) {
 
 }
 module.exports = global.db;
+exports.sq = sq;
+
+console.log("database  connected")
 global.db.User.hasMany(global.db.Payment, {as: 'Payments'});
 global.db.User.hasMany(global.db.Message, {as: "Messeges"});
 global.db.User.hasMany(global.db.Moneycard, {as: "Moneycards"});

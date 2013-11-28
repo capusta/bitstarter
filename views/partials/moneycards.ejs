@@ -1,0 +1,27 @@
+
+    <span class="label label-important" id="cardsLabel">My Cards</span>
+    <% if (cards.length == 0) { %>
+    <br> <br>
+    No Cards :(
+    <% } else { %>
+    <table class="table table-striped">
+        <thead>
+        <th>Card ID</th>
+        <th>Type</th>
+        <th>Condition</th>
+        <th>Amount</th>
+        </thead>
+        <tbody>
+        <% for(var i=cards.length-1; i>=0; i--) {%>
+        <tr>
+            <td><%= cards[i].cid %></td>
+            <td><%= cards[i].ct %></td>
+            <td><%= cards[i].cm %></td>
+            <td><%= cards[i].amt %></td>
+        </tr>
+        <% } %>
+    </table>
+    <% } %>
+            <script>
+                $('#cardsLabel').addClass('animated fadeInUp');
+            </script>

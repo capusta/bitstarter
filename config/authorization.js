@@ -10,7 +10,7 @@ exports.isAuthenticated = function (req, res, next) {
 }
 
 exports.userExist = function(req, res, next) {
-    global.db.User.count({where: {username: req.body.username}}).success(function(n) {
+    global.db.User.count({where: {username: req.body.username.trim().toLowerCase()}}).success(function(n) {
         if(n === 0) { next(0); }
         else {
             req.flash('error', "User exists");

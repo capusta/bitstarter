@@ -98,7 +98,6 @@ module.exports = function(app, passport, usr){
             res.redirect("login")
         }
     })
-
     app.post('/admin/swapcard',  usr.can('access admin page'), function(req, res) {
 
         if(req.isAuthenticated()) {
@@ -143,12 +142,4 @@ module.exports = function(app, passport, usr){
             res.redirect("login")
         }
     })
-
-    app.get('/goshopping', function(req, res){
-        if (req.isAuthenticated()) {
-            res.render('cardshop', {user: req.user})
-            console.log(req.user.username + " is looking at the card shop")
-    } else {
-            res.redirect('/login')
-        }})
 }

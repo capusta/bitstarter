@@ -1,0 +1,36 @@
+    <div class="row-fluid">
+                    <span class="label" id="profileLabel" data-toggle="tooltip"
+                          title="Keep me up to date">Profile</span>
+        <a href="/settings" class="btn btn-info btn-mini" id="settings"
+           data-toggle="tooltip" title="Account Settings"><i class="icon-edit"> Edit</i></a>
+    </div>
+    <div class="row-fluid">
+        <table class="table">
+            <tbody>
+            <tr><td><p>Name:</p></td>
+                <td><p><%= profile.name %></p></td></tr>
+            <tr><td><p>Address:</p></td>
+                <td><p><%= profile.addressOne %></p></td></tr>
+            <tr><td><p>(optional):</p></td>
+                <td><p><%= profile.addressTwo %></p></td></tr>
+            <tr><td><p>Refund Bitcoin Address:</p></td>
+                <td><div class="hidden-phone"><p>
+                    <a href="http://blockchain.info/address/<%= profile.homeBTC %>">
+                        <%= profile.homeBTC %></a></p>
+                </div>
+                    <div class="visible-phone">
+                        <p> <a href="http://blockchain.info/address/<%= profile.homeBTC %>">
+                            <img src="http://blockchain.info/qr?data=<%= profile.homeBTC %>&size=100">
+                        </a></p>
+                    </div>
+
+                </td></tr>
+            </tbody>
+        </table>
+    </div>
+        <script>
+            $('#profileLabel').tooltip({ animation: true, html: true})
+            $('#profileLabel').addClass('animated fadeInUp');
+            $('#settings').tooltip({ animation: true, html: true})
+            $('#settings').addClass('animated bounceIn');
+        </script>

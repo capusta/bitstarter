@@ -1,0 +1,17 @@
+
+        <table class="table table-striped">
+            <thead>
+            <th>Payment ID</th>
+            <th>Amount</th>
+            <th>Product</th>
+            </thead>
+            <tbody>
+            Total # of payments: <%= orders.length %>
+            <% for(var i=0; i<orders.length; i++) {%>
+            <tr>
+                <td><%= orders[i].pid %></td>
+                <td><%= orders[i].amount %></td>
+                <td><%= orders[i].pname %></td>
+            </tr>
+            <% } %>
+        </table>
