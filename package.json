@@ -15,7 +15,8 @@
     "passport-local": "0.1.x",
     "async": "~0.2.9",
     "connect-roles": "git://github.com/ForbesLindesay/connect-roles#master",
-    "connect-flash": "~0.1.1"
+    "connect-flash": "~0.1.1",
+    "connect": "2.11.x"
   },
   "engines": {
     "node": "0.10.12",
