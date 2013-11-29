@@ -53,6 +53,7 @@ var sio = io.listen(srv);
 sio.configure(function(){
     sio.set("transports", ["xhr-polling"]);
     sio.set("polling duration", 10);
+    sio.set("log level", 2);
 })
 
     console.log("socket.io authorization complete")
@@ -64,7 +65,6 @@ global.db.sequelize.sync().complete(function(err) {
         console.log("starting server to listen")
         sio.set("authorization", function (data, callback){
             var store = sessionStore;
-            console.log("store is " + store)
             if(data.headers.cookie){
                 data.cookie = cookie.parse(data.headers.cookie);
                 data.sessionID = parseSignedCookie(data.cookie['abcd'], process.env.SESSION_SECRET)

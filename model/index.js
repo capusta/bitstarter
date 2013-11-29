@@ -22,7 +22,9 @@ if (!global.hasOwnProperty('db')) {
             protocol: 'postgres',
             port:     port,
             host:     host,
-            logging:  true //false
+            logging:  true, //false
+            maxConcurrentQueries: 20,
+            pool: { maxConnections: 20, maxIdleTime: 30}
         };
         sq = new Sequelize(dbname, user, password, config);
         module.exports = sq;
