@@ -57,7 +57,7 @@ sio.configure(function(){
 
     console.log("socket.io authorization complete")
 
-global.db.sequelize.sync({force: true}).complete(function(err) {
+global.db.sequelize.sync().complete(function(err) {
     if (err) {
         throw err;
     } else {
