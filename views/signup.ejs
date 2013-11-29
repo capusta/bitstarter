@@ -8,9 +8,9 @@
     <link href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css" rel="stylesheet">
     <link rel='stylesheet' href="/site.css" />
 
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" type="text/css" />
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" type="text/css" />
-    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" type="text/css" />
+    <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
     <!-- analytics -->
@@ -54,10 +54,10 @@
     <script>
         var socket = io.connect(window.location.hostname);
         socket.on('username_good', function(){
-            $('#custommessege').text("Username OK")
+            $('#custommessege').html("Username OK")
         })
         socket.on('username_bad', function(){
-            $('#custommessege').text("Username Taken")
+            $('#custommessege').html("Username Taken")
         })
 
     </script>
