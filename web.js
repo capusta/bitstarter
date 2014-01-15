@@ -11,17 +11,13 @@ var express = require('express')
   , passportSocketIo = require('passport.socketio')
   , io = require('socket.io')
   , app = express()
-  //, C3Store = require('c3store')(express)
   , SequelizeStore = require('connect-session-sequelize')(express)
   , parseSignedCookie = connect.utils.parseSignedCookie;
 
 require('./model/index')
-//var sessionStore = new C3Store(global.db.sequelize);
 console.log("connecting session store")
 var MemoryStore = express.session.MemoryStore
 sessionStore = new MemoryStore();
-
-//var sessionStore = new SequelizeStore({db: global.db.sequelize});
 
 app.configure(function(){
     app.set('views', __dirname + '/views');
@@ -54,6 +50,7 @@ sio.configure(function(){
     sio.set("transports", ["xhr-polling"]);
     sio.set("polling duration", 10);
     sio.set("log level", 2);
+    sio.set("heartbeat timeout", 40000)
 })
 
     console.log("socket.io authorization complete")

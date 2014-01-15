@@ -1,5 +1,6 @@
-      ejs = require('ejs')
-    , fs      = require('fs')
+ejs = require('ejs'),
+    fs      = require('fs'),
+    rest = require('restler')
 
 module.exports = function(socket, user){
 
@@ -44,9 +45,42 @@ module.exports = function(socket, user){
             })
     })
     socket.on('get_shop', function(){
-    var path = "./views/partials/cardshop.ejs";
-    socket.emit('displayshop', {data: ejs.render(fs.readFileSync(path).toString(), {u: user.dataValues.username})})
-})
+        var path = "./views/partials/cardshop.ejs";
+        var bc = [];
+        var done = false;
+
+        var bodyVerification = {
+            "button":{
+                "name": "VerifyY50",
+                "type": "buy_now",
+                "price_string": "50",
+                "price_currency_iso": "JPY",
+                "custom": user.dataValues.username,
+                "callback_url": "https://suimo-stage.herokyapp.com/paymentcomplete?secret="+process.env.PAYMENT_COMPLETE_SECRET,
+                "description": "Address verification (refundable)",
+                "style": "custom_small",
+                "include_email":true
+            }
+        }
+        //TODO: DOUBLE CHECK THE POST REQUESTS THEN RENDER
+        rest.postJson('https://coinbase.com/api/v1/buttons?api_key='+process.env.COINBASE_API_KEY, bodyVerification).
+            on('complete', function(data, response){
+                if(data.success){
+                    done = true;
+                    console.log("data is successful")
+                    bc.push(data.button.code);
+                    socket.emit('displayshop', {
+                        data: ejs.render(fs.readFileSync(path).toString(),{
+                            u: user.dataValues.username,
+                            buttonCodes: bc})});
+                } else {
+                    console.log("post request not successful")
+                }
+            })
+
+
+
+    })
     socket.on('checkStepA', function(){
         function noDups( s ) {
             var chars = {}, rv = '';
@@ -58,7 +92,6 @@ module.exports = function(socket, user){
             }
             return rv;
         }
-        console.log("xxx")
         user.stepNumber = noDups(user.stepNumber);
         user.save();
     })

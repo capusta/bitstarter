@@ -20,12 +20,23 @@ module.exports = function(sequelize, DataTypes) {
             addressTwo: {type: DataTypes.STRING, allowNull: true, defaultValue: "City, State, Country, Zip"},
             email: {type: DataTypes.STRING, allowNull: true, defaultValue: "user@domain.com",
             validate: {
-                isEmail: true
+                isEmail: {
+                    msg: "Email not valid, please re-check"
+                }
             }},
-            homeBTC: {type: DataTypes.STRING, allowNull: false, defaultValue: "1BTCorgHwCg6u2YSAWKgS17qUad6kHmtQW"},
+            homeBTC: {type: DataTypes.STRING, allowNull: false, defaultValue: "1BTCorgHwCg6u2YSAWKgS17qUad6kHmtQW",
+            validate: {
+                //just a simple test to make sure the bitcoin address is proper length.
+                //will be simply used for comparisons
+                len: {
+                    args: [27,34],
+                    msg: "Bitcoin Address is not correct"
+                }
+            }},
             paymentBTC: {type: DataTypes.STRING, allowNull: true, defaulValue: "0"},
             oneTimeSecret: {type: DataTypes.STRING, allowNull:true},
-            stepNumber: {type: DataTypes.STRING, allowNull: false, defaultValue: "0"}
+            stepNumber: {type: DataTypes.STRING, allowNull: false, defaultValue: "0"},
+            bitMessegeAddr: {type: DataTypes.STRING, allowNull: true, defaultValue: ""}
     }, {
         setterMethods: {
           phash: function(p) { this.setDataValue('phash', p)}

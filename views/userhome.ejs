@@ -114,8 +114,8 @@
              socket.emit("get_messeges")
          })
          $("#displayshop").click(function(){
-             socket.emit('get_shop');
              socket.emit('checkStepA');
+             socket.emit('get_shop');
          })
          $("#displayorders").click(function(){
              socket.emit('get_orders');

@@ -51,7 +51,8 @@ module.exports = function(app, passport, usr){
                 u.addressOne = req.body.addrOneUpdate;
                 u.addressTwo = req.body.addrTwoUpdate;
                 u.homeBTC = req.body.homeBTCUpdate;
-                u.stepNumber = u.stepNumber.concat('a')
+                u.stepNumber = u.stepNumber.concat('a');
+                u.bitMessegeAddr = req.body.bitmessege;
                 u.save()
                     .success(function() {
 
@@ -60,9 +61,19 @@ module.exports = function(app, passport, usr){
                             res.redirect("userhome")
                         }})})
                     .error(function(err){
-                       req.flash('info','invalid email')
-                        res.redirect("settings")
-                    })})
+                        //there should be a better way to display the error messegs
+                        if(err.email) {
+                            req.flash('info', err.email[0]);
+                            res.redirect("settings")
+                        }
+                        if(err.homeBTC){
+                            req.flash('info',err.homeBTC[0])
+                            res.redirect("settings")
+                        }
+                    }
+                )
+                }
+            )
                 .error(function(err){
                     req.flash('info', 'user not found')
                     res.redirect("settings")

@@ -51,7 +51,10 @@
                 <div class="controls controls-row">
                     <div class="span3">Email:</div>
                     <input type="text" name="emailUpdate" value="<%= user.dataValues.email %>">
-
+                </div>
+                <div class="controls controls-row">
+                    <div class="span3">BitMessege (optional): </div>
+                    <input type="text" name="bitmessege" value="<%= user.dataValues.bitMessegeAddr %>">
                 </div>
                 <div class="controls controls-row">
                     <div class="span3">Address 1:</div>
@@ -65,6 +68,7 @@
                     <div class="span3">Refund Bitcoin Address: </div>
                     <input type="text" name="homeBTCUpdate" value="<%= user.dataValues.homeBTC %>">
                 </div>
+
             <br>
             <input type="submit" class="btn btn-info btn-mini" value="update">
             </form>
