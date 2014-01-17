@@ -18,7 +18,7 @@
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/Chart.js"></script>
     <link rel="stylesheet" href="/animate.css" />
-      <link rel="stylesheet" href="/bootstrap-responsive.css" />
+    <link rel="stylesheet" href="/bootstrap-responsive.css" />
 
       <style type="text/css">
           @media (min-width: 980px) {
@@ -64,8 +64,28 @@
   </head>
   <body>
      <% include _navbar.ejs %>
-
-    <div class="container-fluid">
+     <div class="container-fluid-full">
+         <div class="row-fluid">
+             <div id="sidebar-left" class="span2">
+                 <div class="nav-collapse sidebar-nav collapse nav-collapse-side">
+                     <ul class="nav nav-tabs nav-stacked main-menu">
+                         <li><a href="index.html">
+                                 <i class="icon-bar-chart"></i>
+                                 <span class="hidden-tablet">Other</span>
+                             </a>
+                         </li>
+                         <li><a href="index.html">
+                                 <i class="icon-bar-chart"></i>
+                                 >The Link
+                             </a>
+                         </li>
+                     </ul>
+                 </div>
+             </div>
+             <div class="span10"></div>
+         </div>
+     </div>
+     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span2 text-center">
                 <a href="#" id="displaycards" class="btn btn-primary"><i class="icon-white icon-star"></i>eCash Cards</a>
@@ -99,7 +119,10 @@
         <div class="row-fluid" style="box-shadow: 1px 1px 1px 1px lightgrey; padding-bottom: 5px" id="customcontent">
         <br>
         </div>
+
+
     </div>
+
 
      <script>
          $( "#logo").addClass('animated fadeInLeft');

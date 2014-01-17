@@ -6,6 +6,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+            <% if (locals.user) { %>
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse-side">
+                <span class="icon-bar">x</span>
+                <span class="icon-bar">x</span>
+                <span class="icon-bar">x</span>
+            </button>
+            <% } %>
             <a class="brand" href="/">SuiMo</a>
             <div class="nav-collapse collapse">
                 <ul class="nav">
