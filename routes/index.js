@@ -26,7 +26,7 @@ module.exports = function(app, passport, usr){
     app.get('/userhome', usr.can('access profile'), function(req, res) {
         if(req.isAuthenticated()){
 
-            res.render("userhome", { message: req.flash('info'), user: true})
+            res.render("userhome", { message: req.flash('info'), user: req.user})
         } else {
 
             res.redirect("login")
@@ -35,7 +35,11 @@ module.exports = function(app, passport, usr){
 
     app.get('/settings', usr.can('access profile'), function(req, res) {
         if(req.isAuthenticated()) {
-            res.render("updateprofile", { user : req.user, message: req.flash('info')})
+            try { res.render("updateprofile", { user : req.user, message: req.flash('info')}) }
+            catch (err) {
+                console.log("unable to render update profile screen")
+                res.redirect("login")
+            }
         } else {
             res.redirect("login");
         }
@@ -53,23 +57,20 @@ module.exports = function(app, passport, usr){
                 u.homeBTC = req.body.homeBTCUpdate;
                 u.stepNumber = u.stepNumber.concat('a');
                 u.bitMessegeAddr = req.body.bitmessege;
+                u.type = 'user';
                 u.save()
                     .success(function() {
-
                     global.db.Message.sendMessege("admin",u.username,"Profile Updated",function(isOK){
                         if(isOK){
                             res.redirect("userhome")
                         }})})
                     .error(function(err){
-                        //there should be a better way to display the error messegs
-                        if(err.email) {
-                            req.flash('info', err.email[0]);
-                            res.redirect("settings")
-                        }
+                        if(err.email){
+                            req.flash('info',err.email[0]);res.redirect("settings"); return;}
                         if(err.homeBTC){
-                            req.flash('info',err.homeBTC[0])
-                            res.redirect("settings")
-                        }
+                            req.flash('info',err.homeBTC[0]);res.redirect("settings"); return;}
+                        req.flash('info', 'oops error occured');
+                        res.redirect("settings")
                     }
                 )
                 }
@@ -132,18 +133,21 @@ module.exports = function(app, passport, usr){
                 global.db.User.signup(req.body.username.toLowerCase().trim(), req.body.password1, function(err, user){
                     if(err) {
                         console.log("got error on signup " + err)
-                        req.flash('error', "Username must be alphanumeric, " + err)
+                        req.flash('error', "Username must be alphanumeric, " + err.message)
                         res.redirect("signup")
-                        return};
+                        return
+                    };
+                    if(user){
                     global.db.Message.create({to: user.username, from: "admin", message: "Welcome to Suimo! "})
                         .success(function(m){
                             user.addMessege(m);
                         });
                     req.login(user, function(err){
                         if(err) return next(err);
-                        res.redirect("/settings");
-                    });
-                    console.log(req.body.username + " signed up")
+                        res.redirect("/userhome");
+                        console.log(req.body.username + " signed up")
+                    })};
+
                 });
             }
         });

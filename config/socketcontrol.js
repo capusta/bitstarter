@@ -1,20 +1,22 @@
 ejs = require('ejs'),
     fs      = require('fs'),
-    rest = require('restler')
+    rest = require('restler'),
+    async = require('async');
 
 module.exports = function(socket, user){
 
+    // ---- returns all the Suica and Passmo cards a user has ----
     socket.on('get_mycards', function(){
     var path = "./views/partials/moneycards.ejs"
     var cards_json = []
-
         user.getMoneycards().success(function(cards){
             cards.forEach(function(c){
                 cards_json.push({cid: c.cardID, ct: c.type, cm: c.condition, amt: c.amount})
             })
-            socket.emit('mymoneycards', {data: ejs.render(fs.readFileSync(path).toString(), {cards: cards_json})})
+            socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {cards: cards_json})})
         })
 });
+    // ---- returns all  orders made ----
     socket.on('get_orders', function(){
     var path = "./views/partials/orders.ejs";
     var payments_json = [];
@@ -22,17 +24,13 @@ module.exports = function(socket, user){
         payments.forEach(function(p){
             payments_json.push({pid: p.payment_ID, amount: p.amount, pname: p.productName})
         })
-        socket.emit('myorders', {data: ejs.render(fs.readFileSync(path).toString(), {orders: payments_json})})
+        socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {orders: payments_json})})
 })
 } )
     socket.on('get_profile', function(){
-        var path = "./views/partials/myprofile.ejs"
-        var profile_json = []
-        profile_json.name = user.dataValues.name
-        profile_json.addressOne = user.dataValues.addressOne
-        profile_json.addressTwo = user.dataValues.addressTwo
-        profile_json.homeBTC = user.dataValues.homeBTC
-        socket.emit('myprofile', {data: ejs.render(fs.readFileSync(path).toString(), {profile: profile_json})})
+        var path = "./views/partials/myprofile.ejs";
+        var html = ejs.render(fs.readFileSync(path).toString(), {user: user});
+        socket.emit('render', {data: html});
     })
     socket.on('get_messeges', function(){
     var path = "./views/partials/messeges.ejs"
@@ -41,14 +39,14 @@ module.exports = function(socket, user){
                 messeges.forEach(function(c){
                     messeges_json.push({time: c.time, from: c.from, message: c.message})
                 })
-                socket.emit('mymesseges', {data: ejs.render(fs.readFileSync(path).toString(), {messeges: messeges_json})})
+                socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {messeges: messeges_json})})
             })
     })
     socket.on('get_shop', function(){
         var path = "./views/partials/cardshop.ejs";
         var bc = [];
         var done = false;
-
+        //TODO: MAKE A BUNCH OF THESE CALLS FOR EVERY SINGLE CARD
         var bodyVerification = {
             "button":{
                 "name": "VerifyY50",
@@ -69,7 +67,7 @@ module.exports = function(socket, user){
                     done = true;
                     console.log("data is successful")
                     bc.push(data.button.code);
-                    socket.emit('displayshop', {
+                    socket.emit('render', {
                         data: ejs.render(fs.readFileSync(path).toString(),{
                             u: user.dataValues.username,
                             buttonCodes: bc})});
@@ -114,10 +112,9 @@ module.exports = function(socket, user){
                 user.save().success(function(){
                     socket.emit('push_dashboard');
                 });
-
             }
         })
-    })
+    });
     socket.on('checkStepE', function(){
         user.stepNumber = user.stepNumber.concat('e');
         user.save().success(function(){
@@ -138,9 +135,11 @@ module.exports = function(socket, user){
     })
     socket.on('clear_checklist', function(){
         user.stepNumber = "0";
-        user.save;
-        socket.emit('push_dashboard');
+        user.save().success(function(){
+            socket.emit('push_dashboard');
+        });
     })
+
     socket.on('get_data', function(){
     var path = "./views/partials/home.ejs";
     var chartdata = [] ;
@@ -154,6 +153,7 @@ module.exports = function(socket, user){
         color : "#6ED663"
     }
 
+            //wow we need to reduce all that code
     if (~user.dataValues.stepNumber.indexOf('a')){
         chartdata.push(good);
         step_a = true;
@@ -182,13 +182,9 @@ module.exports = function(socket, user){
         chartdata.push(good);
         step_g = true;
     } else {chartdata.push(bad)}
-    socket.emit('renderchart', {content: ejs.render(fs.readFileSync(path).toString(),
+    socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(),
         {chart: chartdata, step_a: step_a, step_b: step_b, step_c: step_c, step_d: step_d, step_e: step_e, step_f: step_f,
             step_g: step_g})})
 })
-
 }
-      /*<!--&lt;!&ndash;<% if (user.usertype === 'admin') { %>-->
-      <!--<a href="/admin" class="btn btn-info btn-mini"><i class="icon-home"></i></a><br>-->
-      <!--<% } %>&ndash;&gt;-->*/
 

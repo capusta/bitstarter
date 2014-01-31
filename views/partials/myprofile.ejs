@@ -8,19 +8,22 @@
         <table class="table">
             <tbody>
             <tr><td><p>Name:</p></td>
-                <td><p><%= profile.name %></p></td></tr>
+                <td><p><%= user.name %></p></td></tr>
+            <tr><td><p>Email:</p></td>
+                <td><p><%= user.email %></p></td></tr>
             <tr><td><p>Address:</p></td>
-                <td><p><%= profile.addressOne %></p></td></tr>
+                <td><p><%= user.addressOne %></p></td></tr>
             <tr><td><p>(optional):</p></td>
-                <td><p><%= profile.addressTwo %></p></td></tr>
+                <td><p><%= user.addressTwo %></p></td></tr>
             <tr><td><p>Refund Bitcoin Address:</p></td>
                 <td><div class="hidden-phone"><p>
-                    <a href="http://blockchain.info/address/<%= profile.homeBTC %>">
-                        <%= profile.homeBTC %></a></p>
+                            <% var btc = user.homeBTC%>
+                    <a href="http://blockchain.info/address/<%= btc %>">
+                        <%= btc %></a></p>
                 </div>
                     <div class="visible-phone">
-                        <p> <a href="https://blockchain.info/address/<%= profile.homeBTC %>">
-                            <img src="https://blockchain.info/qr?data=<%= profile.homeBTC %>&size=100">
+                        <p> <a href="https://blockchain.info/address/<%= btc %>">
+                            <img src="https://blockchain.info/qr?data=<%= btc %>&size=100">
                         </a></p>
                     </div>
 

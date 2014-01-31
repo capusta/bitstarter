@@ -103,5 +103,7 @@ div.row {
 }
 #messeges {
     -webkit-animation-delay: 1s;
-
+}
+#displaymyprofile {
+    width: auto;
 }

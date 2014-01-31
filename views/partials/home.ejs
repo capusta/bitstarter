@@ -27,8 +27,9 @@
 </script>
 
 <div class="row-fluid cool-font" style="overflow: hidden;">
-    <div class="span4"><p><b>Step 1:</b></p><p>Update Shipping address - so we know where to ship your Suica/Passmo Card</p>
-            <br><br>
+    <div class="span4 panel panel-default">
+        <div class="panel-body">
+            <p><b>Step 1:</b></p><p>Update Shipping address - so we know where to ship your Suica/Passmo Card</p>
             <ul class="fa-ul">
                 <% if (step_a) { %>
                 <li><i class="fa-li fa fa-check-square-o"></i>Profile Updated </li>
@@ -36,6 +37,7 @@
                 <li><a href="/settings" class="btn btn-small">Update Profile </a></li>
                 <% } %>
             </ul>
+        </div>
         </div>
     <div class="span4"><p><b>Step 2:</b></p><p>Read Bitcoin Literature and get a bitcoin Wallet.  Here is something to get started: <br>
         <a href = "https://www.jreast.co.jp/e/pass/suica.html">JREast.co.jp</a><br>
@@ -75,7 +77,7 @@
         <div class="row-fluid">
 
             <b>SuiMo Service Completeness</b><br>
-            <canvas id="myChart" width="120%" height="120%"></canvas>
+            <canvas id="myChart" width="150%" height="150%"></canvas>
         </div>
         <div class="row-fluid" style="text-align: right">
             <a href="#" id="clearChecklist" class="btn btn-mini">reset</a>

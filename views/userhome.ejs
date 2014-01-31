@@ -4,21 +4,23 @@
     <meta charset="utf-8">
     <title>Main</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">
-    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    <!--<link href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css" rel="stylesheet">-->
 
-    <link rel='stylesheet' href='/site.css' />
+    <!--<link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">-->
+
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="/bootstrap-responsive.css" />
+
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" type="text/css" />
 
     <script type="text/javascript" src="/jquery.js"></script>
-    <script type="text/javascript" src="/bootstrap.js"></script>
+      <script type="text/javascript" src="/bootstrap.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/Chart.js"></script>
     <link rel="stylesheet" href="/animate.css" />
-    <link rel="stylesheet" href="/bootstrap-responsive.css" />
+      <link rel='stylesheet' href='/site.css' />
 
       <style type="text/css">
           @media (min-width: 980px) {
@@ -30,105 +32,67 @@
               top: 90%;
           }
       </style>
-
       <script>
           var socket = io.connect(window.location.hostname);
-
           socket.on('my_username', function(u){
               $('#welcome').text(u.username);
               socket.emit("get_data");
           })
           socket.on('push_dashboard', function(){
+              //we need to re-query the possibly new data
               socket.emit("get_data");
           })
-          socket.on('mymoneycards', function(data){
+          socket.on('render', function(data){
               $('#customcontent').html(data.data)
-          })
-          socket.on('myprofile', function(data){
-              $('#customcontent').html(data.data)
-          })
-          socket.on('mymesseges', function(data){
-              $('#customcontent').html(data.data)
-          })
-          socket.on('displayshop', function(data){
-              $('#customcontent').html(data.data)
-          })
-          socket.on('myorders', function(data){
-              $('#customcontent').html(data.data)
-          })
-          socket.on('renderchart', function(data){
-              $('#customcontent').html(data.content)
           })
       </script>
-
   </head>
   <body>
      <% include _navbar.ejs %>
      <div class="container-fluid-full">
          <div class="row-fluid">
-             <div id="sidebar-left" class="span2">
-                 <div class="nav-collapse sidebar-nav collapse nav-collapse-side">
-                     <ul class="nav nav-tabs nav-stacked main-menu">
-                         <li><a href="index.html">
-                                 <i class="icon-bar-chart"></i>
-                                 <span class="hidden-tablet">Other</span>
-                             </a>
-                         </li>
-                         <li><a href="index.html">
-                                 <i class="icon-bar-chart"></i>
-                                 >The Link
-                             </a>
-                         </li>
+             <div class="span2">
+
+                 <div class="collapse nav-collapse" id="sideMenu" >
+                     <ul class="nav nav-pills nav-stacked nav-justified" id="sidebarUL">
+
+                         <li><a href="#" id="displaycards">
+                                     <i class="fa fa-credit-card"></i> Cash Cards</a>
+                             </li>
+                         <li><a href="#" id="displaymyprofile"><i class="fa fa-user"></i>
+                                 Profile
+                             </a></li>
+                         <li><a href="#" id="displaymymesseges"><i class="fa fa-envelope-o"></i>
+                                 Messeges
+                             </a></li>
+                         <li><a href="#" id="displayorders"><i class="fa fa-list-ul"></i>
+                                 My Orders
+                             </a></li>
+                         <li><a href="#" id="displayshop"><i class="fa fa-shopping-cart"></i>
+                                 Card Shop
+                             </a></li>
+                         <li><a href="/logout" id="displayshop"><i class="fa fa-sign-out"></i>
+                                 Log Out
+                             </a></li>
                      </ul>
                  </div>
              </div>
-             <div class="span10"></div>
+             <div id="logo" class="cool-font span9">
+                 <h4 id="welcome"> </h4>
+                 <% if (message) { %>
+                  <%= message %>
+                 <% } %>
+             </div>
+             <div class="span9" style=" padding-bottom: 5px" id="customcontent" />
          </div>
-     </div>
-     <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span2 text-center">
-                <a href="#" id="displaycards" class="btn btn-primary"><i class="icon-white icon-star"></i>eCash Cards</a>
-            </div>
-            <div class="span2 text-center">
-            <a href="#" id="displaymyprofile" class="btn btn-inverse"><i class="icon-white icon-user"></i> Profile</a>
-                </div>
-            <div class="span2 text-center">
-            <a href="#" id="displaymymesseges" class="btn btn-inverse"><i class="icon-white icon-envelope"></i> Messeges</a>
-                </div>
-            <div class="span2 text-center">
-            <a href="#" id="displayorders" class="btn btn-inverse"><i class="icon-white icon-list-alt"></i> My Orders</a>
-                </div>
-                <div class="span2 text-center">
-            <a href="#" id="displayshop" class="btn btn-info"><i class="icon-white icon-shopping-cart"></i> Card Shop</a>
-                    </div>
-            <div class="span2 text-center">
-            <a href="/logout" class="btn btn-inverse" id="displaylogout"><i class="fa fa-star"></i> Log Out</a>
-                </div>
-        </div>
-        <br>
-        <div class="row-fluid">
-            <div id="logo" class="cool-font span10">
-                <h4 id="welcome"> </h4>
-                <% if (message) { %>
-                <p><%= message %></p>
-                <% } %>
-            </div>
-            </div>
-
-        <div class="row-fluid" style="box-shadow: 1px 1px 1px 1px lightgrey; padding-bottom: 5px" id="customcontent">
-        <br>
-        </div>
-
-
     </div>
-
-
      <script>
          $( "#logo").addClass('animated fadeInLeft');
-         $('#messeges').tooltip({ animation: true, html: true})
          $("#displaycards").click(function(){
              socket.emit("get_mycards")
+         })
+         $("#displaycards").on('show', function(){
+             alert("shit")
          })
          $("#displaymyprofile").click(function(){
              socket.emit("get_profile")
@@ -144,11 +108,7 @@
              socket.emit('get_orders');
          })
 
-         $('#displaymyprofile').width($('#displaycards').width());
-         $('#displaymymesseges').width($('#displaycards').width());
-         $('#displayorders').width($('#displaycards').width());
-         $('#displayshop').width($('#displaycards').width());
-         $('#displaylogout').width($('#displaycards').width());
+
      </script>
   </body>
 </html>

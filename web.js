@@ -49,13 +49,13 @@ var sio = io.listen(srv);
 sio.configure(function(){
     sio.set("transports", ["xhr-polling"]);
     sio.set("polling duration", 10);
-    sio.set("log level", 2);
+    sio.set("log level", 1);
     sio.set("heartbeat timeout", 40000)
 })
 
     console.log("socket.io authorization complete")
 
-global.db.sequelize.sync().complete(function(err) {
+global.db.sequelize.sync({force: false}).complete(function(err) {
     if (err) {
         throw err;
     } else {
@@ -80,8 +80,6 @@ sio.on('connection', function(socket){
     var user = null;
     var sessionStore = global.sessionStore;
     var sessionID = socket.handshake.sessionID;
-    console.log("incoming connection: " + " session store: " + sessionStore + " sessionID" + sessionID)
-    console.log("user is " + socket.handshake)
     sessionStore.get(sessionID, function(err, session){
         if(!session){
            return null;
