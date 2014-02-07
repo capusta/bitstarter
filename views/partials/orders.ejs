@@ -4,14 +4,16 @@
             <th>Payment ID</th>
             <th>Amount</th>
             <th>Product</th>
+            <th>Refunded</th>
             </thead>
             <tbody>
             Total # of payments: <%= orders.length %>
-            <% for(var i=0; i<orders.length; i++) {%>
+            <% for(var i=(orders.length)-1; i>=0; i--) {%>
             <tr>
                 <td><%= orders[i].pid %></td>
                 <td><%= orders[i].amount %></td>
                 <td><%= orders[i].pname %></td>
+                <td><%= orders[i].refundstatus %></td>
             </tr>
             <% } %>
         </table>

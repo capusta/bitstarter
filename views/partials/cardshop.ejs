@@ -1,3 +1,8 @@
+<div class="alert center">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Please make sure that you update your profile with your address.</strong>
+</div>
+<div id="wrap" style="padding-bottom: 1%"><h3 class="jumbo cool-font">USD/BTC: <span id="targetPrice"></span></h3></div>
 <div id="cardshopcarousel" class="carousel slide">
     <ol class="carousel-indicators">
         <li data-target="#cardshopcarousel" data-slide-to="0" class="active"></li>
@@ -90,7 +95,38 @@
     <a class="carousel-control left" href="#cardshopcarousel" data-slide="prev">&lsaquo;</a>
     <a class="carousel-control right" href="#cardshopcarousel" data-slide="next">&rsaquo;</a>
 </div>
-        <script>
-            $('.carousel').carousel({ interval: false})
 
-        </script>
+<script type="text/javascript" src="/js/countUp.js"></script>
+<script>
+
+    var from = 0;
+    var to = 0;
+    $.getJSON("https://data.mtgox.com/api/2/BTCUSD/money/ticker",function(result){
+        to = result.data.last_all.value;
+        from = result.data.last_all.value;
+    })
+    var demo;
+    var updateCouter = function() {
+        demo = null;
+        from = to;
+        $.getJSON("https://data.mtgox.com/api/2/BTCUSD/money/ticker",function(result){
+            to = result.data.last_all.value
+            demo = new countUp("targetPrice", from, to, 2, 10);
+            demo.start();
+        })
+    }
+    var c = function() {
+        updateCouter();
+        setTimeout(function() {
+            console.log('d')
+            d();
+        }, 10000);
+    }
+    var d = function() {
+        updateCouter();
+        setTimeout(function() {
+            console.log('d')
+            c();
+        }, 10000);
+    }
+</script>

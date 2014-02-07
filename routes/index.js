@@ -6,7 +6,7 @@ module.exports =    global.https   = require('https'),
 
 module.exports = function(app, passport, usr){
 
-    require('./money.js')(app, passport, usr);
+    require('./money.js')(app, passport);
     require('./admin.js')(app, passport, usr);
     require('./messeges.js')(app, passport, usr);
 
@@ -50,14 +50,23 @@ module.exports = function(app, passport, usr){
 
             global.db.User.find( { where: {username: req.user.username}})
                 .success(function(u){
+                    var cache_email = u.email;
+                    var cache_homeBTC = u.homeBTC;
                 u.name = req.body.nameUpdate;
-                u.email = req.body.emailUpdate;
                 u.addressOne = req.body.addrOneUpdate;
                 u.addressTwo = req.body.addrTwoUpdate;
-                u.homeBTC = req.body.homeBTCUpdate;
+                    if(req.body.homeBTCUpdate != null){
+                        u.homeBTC = req.body.homeBTCUpdate.trim();
+                    } else {
+                        u.homeBTC = req.body.homeBTCUpdate;
+                    }
+                if (cache_email != req.body.emailUpdate){
+                    u.email = req.body.emailUpdate;
+                    u.emailVerified = 'FALSE';
+                }
                 u.stepNumber = u.stepNumber.concat('a');
                 u.bitMessegeAddr = req.body.bitmessege;
-                u.type = 'user';
+                u.usertype = 'user';
                 u.save()
                     .success(function() {
                     global.db.Message.sendMessege("admin",u.username,"Profile Updated",function(isOK){
@@ -109,8 +118,7 @@ module.exports = function(app, passport, usr){
 
     });
 
-    app.post('/login',
-        passport.authenticate('local', {
+    app.post('/login',passport.authenticate('local', {
             successRedirect: '/userhome',
             failureRedirect: '/login',
             failureFlash: true
@@ -122,7 +130,6 @@ module.exports = function(app, passport, usr){
                 console.log("user already exists " + n);
                 res.locals.oldname = req.body.username || "user";
                 res.render("signup", {message: req.flash('error')});
-
             } else {
                 if(req.body.password1 != req.body.password2){
                     console.log("passwords do not match");

@@ -1,11 +1,14 @@
-module.exports = function(app, passport, usr){
+module.exports = function(app, passport){
 
     app.get('/orders', function(request, response) {
         global.db.Order.findAll().success(function(orders) {
             var orders_json = [];
             //console.log(orders);
+            orders.sort( function(a,b){
+                return a - b;
+            });
             orders.forEach(function(order) {
-                orders_json.push({id: order.coinbase_id, amount: order.amount, time: order.time});
+                orders_json.push({id: order.coinbase_id, amount: order.amount});
             });
             // Uses views/orders.ejs
             response.render("orders", {orders: orders_json, user: request.user});
@@ -16,16 +19,8 @@ module.exports = function(app, passport, usr){
     });
 
     var checkBlockChain = function(u, hash){
-        var paymentBTC = u.paymentBTC;
-        var submittedBTC = u.homeBTC;
-        if (paymentBTC === submittedBTC){
-            console.log("The user is already verified");
-            u.stepNumber = u.stepNumber.concat('c');
-            u.save();
-            return;
-        }
-        console.log("user is not verified")
-        console.log("processing hash " + hash)
+        homeBTC = u.homeBTC;
+
         https.get("https://blockchain.info/rawtx/"+hash+"?format=json", function(rr) {
             var body = '';
             rr.on('data', function(chunk) {body += chunk;});
@@ -33,18 +28,28 @@ module.exports = function(app, passport, usr){
                 try {
                     var x = JSON.parse(body);
                     for (var i in x.inputs) {
-                        if (submittedBTC === x.inputs[i].prev_out.addr) {
+                        if (homeBTC === x.inputs[i].prev_out.addr) {
+                            //NOTE: Must never set payment BTC any other way ... only when an order that comes in
+                            //Otherwise ask users for verification by 1st - setting their address, then
+                            //2nd - buying a verification.
                             u.paymentBTC = x.inputs[i].prev_out.addr;
-                            u.save();
+                            u.stepNumber = u.stepNumber.concat('c');
+
+                            u.BTCverified = 'TRUE';
+                            u.save().success(function(u){
+                                console.log("user verified")
+                            });
                             break;
                         };
                     }
                 }
                 catch (err){
-                    console.log("unable to parse blockchain hash");
-                    console.log("specifically, hash " + hash + " for order ")
+                    console.log("unable to parse blockchain hash: " + err);
+                    console.log("specifically, hash " + hash)
+                    //TODO: SAVE HASH, HOMEBTC, USERNAME - TO RUN LATER AND VERIFY THEM
                 }
-            })});
+            }
+            )});
     }
 
     app.post('/paymentcomplete?', function(req, res) {
@@ -55,10 +60,11 @@ module.exports = function(app, passport, usr){
         } else {
             var b = req.body;
             try {
-                console.log("parsing payment " + b.order.status);
                 if (b.order.status != "completed") {
-                    console.log("status is not completed ");
-                    res.status(418).send()}
+                    console.log("Order " + b.order.id + " status is not completed ");
+                    res.status(418).send();
+                    return;
+                }
                 var p = global.db.Payment;
                 //we now have a completed payment for a user, lets start building the payment first
                 //populate with basic information before we check the user.
@@ -93,8 +99,8 @@ module.exports = function(app, passport, usr){
                                     return;
                                 });
                         } else {
-                            console.log("Successfully found user BUT - but for transaction " + b.order.id);
-                            console.log("order username was " + b.order.custom)
+                            console.log("Found NULL user for order " + b.order.id);
+                            console.log("Order username was " + b.order.custom)
                             //save the transaction, even though it has no users attached to it.
                             new_payment_instance.save();
                             res.status(200).send();

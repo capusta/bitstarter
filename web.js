@@ -35,22 +35,19 @@ app.configure(function(){
     app.use(usr);
 })
 
-
-
 require('./config/passport')(passport)
 require('./config/connectroles')(usr)
 require('./routes')(app, passport, usr);
 
-
-console.log("configuration done, ready for the server")
-
 srv = http.createServer(app);
 var sio = io.listen(srv);
+module.exports = global.sio;
+
 sio.configure(function(){
     sio.set("transports", ["xhr-polling"]);
     sio.set("polling duration", 10);
-    sio.set("log level", 1);
-    sio.set("heartbeat timeout", 40000)
+    sio.set("log level", 2);
+    sio.set("heartbeat timeout", 60000)
 })
 
     console.log("socket.io authorization complete")
@@ -71,7 +68,6 @@ global.db.sequelize.sync({force: false}).complete(function(err) {
         srv.listen(app.get('port'), function() {
             console.log("server is listening on " + app.get('port'))
         });
-
     }
 });
 
@@ -81,20 +77,21 @@ sio.on('connection', function(socket){
     var sessionStore = global.sessionStore;
     var sessionID = socket.handshake.sessionID;
     sessionStore.get(sessionID, function(err, session){
-        if(!session){
+        if(!session || err){
+            console.log(' no session found ')
            return null;
         }
-        if (! err){
-            if(session.passport.user){
-                global.db.User.find( { where: {username: session.passport.user}}).success(function(u){
-                    require('./config/socketcontrol')(socket, u);
-                    socket.emit('my_username', {username: "Welcome " + u.dataValues.username})
+        if(session.passport.user){
+            global.db.User.find( { where: {username: session.passport.user}}).success(function(u){
+                socket.join(u.username); console.log("socket joined " + u.username)
+                require('./config/socketcontrol')(socket, u);
+                require('./config/socket_email')(socket, u);
+                socket.emit('my_username', {username: "Welcome " + u.dataValues.username});
                 })
             } else {
+                socket.join(sessionID);
                 require('./config/socketgeneral')(socket);
             }
-        }
-        else { console.log("error - cannot find session in the session store")}
     })
 })
 

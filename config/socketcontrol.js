@@ -13,6 +13,7 @@ module.exports = function(socket, user){
             cards.forEach(function(c){
                 cards_json.push({cid: c.cardID, ct: c.type, cm: c.condition, amt: c.amount})
             })
+            console.log('emitting moneycards' + user.username)
             socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {cards: cards_json})})
         })
 });
@@ -22,7 +23,7 @@ module.exports = function(socket, user){
     var payments_json = [];
     user.getPayments().success(function(payments){
         payments.forEach(function(p){
-            payments_json.push({pid: p.payment_ID, amount: p.amount, pname: p.productName})
+            payments_json.push({pid: p.payment_ID, amount: p.amount, pname: p.productName, refundstatus: p.refundstatus})
         })
         socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {orders: payments_json})})
 })
@@ -42,6 +43,9 @@ module.exports = function(socket, user){
                 socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {messeges: messeges_json})})
             })
     })
+    //TODO: GRAB CODES FOR BUTTON GENERATION FOR THE WEB STORE
+    //TODO: MAKE THE STORE A BIT NICER
+    //TODO: ADD THE PRICE UPDATER THINGIE
     socket.on('get_shop', function(){
         var path = "./views/partials/cardshop.ejs";
         var bc = [];
@@ -53,7 +57,7 @@ module.exports = function(socket, user){
                 "type": "buy_now",
                 "price_string": "50",
                 "price_currency_iso": "JPY",
-                "custom": user.dataValues.username,
+                "custom": user.username,
                 "callback_url": "https://suimo-stage.herokyapp.com/paymentcomplete?secret="+process.env.PAYMENT_COMPLETE_SECRET,
                 "description": "Address verification (refundable)",
                 "style": "custom_small",
@@ -61,16 +65,18 @@ module.exports = function(socket, user){
             }
         }
         //TODO: DOUBLE CHECK THE POST REQUESTS THEN RENDER
-        rest.postJson('https://coinbase.com/api/v1/buttons?api_key='+process.env.COINBASE_API_KEY, bodyVerification).
-            on('complete', function(data, response){
-                if(data.success){
+        rest.postJson('https://coinbase.com/api/v1/buttons?api_key='+process.env.COINBASE_API_KEY, bodyVerification)
+            .once('complete', function(data, response){
+                console.log('conbase query for ' + user.username)
+                if(data){
                     done = true;
-                    console.log("data is successful")
                     bc.push(data.button.code);
-                    socket.emit('render', {
+                    socket.emit('rendershop', {
                         data: ejs.render(fs.readFileSync(path).toString(),{
                             u: user.dataValues.username,
                             buttonCodes: bc})});
+                    console.log('store for ' + user.username);
+                    console.log(bc)
                 } else {
                     console.log("post request not successful")
                 }
@@ -139,7 +145,6 @@ module.exports = function(socket, user){
             socket.emit('push_dashboard');
         });
     })
-
     socket.on('get_data', function(){
     var path = "./views/partials/home.ejs";
     var chartdata = [] ;

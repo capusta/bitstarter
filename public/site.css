@@ -107,3 +107,14 @@ div.row {
 #displaymyprofile {
     width: auto;
 }
+
+#wrap {
+    min-height:100%;
+    height:auto !important;
+    height:100%;
+    margin:0 auto -25px auto;
+    text-align: center;
+}
+h3.jumbo.cool-font{
+    color: #8A8A8A;
+}

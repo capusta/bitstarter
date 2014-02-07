@@ -20,7 +20,8 @@
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/Chart.js"></script>
     <link rel="stylesheet" href="/animate.css" />
-      <link rel='stylesheet' href='/site.css' />
+    <link rel='stylesheet' href='/site.css' />
+
 
       <style type="text/css">
           @media (min-width: 980px) {
@@ -43,7 +44,12 @@
               socket.emit("get_data");
           })
           socket.on('render', function(data){
-              $('#customcontent').html(data.data)
+              $('#customcontent').html(data.data);
+          })
+          socket.on('rendershop', function(data){
+              $('#customcontent').html(data.data);
+              $('.carousel').carousel({ interval: false});
+              c();
           })
       </script>
   </head>
@@ -57,13 +63,16 @@
                      <ul class="nav nav-pills nav-stacked nav-justified" id="sidebarUL">
 
                          <li><a href="#" id="displaycards">
-                                     <i class="fa fa-credit-card"></i> Cash Cards</a>
+                                     <i class="fa fa-credit-card"></i> Cash Cards
+                                         <% if (user.hasCashCardAlert()) {%>
+                                         <span class="badge badge-info" id="cardbadge">!</span> <%}%> </a>
                              </li>
                          <li><a href="#" id="displaymyprofile"><i class="fa fa-user"></i>
                                  Profile
                              </a></li>
                          <li><a href="#" id="displaymymesseges"><i class="fa fa-envelope-o"></i>
-                                 Messeges
+                                 Messeges <% if (user.hasMessegesAlert()) {%>
+                                            <span class="badge badge-warning" id="messegebadge">!</span> <%}%>
                              </a></li>
                          <li><a href="#" id="displayorders"><i class="fa fa-list-ul"></i>
                                  My Orders
@@ -89,16 +98,15 @@
      <script>
          $( "#logo").addClass('animated fadeInLeft');
          $("#displaycards").click(function(){
-             socket.emit("get_mycards")
-         })
-         $("#displaycards").on('show', function(){
-             alert("shit")
+             socket.emit("get_mycards");
+             $("#cardbadge").slideToggle();
          })
          $("#displaymyprofile").click(function(){
              socket.emit("get_profile")
          })
          $("#displaymymesseges").click(function(){
-             socket.emit("get_messeges")
+             socket.emit("get_messeges");
+             $("#messegebadge").slideToggle();
          })
          $("#displayshop").click(function(){
              socket.emit('checkStepA');
@@ -106,7 +114,7 @@
          })
          $("#displayorders").click(function(){
              socket.emit('get_orders');
-         })
+         });
 
 
      </script>

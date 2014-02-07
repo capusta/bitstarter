@@ -10,7 +10,13 @@
             <tr><td><p>Name:</p></td>
                 <td><p><%= user.name %></p></td></tr>
             <tr><td><p>Email:</p></td>
-                <td><p><%= user.email %></p></td></tr>
+                <td><p><%= user.email %> <%if (user.emailVerified) {%>
+                        <i class="fa fa-check-circle-o" id="emailVerified"
+                           data-toggle="tooltip" title="Verified Email Address"></i> <%}%>
+                        <% if (!user.emailVerified) {%>
+                       <a href="#"><span class="label" id="verifyMe" data-toggle="tooltip"
+                             title="Send Verification Email">Verify</span></a> <%}%>
+                    </p></td></tr>
             <tr><td><p>Address:</p></td>
                 <td><p><%= user.addressOne %></p></td></tr>
             <tr><td><p>(optional):</p></td>
@@ -19,21 +25,35 @@
                 <td><div class="hidden-phone"><p>
                             <% var btc = user.homeBTC%>
                     <a href="http://blockchain.info/address/<%= btc %>">
-                        <%= btc %></a></p>
+                        <%= btc %> </a> <% if (user.BTCverified) {%>
+                            <i class="fa fa-check-circle-o" id="btcVerified"
+                               data-toggle="tooltip" title="Verified BTC Address"></i>
+                            <%}%>
+                        </p>
                 </div>
                     <div class="visible-phone">
                         <p> <a href="https://blockchain.info/address/<%= btc %>">
                             <img src="https://blockchain.info/qr?data=<%= btc %>&size=100">
-                        </a></p>
+                        </a><br> <%if (user.BTCverified) {%>
+                            <i class="fa fa-check-circle-o" id="btcVerified"
+                               data-toggle="tooltip" title="Verified BTC Address"></i> <%}%> </p>
                     </div>
 
                 </td></tr>
             </tbody>
         </table>
+
     </div>
         <script>
             $('#profileLabel').tooltip({ animation: true, html: true})
             $('#profileLabel').addClass('animated fadeInUp');
             $('#settings').tooltip({ animation: true, html: true})
             $('#settings').addClass('animated bounceIn');
+            $('#btcVerified').tooltip({animation: true, html:true})
+            $('#emailVerified').tooltip({animation: true, html:true})
+            $('#verifyMe').tooltip({animation: true, html:true})
+            $('#verifyMe').click(function(){
+                socket.emit('send verification email');
+                $('#verifyMe').slideToggle();
+            })
         </script>

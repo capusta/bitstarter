@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Really Simple HTML Email Template</title>
+
+</head>
+
+<body bgcolor="#f6f6f6">
+
+<!-- body -->
+<table class="body-wrap">
+    <tr>
+        <td></td>
+        <td class="container" bgcolor="#FFFFFF">
+
+            <!-- content -->
+            <div class="content">
+                <table>
+                    <tr>
+                        <td>
+                            <p>Hi <%= username %> </p>
+                            <h3>Thank you for registering with SuiMo!</h3>
+                            <p>We hope you will have a great time in Japan!</p>
+                            <h2>What Now?</h2>
+                            <p>Please click the link below to complete verification.  This just makes it easier for us to email you
+                            if there are any problems.  Hopefully we won't have to email you at all :)</p>
+                            <table>
+                                <tr>
+                                    <td class="padding">
+
+                                        <p><a href="http://usskdr.ignorelist.com:63195/secret/<%= code %>" class="btn-secondary">
+                                                Click here</a></p>
+                                        <p>If you cannot see the above link, please use: http://usskdr.ignorelist.com:63195/secret/<%= code %></p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p>If you have any questions, concerns, or suggestions for how we can improve - don't hesitate to email us: info@suimo.pw</p>
+                            <p>Very respectfuly,</p>
+                            <p>Alexei</p>
+                            <p><a href="http://twitter.com/papaya_san">Follow @papaya_san on Twitter</a></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- /content -->
+
+        </td>
+        <td></td>
+    </tr>
+</table>
+<!-- /body -->
+
+<!-- footer -->
+<table class="footer-wrap">
+    <tr>
+        <td></td>
+        <td class="container">
+
+            <!-- content -->
+            <div class="content">
+                <table>
+                    <tr>
+                        <td align="center">
+                            <p>Don't like these annoying emails? Reply with the subject "UNSUBSCRIBE".
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- /content -->
+
+        </td>
+        <td></td>
+    </tr>
+</table>
+<!-- /footer -->
+
+</body>
+</html>
