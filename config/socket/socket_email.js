@@ -1,6 +1,6 @@
 fs      = require('fs'),
-    b64 = require('../config/base64url'),
-    email = require("../node_modules/emailjs/email"),
+    b64 = require('../base64url'),
+    email = require("../../node_modules/emailjs/email"),
     path = require('path'),
     templateDir = path.join(__dirname, '../templates'),
     emailTemplates = require("email-templates");
@@ -31,7 +31,7 @@ module.exports = function(socket, user){
                     server.send({
                         from: "Suimo <info@suimo.pw>",
                         to: user.name+"<"+ user.email + ">",
-                        subject: "just testing to LS",
+                        subject: "SuiMo - Email Confirmation",
                         attachment:
                             [
                                 {data: html, alternative: true}

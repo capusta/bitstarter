@@ -84,13 +84,13 @@ sio.on('connection', function(socket){
         if(session.passport.user){
             global.db.User.find( { where: {username: session.passport.user}}).success(function(u){
                 socket.join(u.username); console.log("socket joined " + u.username)
-                require('./config/socketcontrol')(socket, u);
-                require('./config/socket_email')(socket, u);
+                require('./config/socket/socketcontrol')(socket, u);
+                require('./config/socket/socket_email')(socket, u);
                 socket.emit('my_username', {username: "Welcome " + u.dataValues.username});
                 })
             } else {
                 socket.join(sessionID);
-                require('./config/socketgeneral')(socket);
+                require('./config/socket/socketgeneral')(socket);
             }
     })
 })

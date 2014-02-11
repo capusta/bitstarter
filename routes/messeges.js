@@ -36,7 +36,8 @@ module.exports = function(app, passport, usr){
                 //this is a model instance method that will decode the one time encrypted action
                 if(!err){
                     command = actn.toString('utf8').slice(5,actn.length-5).split(",")[0];
-                    if (action === 'new_email'){
+                    console.log('command is ' + command)
+                    if (command === 'new_email'){
                         u.emailVerified = 'TRUE';
                         u.removeOneTimeSecret(function(err){
                             if(err){console.log('unable to remove onetimeSecret')}
@@ -44,8 +45,9 @@ module.exports = function(app, passport, usr){
                         u.save();
                         req.flash('error','Email Verified, Please Log In')
                         res.redirect("login")
+                        return;
                     };
-                    if (action === 'change_password'){
+                    if (command === 'change_password'){
                         //TODO: get the body of the request to change the password
                         console.log("change password - messeges.js")
                         res.redirect("login");

@@ -131,7 +131,7 @@ module.exports = function(app, passport, usr){
                 res.locals.oldname = req.body.username || "user";
                 res.render("signup", {message: req.flash('error')});
             } else {
-                if(req.body.password1 != req.body.password2){
+                if(req.body.password1 !== req.body.password2){
                     console.log("passwords do not match");
                     req.flash('error', "Passwords does not match");
                     res.redirect("signup")

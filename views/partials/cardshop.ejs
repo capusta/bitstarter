@@ -118,15 +118,14 @@
     var c = function() {
         updateCouter();
         setTimeout(function() {
-            console.log('d')
             d();
         }, 10000);
     }
     var d = function() {
         updateCouter();
         setTimeout(function() {
-            console.log('d')
             c();
         }, 10000);
     }
+
 </script>

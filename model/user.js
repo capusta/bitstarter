@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
                     isAlphanumeric: true
                 }
             },
-            phash: {type: DataTypes.STRING(255), unique: true, allowNull: false},
+            phash: {type: DataTypes.STRING(255), unique: false, allowNull: false},
             usertype: {type: DataTypes.STRING, allowNull: false, defaultValue: 'user'},
             name: {type: DataTypes.STRING, allowNull: true, defaultValue: 'Weary Traveler',
                 set: function(v){
