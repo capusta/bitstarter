@@ -86,6 +86,7 @@ sio.on('connection', function(socket){
                 socket.join(u.username); console.log("socket joined " + u.username)
                 require('./config/socket/socketcontrol')(socket, u);
                 require('./config/socket/socket_email')(socket, u);
+                require("./config/socket/socket_store")(socket, u);
                 socket.emit('my_username', {username: "Welcome " + u.dataValues.username});
                 })
             } else {

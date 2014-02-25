@@ -51,19 +51,6 @@
             box-shadow: 0 1px 2px rgba(0,0,0,.05);
         }
     </style>
-    <script>
-        var socket = io.connect(window.location.hostname);
-        socket.on('username_good', function(){
-            $('#custommessege').html("Username OK")
-        })
-        socket.on('username_bad', function(){
-            $('#custommessege').html("Username Taken")
-        })
-        socket.on('username_not_alpha', function(){
-            $('#custommessege').html("Username not Alphanumeric")
-        })
-
-    </script>
 </head>
 <body>
 <% include _navbar.ejs %>
@@ -87,9 +74,6 @@
 </div>
 <script>
     var t;
-    var check_username = function(){
-        socket.emit('check_username', {username: $('#username').val()});
-    }
     var check_password = function(){
         if($('#pass1').val() != $('#pass2').val()){
             $('#custommessege').text("Passwords do not Match");
@@ -97,10 +81,6 @@
             $('#custommessege').text("Passwords OK");
         }
     }
-    $('#username').keypress(function(event){
-        clearTimeout(t);
-        t = setTimeout(check_username, 1000)
-    })
     $('#pass2').keypress(function(event){
         clearTimeout(t)
         t = setTimeout(check_password, 500)

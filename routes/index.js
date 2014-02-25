@@ -139,7 +139,7 @@ module.exports = function(app, passport, usr){
                 }
                 global.db.User.signup(req.body.username.toLowerCase().trim(), req.body.password1, function(err, user){
                     if(err) {
-                        console.log("got error on signup " + err)
+                        console.log("got errors on signup " + err)
                         req.flash('error', "Username must be alphanumeric, " + err.message)
                         res.redirect("signup")
                         return
@@ -150,9 +150,11 @@ module.exports = function(app, passport, usr){
                             user.addMessege(m);
                         });
                     req.login(user, function(err){
-                        if(err) return next(err);
-                        res.redirect("/userhome");
-                        console.log(req.body.username + " signed up")
+                        if(err) {
+                            return next(err); }
+                        else {
+                            res.redirect("login");
+                        }
                     })};
 
                 });

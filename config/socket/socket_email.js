@@ -2,7 +2,7 @@ fs      = require('fs'),
     b64 = require('../base64url'),
     email = require("../../node_modules/emailjs/email"),
     path = require('path'),
-    templateDir = path.join(__dirname, '../templates'),
+    templateDir = path.join(__dirname, '../../templates'),
     emailTemplates = require("email-templates");
 
 var server = email.server.connect({

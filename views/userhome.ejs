@@ -33,12 +33,17 @@
           socket.on('render', function(data){
               $('#spinhere').html('');
               $('#customcontent').html(data.data);
-          })
+          });
           socket.on('rendershop', function(data){
               $('#spinhere').html('');
               $('#customcontent').html(data.data);
-              $('.carousel').carousel({ interval: false});
               c();
+              $("#getSuicaChoices").click(function(){
+                  socket.emit('getCardItem', {cardType: "Suica"})
+              });
+              $("#getPassmoChoices").click(function(){
+                  socket.emit('getCardItem', {cardType: "Passmo"})
+              });
           })
           var opts = {
               lines: 11, // The number of lines to draw
@@ -94,12 +99,6 @@
                      </ul>
                  </div>
                  <div id="spinhere" style="left: 50%; position: relative; padding-top: 30%"></div>
-             </div>
-             <div id="logo" class="cool-font span9">
-                 <h4 id="welcome"> </h4>
-                 <% if (message) { %>
-                  <%= message %>
-                 <% } %>
              </div>
              <div class="span9" style=" padding-bottom: 5px" id="customcontent" />
          </div>

@@ -40,51 +40,19 @@ module.exports = function(socket, user){
                 messeges.forEach(function(c){
                     messeges_json.push({time: c.time, from: c.from, message: c.message})
                 })
-                socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {messeges: messeges_json})})
+                socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(),
+                    {messeges: messeges_json
+                    , user: user})})
             })
-    })
-    //TODO: GRAB CODES FOR BUTTON GENERATION FOR THE WEB STORE
-    //TODO: MAKE THE STORE A BIT NICER
-    //TODO: ADD THE PRICE UPDATER THINGIE
+    });
+
     socket.on('get_shop', function(){
-        var path = "./views/partials/cardshop.ejs";
-        var bc = [];
-        var done = false;
-        //TODO: MAKE A BUNCH OF THESE CALLS FOR EVERY SINGLE CARD
-        var bodyVerification = {
-            "button":{
-                "name": "VerifyY50",
-                "type": "buy_now",
-                "price_string": "50",
-                "price_currency_iso": "JPY",
-                "custom": user.username,
-                "callback_url": "https://suimo-stage.herokyapp.com/paymentcomplete?secret="+process.env.PAYMENT_COMPLETE_SECRET,
-                "description": "Address verification (refundable)",
-                "style": "custom_small",
-                "include_email":true
-            }
-        }
-        //TODO: DOUBLE CHECK THE POST REQUESTS THEN RENDER
-        rest.postJson('https://coinbase.com/api/v1/buttons?api_key='+process.env.COINBASE_API_KEY, bodyVerification)
-            .once('complete', function(data, response){
-                console.log('conbase query for ' + user.username)
-                if(data){
-                    done = true;
-                    bc.push(data.button.code);
-                    socket.emit('rendershop', {
-                        data: ejs.render(fs.readFileSync(path).toString(),{
-                            u: user.dataValues.username,
-                            buttonCodes: bc})});
-                    console.log('store for ' + user.username);
-                    console.log(bc)
-                } else {
-                    console.log("post request not successful")
-                }
-            })
-
-
-
-    })
+        var shopPath = "./views/partials/cardshop.ejs";
+        socket.emit('rendershop', {
+            data: ejs.render(fs.readFileSync(shopPath).toString(),{
+                u: user.dataValues.username})});
+        console.log(user.username + " store_load");
+    });
     socket.on('checkStepA', function(){
         function noDups( s ) {
             var chars = {}, rv = '';

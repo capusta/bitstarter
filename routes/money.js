@@ -37,16 +37,23 @@ module.exports = function(app, passport){
 
                             u.BTCverified = 'TRUE';
                             u.save().success(function(u){
-                                console.log("user verified")
+                                console.log(u.username + " verified")
                             });
                             break;
-                        };
+                        }
+                    }
+                    //We are going to save the hash of the transaction and run it later
+                    if(!u.BTCverified){
+                        u.paymentBTC = hash;
+                        u.save();
                     }
                 }
                 catch (err){
                     console.log("unable to parse blockchain hash: " + err);
-                    console.log("specifically, hash " + hash)
-                    //TODO: SAVE HASH, HOMEBTC, USERNAME - TO RUN LATER AND VERIFY THEM
+                    console.log("specifically, hash " + hash);
+                    u.paymentBTC = hash;
+                    u.save();
+                    //TODO: RUN SOMETHING LATER TO VERIFY THE ACCOUNT ONCE THE HASH IS ON THE BLOCKCHAIN
                 }
             }
             )});

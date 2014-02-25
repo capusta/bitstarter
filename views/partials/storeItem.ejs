@@ -1,0 +1,50 @@
+
+<div class="span4" id="imgDiv">
+    <img class="displayed" src=<%= imgURL %> class="img-rounded">
+</div>
+<div class="span4" id="infodiv">
+    <form>
+        <div class="control-group">
+            <label class="control-label">
+                <b>Price</b>
+            </label>
+            <div class="controls">
+                    <% for(var i=0; i < choices.length; i++) {%>
+                <label class="radio" for="radio">
+                    <input type="radio" name="card" value="<%= choices[i].id%>" name="radio">
+                    <%= choices[i].desc %>
+                    </label>
+                    <% } %>
+            </div>
+        </div>
+        <a class="btn btn-small" id = "getCode">Generate <i class="fa fa-play-circle-o fa-lg">&nbsp;</i></a>
+    </form>
+</div>
+<div class="span4" id="itemPayment">
+
+</div>
+
+<script>
+    socket.on('renderPayment', function(data){
+        $('#itemPayment').fadeOut(function(){
+            $('#itemPayment').html(data.data).fadeIn();
+        });
+    })
+    $('#imgDiv').removeClass('span4').addClass('span6');
+    $('#infodiv').removeClass('span4').addClass('span6');
+
+    $("#getCode").click(function(){
+        $("#itemPayment").html(spinner.el);
+        var i = $('#imgDiv');
+        var n = $('#infodiv');
+        i.fadeOut(function(){
+            i.removeClass('span6').addClass('span4');
+        });
+        n.fadeOut(function(){
+            n.removeClass('span6').addClass('span4');
+        });
+        i.fadeIn();n.fadeIn();
+        socket.emit('getCode', {id: $('input[name="card"]:checked').val()});
+    });
+
+</script>

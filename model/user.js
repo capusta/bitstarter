@@ -6,9 +6,9 @@ module.exports = function(sequelize, DataTypes) {
     return sequelize.define("User", {
             username: {type: DataTypes.STRING, unique: true, allowNull: false,
                 validate: {
-                    isAlphanumeric: true
-                }
-            },
+                    isAlphanumeric: true,
+                    len: [4,20]
+                }},
             phash: {type: DataTypes.STRING(255), unique: false, allowNull: false},
             usertype: {type: DataTypes.STRING, allowNull: false, defaultValue: 'user'},
             name: {type: DataTypes.STRING, allowNull: true, defaultValue: 'Weary Traveler',
@@ -80,8 +80,7 @@ module.exports = function(sequelize, DataTypes) {
                     return this.setDataValue('paymentBTC', crypto.encrypt(v.toString('utf8')));
                 },
                 get: function(){
-                    v = this.getDataValue('paymentBTC');
-                    console.log(" v is " + v + " is v zero " + v == '0')
+                    var v = this.getDataValue('paymentBTC');
                     if(v !== null && v != '0'){
                         return crypto.decrypt(this.getDataValue('paymentBTC'));
                     }
@@ -136,8 +135,8 @@ module.exports = function(sequelize, DataTypes) {
                     .success(function(u){console.log(uname + " signed up")
                         done(null, u);})
                     .error(function(err){
-                        console.log("got error on signup " + err.message)
-                        done(err.message, null)
+                        console.log("User model got error on signup " + err.message)
+                        done(err, null)
                     })
             })
         }},

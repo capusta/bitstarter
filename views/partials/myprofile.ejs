@@ -2,57 +2,86 @@
                     <span class="label" id="profileLabel" data-toggle="tooltip"
                           title="Keep me up to date">Profile</span>
         <a href="/settings" class="btn btn-info btn-mini" id="settings"
-           data-toggle="tooltip" title="Account Settings"><i class="icon-edit"> Edit</i></a>
+           data-toggle="tooltip" title="Account Settings"><i class="fa fa-pencil"> Edit</i></a>
     </div>
-    <div class="row-fluid">
+    <div class="row-fluid cool-font">
         <table class="table">
             <tbody>
             <tr><td><p>Name:</p></td>
                 <td><p><%= user.name %></p></td></tr>
             <tr><td><p>Email:</p></td>
-                <td><p><%= user.email %> <%if (user.emailVerified) {%>
+                <td><%= user.email %> <%if (user.emailVerified) {%>
                         <i class="fa fa-check-circle-o" id="emailVerified"
                            data-toggle="tooltip" title="Verified Email Address"></i> <%}%>
                         <% if (!user.emailVerified) {%>
-                       <a href="#"><span class="label" id="verifyMe" data-toggle="tooltip"
+
+                        <div id="emailDiv">
+                        <a href="#"><span class="label" id="verifyMe" data-toggle="tooltip"
                              title="Send Verification Email">Verify</span></a> <%}%>
-                    </p></td></tr>
+                        </div>
+
+                    </td></tr>
             <tr><td><p>Address:</p></td>
                 <td><p><%= user.addressOne %></p></td></tr>
             <tr><td><p>(optional):</p></td>
                 <td><p><%= user.addressTwo %></p></td></tr>
             <tr><td><p>Refund Bitcoin Address:</p></td>
-                <td><div class="hidden-phone"><p>
+                <td><div class="hidden-phone">
                             <% var btc = user.homeBTC%>
                     <a href="http://blockchain.info/address/<%= btc %>">
                         <%= btc %> </a> <% if (user.BTCverified) {%>
                             <i class="fa fa-check-circle-o" id="btcVerified"
                                data-toggle="tooltip" title="Verified BTC Address"></i>
                             <%}%>
-                        </p>
+                            <% if (!user.BTCverified) {%>
+                        <div id="btcDiv">
+                            <a href="#"><span class="label" id="btcVerifyMe" data-toggle="tooltip"
+                                              title="Verify Address (Necessary if using a shared wallet))">Verify</span></a> <%}%>
+                        </div>
+                            <br>
                 </div>
                     <div class="visible-phone">
                         <p> <a href="https://blockchain.info/address/<%= btc %>">
                             <img src="https://blockchain.info/qr?data=<%= btc %>&size=100">
                         </a><br> <%if (user.BTCverified) {%>
                             <i class="fa fa-check-circle-o" id="btcVerified"
-                               data-toggle="tooltip" title="Verified BTC Address"></i> <%}%> </p>
+                               data-toggle="tooltip" title="Verified BTC Address"></i> <%}%>
+                        <% if (!user.BTCverified) {%>
+                        <a href="#"><span class="label" id="btcVerifyMe" data-toggle="tooltip"
+                                          title="Verify Address (Necessary if using a shared wallet))">Verify</span></a> <%}%>
+                        </p>
                     </div>
+                    <div">[ If you own your Wallet above (i.e. if it is not a shared wallet) then there
+                    is no need to verify.  Verification will be automatic once you place an order.  If, however in a rare case
+                    that your Bitcoin address does not match the above refund address, we may ask to manually verify your refund
+                    address ]</div>
 
                 </td></tr>
             </tbody>
         </table>
 
     </div>
+
         <script>
+            socket.on('renderVerification', function(data){
+                console.log('page verification socket messege received w code ' + data.buttonCode)
+                var buttonCode = data.buttonCode;
+                $('#btcDiv').html( '<a href="https://coinbase.com/checkouts/' + buttonCode + '" target="_blank"><img alt="Pay With Bitcoin" src="https://coinbase.com/assets/buttons/buy_now_small.png"></a>'
+                );
+            })
             $('#profileLabel').tooltip({ animation: true, html: true}).addClass('animated fadeInUp');
             $('#settings').tooltip({ animation: true, html: true})
             $('#settings').addClass('animated bounceIn');
             $('#btcVerified').tooltip({animation: true, html:true})
-            $('#emailVerified').tooltip({animation: true, html:true})
+            $('#emailVerified').tooltip({animation: true, html:true});
+            $('#btcVerifyMe').tooltip({animation: true, html: true});
             $('#verifyMe').tooltip({animation: true, html:true})
             $('#verifyMe').click(function(){
                 socket.emit('send verification email');
-                $('#verifyMe').slideToggle();
+                $('#emailDiv').html( "<b> Email Sent</b>");
+            });
+            $('#btcVerifyMe').click(function(){
+                socket.emit('verifyMe');
+                console.log('verification request sent')
             })
         </script>
