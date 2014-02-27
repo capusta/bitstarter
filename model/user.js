@@ -170,6 +170,22 @@ module.exports = function(sequelize, DataTypes) {
                     }
                 })
             },
+            resetpassword: function(callback){
+                //cannot call "this" in the hash function
+                usr=this;
+                p = crypto.generate(10);
+                hash(p, process.env.SALT, function(err, ret_hash){
+                    if (err){
+                        console.log("user.js - password change for user " + usr.username + " failed ")
+                        callback(false)
+                    }
+                    else {
+                        console.log("new password generated for " + usr.username);
+                        usr.updateAttributes({phash: ret_hash.toString('base64')});
+                        callback(p)
+                    }
+                })
+            },
             removeOneTimeSecret: function(callback){
                 //breaking my abstraction a little bit
                 this.setDataValue('oneTimeSecret', null);

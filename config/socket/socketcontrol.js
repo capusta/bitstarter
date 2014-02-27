@@ -5,6 +5,15 @@ ejs = require('ejs'),
 
 module.exports = function(socket, user){
 
+    socket.on('authPassChange', function(data){
+        user.changepassword(data, function(isOK){
+            if(isOK){
+                socket.emit('authPasswordChanged', {msg: '[password changed]'})
+            } else{
+                socket.emit('authPasswordChanged', {msg: '[error changing password]'})
+            }
+        })
+    })
     // ---- returns all the Suica and Passmo cards a user has ----
     socket.on('get_mycards', function(){
     var path = "./views/partials/moneycards.ejs"

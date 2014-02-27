@@ -21,16 +21,14 @@
                     <tr>
                         <td>
                             <p>Hi <%= username %> </p>
-                            <h3>Thank you for registering with SuiMo!</h3>
-                            <p>We hope you will have a great time in Japan!</p>
-                            <h2>What Now?</h2>
-                            <p>Please click the link below to complete verification.  Hopefully we won't have to email you at all :)</p>
+                            <p>We have received a password change request.</p>
+                            <p>Please follow the link below to confirm.</p>
                             <table>
                                 <tr>
                                     <td class="padding">
 
                                         <p><a href="<%= process.env.SECRET_CALLBACK %><%= code %>" class="btn-secondary">
-                                                Click here</a></p>
+                                                Confirm</a></p>
                                         <p>If you cannot see the above link, please use: <br><br>
                                             <%= process.env.SECRET_CALLBACK %><%= code %></p>
                                     </td>

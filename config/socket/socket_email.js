@@ -11,14 +11,17 @@ var server = email.server.connect({
     host: process.env.EMAIL_HOST,
     ssl: true});
 
+var tooManyEmails = function(user){
+    if (user.emailCount > 10) {
+        console.log(user.username + " sending too many emails");
+        global.db.Message.sendMessege("admin",user.username,"Too many email verifications, please take a break",function(isOK){});
+        return true;
+    } else { return false;}
+}
 module.exports = function(socket, user){
 
     socket.on('send verification email',function(){
-        if (user.emailCount > 10) {
-            console.log(user.username + " sending too many emails");
-            global.db.Message.sendMessege("admin",user.username,"Too many email verifications, please take a break",function(isOK){});
-            return;
-        }
+        if (tooManyEmails(usr)){  return; }
         user.oneTimeSecret = 'new_email';
         user.emailCount = user.emailCount+1;
         user.save().success(function(){
@@ -35,7 +38,6 @@ module.exports = function(socket, user){
                         attachment:
                             [
                                 {data: html, alternative: true}
-
                             ]
                     }, function(err, message) {
                         if(message) { console.log("new user " + user.username + " messege sent"); }
@@ -43,7 +45,6 @@ module.exports = function(socket, user){
                     });
                 }});
             //remember to convert to url save base 64
-            //console.log("user should navigate to " + b64.urlEncode(user.oneTimeSecret))
             });
         });
     });

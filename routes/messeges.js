@@ -1,4 +1,15 @@
-b64 = require('../config/base64url');
+fs      = require('fs'),
+    b64 = require('../config/base64url'),
+    email = require("../node_modules/emailjs/email"),
+    path = require('path'),
+    templateDir = path.join(__dirname, '../templates'),
+    emailTemplates = require("email-templates");
+
+var server = email.server.connect({
+    user: process.env.EMAIL_USERNAME,
+    password: process.env.EMAIL_PASS,
+    host: process.env.EMAIL_HOST,
+    ssl: true});
 
 module.exports = function(app, passport, usr){
 
@@ -47,10 +58,37 @@ module.exports = function(app, passport, usr){
                         res.redirect("login")
                         return;
                     };
-                    if (command === 'change_password'){
-                        //TODO: get the body of the request to change the password
-                        console.log("change password - messeges.js")
-                        res.redirect("login");
+                    if (command === 'resetpassword'){
+                        u.resetpassword(function(p){
+                            if(p){
+                                locals = {username: u.username, pass: p};
+                                emailTemplates(templateDir, function(err, template){
+                                    template('pass_reset', locals, function(err, html, text){
+                                        if (err) {
+                                            console.log("error in making the reset password template " + err.message);
+                                        } else {
+                                            server.send({
+                                                from: "Suimo <info@suimo.pw>",
+                                                to: u.name+"<"+ u.email + ">",
+                                                subject: "SuiMo - Password Reset",
+                                                attachment:
+                                                    [
+                                                        {data: html, alternative: true}
+                                                    ]
+                                            }, function(err, message) {
+                                                if(message) { console.log("new user " + u.username + " messege sent"); }
+                                                else {console.log("messeges.js - error in sending email for new user template")}
+                                            });
+                                        }});
+                                });
+                                u.removeOneTimeSecret(function(err){})
+                                req.flash('error','Please check your email for your new password.');
+                                res.redirect("login");
+                            }
+                            else {
+                                console.log('messeges.js - error setting new password')
+                            }
+                        })
                     }
                 } else{
                    console.log('unable to get secret action for user ' + u.username)

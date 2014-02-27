@@ -151,8 +151,8 @@ module.exports = function(socket, user){
                         bullets: [
                             {desc: "\&yen;500 Card Deposit (refundable)"},
                             {desc: "\&yen;500 Fee (includes shipment)"},
-                            {desc: "\&yen;"+(amnt-1000) + " Usable Funds (remainder refundable)"},
-                            {desc: "TOTAL: \&yen;" + (amnt)}],
+                            {desc: "\&yen;"+(amnt) + " Usable Funds (remainder refundable)"},
+                            {desc: "TOTAL: \&yen;" + (amnt+1000)}],
                         buttonCode: buttonCode
                     });
                     socket.emit("renderPayment", {data: newData})
