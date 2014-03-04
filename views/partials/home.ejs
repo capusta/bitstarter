@@ -24,12 +24,18 @@
     $("#clearChecklist").click(function(){
         socket.emit('clear_checklist');
     })
+        socket.on('no_payments', function(){
+            var d = $('#checkStepD');
+            d.fadeOut(function(){
+                d.html('<b>No Orders Found</b>').fadeIn();
+            });
+        })
 </script>
 
-<div class="row-fluid cool-font" style="overflow: hidden;">
-    <div class="span4 panel panel-default">
+<div class="row-fluid cool-font">
+    <div class="span4" id="step1Panel">
         <div class="panel-body">
-            <p><b>Step 1:</b></p><p>Update Shipping address - so we know where to ship your Suica/Passmo Card</p>
+            <p><b>Step 1:</b></p><p>Update Shipping address - so we know where to ship.</p>
             <ul class="fa-ul">
                 <% if (step_a) { %>
                 <li><i class="fa-li fa fa-check-square-o"></i>Profile Updated </li>
@@ -39,9 +45,12 @@
             </ul>
         </div>
         </div>
-    <div class="span4"><p><b>Step 2:</b></p><p>Read Bitcoin Literature and get a bitcoin Wallet.  Here is something to get started: <br>
+    <div class="span4">
+        <p><b>Step 2:</b></p><p>Read Bitcoin Literature and get a bitcoin Wallet.  Here is something to get started: <br>
         <a href = "https://www.jreast.co.jp/e/pass/suica.html">JREast.co.jp</a><br>
-        <a href="/info#xxbitcoin">More Info</a> </p>
+        <a href="/info#xxbitcoin">More Info</a><br>
+        <a href="http://www.yes-tokio.es/pictures/moversextokio/Suicauserguide.pdf">Suica User's Guide</a>
+        </p>
             <ul class="fa-ul">
                 <% if (step_b) { %>
                 <li><i class="fa-li fa fa-check-square-o"></i>Read Everything </li>
@@ -50,7 +59,8 @@
                 <% } %>
             </ul>
     </div>
-    <div class="span4 "><p><b>Step 3:</b></p><p>Update your BTC wallet (Hopefully you already have one).<br>
+    <div class="span4">
+        <p><b>Step 3:</b></p><p>Update your BTC wallet (Hopefully you already have one).<br>
         You can update your wallet info <a href="/settings">Here</a> </p><br> <br>
         <ul class="fa-ul">
             <% if (step_c) { %>

@@ -26,6 +26,13 @@ IMG.displayed {
     width: auto;
     height: 100px;
 }
+IMG.greyBranding {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+    height: 40px;
+}
 div.addthis_toolbox {
     width:180px;
     margin: 0 auto;
@@ -40,20 +47,20 @@ div.nudgeleft {
     padding: 2px;
     border: 1px solid;
     border-color: #888888;
-    border-radius: 3px;
+    border-radius: 1px;
 }
 .thermometer {
     padding: 1%;
-    border-radius: 7px;
-    border: 5px solid;
-    background-color: rgba(35, 221, 24, 0.54);
+    border-radius: 3px;
+    border: 0px;
+    background-color: rgba(152, 255, 154, 0.54);
     border-color: #a4aa9e;
 }
 .order {
     padding: 1%;
-    border: 5px solid;
-    border-radius: 7px;
-    background-color: rgba(240, 135, 137, 0.44);
+    border: 0px;
+    border-radius: 3px;
+    background-color: rgba(240, 177, 180, 0.44);
     border-color: #a4aa9e;
 }
 .social {
@@ -65,9 +72,9 @@ div.row {
     border: 0px solid;
 }
 .footer{
-    background-color: #1b1b1b;
+    background-color: #565658;
     text-align: center;
-    color: azure;
+    color: #b6b4bb;
 }
 .video-container {
     position: relative; /* keeps the aspect ratio */
@@ -117,4 +124,12 @@ div.row {
 }
 h3.jumbo.cool-font{
     color: #8A8A8A;
+}
+
+.cardDisplayed {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
 }

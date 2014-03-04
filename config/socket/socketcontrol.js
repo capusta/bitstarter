@@ -13,7 +13,16 @@ module.exports = function(socket, user){
                 socket.emit('authPasswordChanged', {msg: '[error changing password]'})
             }
         })
-    })
+    });
+    socket.on('changeUserData', function(data){
+       switch(data.item){
+           case 'name':
+               user.name = data.value;
+               break;
+           default:
+               socket.emit('displayError', {msg: 'Unable to Change the ' + data.item})
+       }
+    });
     // ---- returns all the Suica and Passmo cards a user has ----
     socket.on('get_mycards', function(){
     var path = "./views/partials/moneycards.ejs"
@@ -31,6 +40,7 @@ module.exports = function(socket, user){
     var path = "./views/partials/orders.ejs";
     var payments_json = [];
     user.getPayments().success(function(payments){
+        console.log("payments for user: " + payments);
         payments.forEach(function(p){
             payments_json.push({pid: p.payment_ID, amount: p.amount, pname: p.productName, refundstatus: p.refundstatus})
         })
@@ -95,6 +105,8 @@ module.exports = function(socket, user){
                 user.save().success(function(){
                     socket.emit('push_dashboard');
                 });
+            } else {
+                socket.emit('no_payments')
             }
         })
     });

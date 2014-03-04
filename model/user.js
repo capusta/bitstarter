@@ -10,6 +10,7 @@ module.exports = function(sequelize, DataTypes) {
                     len: [4,20]
                 }},
             phash: {type: DataTypes.STRING(255), unique: false, allowNull: false},
+            salt: {type: DataTypes.STRING, unique: false, allowNull: false, defaultValue:crypto.generate()},
             usertype: {type: DataTypes.STRING, allowNull: false, defaultValue: 'user'},
             name: {type: DataTypes.STRING, allowNull: true, defaultValue: 'Weary Traveler',
                 set: function(v){
@@ -128,10 +129,11 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         classMethods: {
         signup: function(uname, pword, done) {
-            hash(pword, process.env.SALT, function(err, ret_hash){
+            var s = crypto.generate();
+            hash(pword, s, function(err, ret_hash){
                 if (err) {done(err, null, {message: "bad hash"})}
 
-                global.db.User.build({ username: uname.toLowerCase(), phash: ret_hash.toString('base64')}).save()
+                global.db.User.build({ username: uname.toLowerCase(), phash: ret_hash.toString('base64'), salt: s}).save()
                     .success(function(u){console.log(uname + " signed up")
                         done(null, u);})
                     .error(function(err){
@@ -142,10 +144,12 @@ module.exports = function(sequelize, DataTypes) {
         }},
 
         instanceMethods: {
+            /*Every user is an object pulled from the database.  Every user can validate their own password.*/
             validPassword: function(pword, answer) {
-                     var myhash = this.phash;
-                     var uname = this.username;
-                     hash(pword, process.env.SALT, function (err, ret_hash) {
+                var myhash = this.phash;
+                var uname = this.username;
+                var s = this.salt;
+                     hash(pword, s, function (err, ret_hash) {
                         if (err) {return answer(false);}
                         if (ret_hash.toString('base64') !== myhash) {
                             answer(false);
@@ -155,17 +159,20 @@ module.exports = function(sequelize, DataTypes) {
                             return answer(true);
                      }});
               },
+            /*Allows a user to change their password, assuming the request is authenticated.*/
             changepassword: function(p, callback){
-                //kind of strange notation, but cannot call "this" in the hash function
-                    usr=this;
-                hash(p, process.env.SALT, function(err, ret_hash){
+                //kind of strange notation, but cannot call "this" in the hash function */
+                usr=this;
+                s = crypto.generate();
+                //New salt is generated every single time a password is changed.
+                hash(p, s, function(err, ret_hash){
                     if (err){
                              console.log("password change for user " + usr.username + " failed ")
                              callback(false)
                          }
                     else {
                         console.log("password changed for " + usr.username);
-                        usr.updateAttributes({phash: ret_hash.toString('base64')});
+                        usr.updateAttributes({phash: ret_hash.toString('base64'), salt: s});
                         callback(true)
                     }
                 })
@@ -173,15 +180,18 @@ module.exports = function(sequelize, DataTypes) {
             resetpassword: function(callback){
                 //cannot call "this" in the hash function
                 usr=this;
+                //generate a random 10 letter password
                 p = crypto.generate(10);
-                hash(p, process.env.SALT, function(err, ret_hash){
+                //then generate a random 32 byte salt ... lol, salt is longer than the password
+                s = crypto.generate();
+                hash(p, s, function(err, ret_hash){
                     if (err){
                         console.log("user.js - password change for user " + usr.username + " failed ")
                         callback(false)
                     }
                     else {
                         console.log("new password generated for " + usr.username);
-                        usr.updateAttributes({phash: ret_hash.toString('base64')});
+                        usr.updateAttributes({phash: ret_hash.toString('base64'), salt: s});
                         callback(p)
                     }
                 })

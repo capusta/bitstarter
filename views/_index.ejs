@@ -50,8 +50,8 @@
             <div class="span3">
                 <img class="displayed" id="btcimage" src="https://dl.dropboxusercontent.com/u/8869944/suimo/btc.jpg"/>
                 <h3 class="text-center"> pay by bitcoins </h3>
-                <p>Visit bitstamp.com or mtgox.com to get bitcoins in your wallet.  Pay us in bitcoin and we will send you a Japanese
-                e-cash card pre-charged with Yen.  Kind of like a debit card ... </p>
+                <p>Visit an exchange (<a href="http://bitcoincharts.com/markets/currency/USD.html">here</a>) to get coins.  Pay us
+                    in bitcoin and we will send you a Japanese e-cash card pre-charged with Yen.  Kind of like a debit card ... </p>
             </div>
             <div class="span3">
                 <img class="displayed" id="suicapassmo" src="https://dl.dropboxusercontent.com/u/8869944/suimo/suicapassmo.jpg" width="50%" height="50%" />
@@ -68,7 +68,7 @@
                 <img class="displayed" src="https://dl.dropboxusercontent.com/u/8869944/suimo/back.jpg"/>
                 <h3 class="text-center">get remainder</h3>
                 <p>Done using Suica or Passmo?  Have a left-over balance?  Just send us the card back, and we will refund your balance in
-                    Bitcoins. What else can you wish for?</p>
+                    Bitcoins. (Inluding the deposit.)</p>
             </div>
         </div>
     </div>
@@ -81,47 +81,66 @@
         <div class="span6">
             <div class="thermometer">
                 <h2>Suica</h2>
-                <p>Japanese e-currency mostly used for "Japan Rail" train lines.</p>
+                <p>Japanese e-currency debit card for "Japan Rail" train lines, cabs, buses, stores,
+                    and retail shops around any train station.  As of March 31, 2012 there were approximately 177,630
+                retail locations around the country.  (<a href="https://www.jreast.co.jp/e/investor/ar/2012/pdf/ar_2012_10.pdf">source</a>)</p>
 
             </div>
             <br>
             <div class="order">
                 <h2>Passmo</h2>
-                <p>Japanese e-currency used mostly for private train lines and stores.</p>
+                <p>Japanese e-currency used mostly for private (underground metro) train lines, busses, convinience stores,
+                    and countless shops around any train station.</p>
             </div>
             <div class="span8 offset2 social">
-
-                <div class="nudgeleft">
-                    <a class="coinbase-button" data-code="5a5f3f2466d3c7650c0c2d90ea186255"
-                       data-button-style="custom_large" data-button-text="Preorder with Bitcoin"
-                       href="https://coinbase.com/checkouts/5a5f3f2466d3c7650c0c2d90ea186255">Preorder with Bitcoin</a>
-                    <script src="https://coinbase.com/assets/button.js" type="text/javascript"></script>
-                </div>
-
-
+                <br>
                 <!-- AddThis Button BEGIN -->
                 <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
                     <a class="addthis_button_facebook"></a>
                     <a class="addthis_button_twitter"></a>
                     <a class="addthis_button_google_plusone_share"></a>
                     <a class="addthis_button_compact"></a>
-
                 </div>
                 <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
-                <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5200cb5c1ecf11b2"></script>
+                <script type="text/javascript" src="https://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5200cb5c1ecf11b2"></script>
                 <!-- AddThis Button END -->
 
             </div>
         </div>
     </div>
+    <div class="container hidden-tablet hidden-phone">
+    <div class="row-fluid" style="padding: 1%" id="branding">
+        <div class="span4"></div>
+        <div class="span4">
+            <div class="span2">
+                <img  class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/coinbase_gray_logo.png"
+                      data-toggle="tooltip" title="Payments through Coinbase" id="coinbaselogo">
+            </div>
+            <div class="span2">
+                <img class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/github_logo.png"
+                     data-toggle="tooltip" title="Versioned on Github" id="githublogo">
+            </div>
+            <div class="span2">
+                <img  class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/heroku_logo.png"
+                      data-toggle="tooltip" title="Hosted on Heroku" id="herokulogo">
+            </div>
+            <div class="span2">
+                <img class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/nodejs_gray_logo.png"
+                     data-toggle="tooltip" title="Made with Node JS" id="nodelogo">
+            </div>
+        </div>
+        <div class="span4"></div>
 
-    <div class="smallround row-fluid footer ">
-        Made for the Summer session of Stanford's Startup Engineering
+    </div>
+    </div>
+    <script>$('#coinbaselogo, #githublogo, #herokulogo, #nodelogo').tooltip({ animation: true, html: true})</script>
+    <div class="row-fluid footer cool-font smallround">
+            <div class="span4">Legal</div>
+            <div class="span4">Contact</div>
+            <div class="span4">Transparency</div>
+
     </div>
 </div>
-
-<!--<script src="https://twitter.github.io/bootstrap/2.3.2/assets/js/bootstrap-collapse.js"></script>
-<script src="https://twitter.github.io/bootstrap/2.3.2/assets/js/bootstrap-dropdown.js"></script>-->
 
 <!-- google analytics.js -->
 <script>

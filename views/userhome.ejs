@@ -37,13 +37,7 @@
           socket.on('rendershop', function(data){
               $('#spinhere').html('');
               $('#customcontent').html(data.data);
-              c();
-              $("#getSuicaChoices").click(function(){
-                  socket.emit('getCardItem', {cardType: "Suica"})
-              });
-              $("#getPassmoChoices").click(function(){
-                  socket.emit('getCardItem', {cardType: "Passmo"})
-              });
+              c();;
           })
           var opts = {
               lines: 11, // The number of lines to draw

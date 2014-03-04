@@ -15,9 +15,9 @@ module.exports = function(socket, user){
         var card = data.cardType.toString();
         var imgURL = "";
         if (card == "Suica"){
-            imgURL = "https://dl.dropboxusercontent.com/u/8869944/suimo/suicaimg.jpg";
+            imgURL = "https://dl.dropboxusercontent.com/u/8869944/suimo/suica.png";
         } else {
-            imgURL = "https://dl.dropboxusercontent.com/u/8869944/suimo/passmoimg.gif"
+            imgURL = "https://dl.dropboxusercontent.com/u/8869944/suimo/passmo.png"
         };
         //TODO: Expanding the store - will have to change the images logic
         newData = ejs.render(fs.readFileSync(storeItem).toString(), {
@@ -33,7 +33,7 @@ module.exports = function(socket, user){
 
     /* Verifications.  A user does not have to do this because all input addresses are checked against the
     * user's registered bitcoin address.  in case nothing is found, or the hash does not exist, we store the
-    * hash and come back to it later*/
+    * given hash and come back to it later*/
     socket.on('verifyMe', function(){
         var html = ""
             , resbody = ''

@@ -3,6 +3,7 @@
                           title="Keep me up to date">Profile</span>
         <a href="/settings" class="btn btn-info btn-mini" id="settings"
            data-toggle="tooltip" title="Account Settings"><i class="fa fa-pencil"> Edit</i></a>
+        <div id="displayError" class="cool-font" style="color: red"></div>
     </div>
     <div class="row-fluid cool-font">
         <br>
@@ -18,13 +19,32 @@
                     <input type="password" id="passOne"> <br>
                     <input type="password" id="passTwo"> <br>
                     <span class="btn btn-info btn-mini" id="authPassChangeButton">Change</span>
-                    <br>
-                    <div id="passError"></div>
+
                     </div>
                 </td>
             </tr>
             <tr><td>Name:</td>
-                <td><%= user.name %></td></tr>
+                <td><%= user.name %> <a href="#"><i class="fa fa-pencil" id="authnameChange"></i></a>
+                    <script>
+                        $('#nameChangediv').hide();
+                        $('#authnameChange').click(function(){
+                            $('#nameChangediv').slideToggle();});
+                        $('#authNameChangeButton').click(function(){
+                            b = $('#newName').val();
+                            if (b === null || typeof b === 'undefined' || b.length == 0) {
+                                showError('Name Cannot be Blank')
+                                return;
+                            } else {
+                            socket.emit('changeUserData', {item: 'name', value: b.trim()});
+                            socket.emit('get_profile');
+                            }
+                        });
+                    </script>
+                <div id="nameChangediv">
+                    <input type="text" id="newName"> <br>
+                    <span class="btn btn-info btn-mini" id="authNameChangeButton">Change</span>
+                </div>
+                </td></tr>
 
             <tr><td><p>Email:</p></td>
                 <td><%= user.email %> <%if (user.emailVerified) {%>
@@ -41,7 +61,7 @@
                 <td><p><%= user.addressOne %></p></td></tr>
             <tr><td><p>(optional):</p></td>
                 <td><p><%= user.addressTwo %></p></td></tr>
-            <tr><td><p>Refund Bitcoin Address:</p></td>
+            <tr><td><p>My Wallet Address:</p></td>
                 <td><div class="hidden-phone">
                             <% var btc = user.homeBTC%>
                     <a href="http://blockchain.info/address/<%= btc %>">
@@ -69,8 +89,7 @@
                     </div>
                     <div>[ If you own your Wallet above (i.e. if it is not a shared wallet) then there
                     is no need to verify.  Verification will be automatic once you place an order.  If, however in a rare case
-                    that your Bitcoin address does not match the above refund address, we may ask to manually verify your refund
-                    address ]</div>
+                    that your Bitcoin address does not match the above refund address, we may ask to manually verify your wallet ]</div>
 
                 </td></tr>
             </tbody>
@@ -79,9 +98,17 @@
     </div>
 
         <script>
+            var showError = function(msg){
+                e = $('#displayError');
+                e.fadeOut(function(){
+                    e.html(msg).fadeIn();
+                });
+            };
             $('#authpassDiv').hide();
+            socket.on('displayError', function(data){
+                showError(data.msg);
+            });
             socket.on('renderVerification', function(data){
-                console.log('page verification socket messege received w code ' + data.buttonCode)
                 var buttonCode = data.buttonCode;
                 $('#btcDiv').html( '<a href="https://coinbase.com/checkouts/' + buttonCode + '" target="_blank"><img alt="Pay With Bitcoin" src="https://coinbase.com/assets/buttons/buy_now_small.png"></a>'
                 );
@@ -89,8 +116,12 @@
             $('#authPassChangeButton').click(function(){
                 var a = $('#passOne').val();
                 var b = $('#passTwo').val();
+                if(a.length < 4){
+                    showError('Passwords are too short');
+                    return;
+                }
                 if(a !== b){
-                    $('#passError').html('Passwords do not match');
+                    showError('Passwords do not match');
                     return;
                 }
                 socket.emit('authPassChange', a);
@@ -114,6 +145,5 @@
             });
             $('#btcVerifyMe').click(function(){
                 socket.emit('verifyMe');
-                console.log('verification request sent')
             })
         </script>
