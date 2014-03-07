@@ -22,8 +22,7 @@
       </style>
       <script>
           var socket = io.connect(window.location.hostname);
-          socket.on('my_username', function(u){
-              $('#welcome').text(u.username);
+          socket.on('hello', function(){
               socket.emit("get_data");
           })
           socket.on('push_dashboard', function(){
@@ -37,7 +36,8 @@
           socket.on('rendershop', function(data){
               $('#spinhere').html('');
               $('#customcontent').html(data.data);
-              c();;
+              // c , below, starts our mutually recursive exchange rate functions
+              c();
           })
           var opts = {
               lines: 11, // The number of lines to draw

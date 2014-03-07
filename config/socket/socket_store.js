@@ -9,28 +9,14 @@ fs      = require('fs'),
 
 module.exports = function(socket, user){
 
-    socket.on('getCardItem',function(data){
-        var storeItem = "./views/partials/storeItem.ejs";
-        var msg = "render"+data.cardType;
-        var card = data.cardType.toString();
-        var imgURL = "";
-        if (card == "Suica"){
-            imgURL = "https://dl.dropboxusercontent.com/u/8869944/suimo/suica.png";
-        } else {
-            imgURL = "https://dl.dropboxusercontent.com/u/8869944/suimo/passmo.png"
-        };
-        //TODO: Expanding the store - will have to change the images logic
-        newData = ejs.render(fs.readFileSync(storeItem).toString(), {
-            imgURL: imgURL,
-            choices:
-                [   {id: card.toLowerCase()+",10", desc: "\&yen;1000 Trial " + card + " - See if you like it"},
-                    {id: card.toLowerCase()+",50", desc: "\&yen;5000 - if you are comfortable"},
-                    {id: card.toLowerCase()+",100", desc: "\&yen;10,000 - for those experienced " + card + "-ers"},
-                    {id: card.toLowerCase()+",200", desc: "\&yen;20,000 - really, the best value"}]
-        });
-        socket.emit("renderItem", {data: newData});
+    //Loading teh Store from the socket request
+    socket.on('get_shop', function(){
+        var shopPath = "./views/partials/cardshop.ejs";
+        socket.emit('rendershop', {
+            data: ejs.render(fs.readFileSync(shopPath).toString(),{
+                //username is needed to send to coinbase for the custom codes
+                u: user.dataValues.username})});
     });
-
     /* Verifications.  A user does not have to do this because all input addresses are checked against the
     * user's registered bitcoin address.  in case nothing is found, or the hash does not exist, we store the
     * given hash and come back to it later*/
@@ -47,10 +33,11 @@ module.exports = function(socket, user){
             'price_currency_iso': 'JPY',
             'custom': user.username,
             'callback_url': process.env.PAYMENT_CALLBACK + "?secret="+process.env.PAYMENT_COMPLETE_SECRET,
-            'text': 'Verify',
+            'text': 'Verification',
             'custom_secure':'true',
             'style': 'custom_small',
-            'description': "Refund address verification - " + user.username
+            'description': "Refund address verification - " + user.username,
+            'success_url': process.env.SUCCESS_URL
             }
             };
         var bodydata = JSON.stringify(button);
@@ -80,10 +67,9 @@ module.exports = function(socket, user){
             });
             res.on('end', function(){
                 try{
-                    console.log('verification code not errored out')
                     buttonCode = JSON.parse(resbody).button.code;
                     socket.emit('renderVerification', {buttonCode: buttonCode})
-                    console.log('verification render emitted')
+                    console.log(user.username + " is verifying account")
                 } catch(err) {
                     console.log('unable to parse coinbase reply for ' + user.username + " verification")
                 }
@@ -97,26 +83,31 @@ module.exports = function(socket, user){
     /*Code for getting a button name and generating a Coinbase ID for the button.
      * The ID code is used to generate the payment button*/
     socket.on('getCode', function(data){
-        var storePayment = "./views/partials/storePayment.ejs"
-            , d = data.id.split(',')
-            , amnt = parseInt(d[1])*100; var card = d[0].toLowerCase()
-            , resbody = ''
+        try {
+            var amnt = parseInt(data.amount);
+            var cardName = data.cardType.toString();
+        }
+        catch(err){
+            console.log('unable to parse the amount from cardshop.ejs')
+            return;
+        }
+            var resbody = ''
             , nonce = new Date().getTime()
             , sig = require('crypto').createHmac('sha256', process.env.COINBASE_SECRET)
             , buttonCode = '';
 
         var button = { 'button': {
-            'name': card.toUpperCase()+"-"+ "Y"+(amnt),
+            'name': cardName.toUpperCase()+"-"+ "Y"+(amnt),
             'type': 'buy_now',
             'price_string': amnt+1000,
             'price_currency_iso': 'JPY',
             'custom': user.username,
             'callback_url': process.env.PAYMENT_CALLBACK + "?secret="+process.env.PAYMENT_COMPLETE_SECRET,
-            'description': "Japanese " + card + " e-cash card",
-            'text': 'Place Order.',
+            'description': "Japanese " + cardName + " e-cash card",
+            'text': 'Order Y' + amnt + " " + cardName,
             'custom_secure':'true',
             'style': 'custom_small',
-            'description': user.username+","+card.toUpperCase()+","+amnt
+            'description': user.username+","+cardName.toUpperCase()+","+amnt+" on the card"
             }
         };
         var bodydata = JSON.stringify(button);
@@ -136,9 +127,11 @@ module.exports = function(socket, user){
             }
         };
 
+        // here we make the request, and when we get a button code from coinbase, we emit the code to the ejs files
         var v = https.request(options, function(res){
             if(res.statusCode != 200) {
-                console.log("error occured communicating with coinbase - error " + res.statusCode);
+                console.log("error occured while trying to get codes from coinbase: status code " + res.statusCode);
+                socket.emit("buttonCode", {buttonCode: null, cardType: cardName.toLowerCase()})
                 return;
             }
             res.on('data', function(d){
@@ -147,21 +140,52 @@ module.exports = function(socket, user){
             res.on('end', function(){
                 try{
                     buttonCode = JSON.parse(resbody).button.code;
-                    newData = ejs.render(fs.readFileSync(storePayment).toString(), {
-                        bullets: [
-                            {desc: "\&yen;500 Card Deposit (refundable)"},
-                            {desc: "\&yen;500 Fee (includes shipment)"},
-                            {desc: "\&yen;"+(amnt) + " Usable Funds (remainder refundable)"},
-                            {desc: "TOTAL: \&yen;" + (amnt+1000)}],
-                        buttonCode: buttonCode
-                    });
-                    socket.emit("renderPayment", {data: newData})
+                    socket.emit("buttonCode", {buttonCode: buttonCode, cardType: cardName.toLowerCase()})
                 } catch(err) {
-                    console.log('unable to parse coinbase reply for ' + user.username)
+                    console.log('socket_store.js - unable to parse coinbase reply for ' + user.username)
                 }
             })
         });
         v.write(bodydata);
         v.end();
     })
-}
+
+    /*This will be used to set the coinbase exchange rates on top of the store page
+    * we will get a request for the reate, query it, and return the result.  Works with cardshop.ejs*/
+    var exchangeOptions = {
+        host: 'coinbase.com',
+        path: '/api/v1/currencies/exchange_rates',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    var usdbtc = 0;
+    var jpybtc = 0;
+
+    socket.on('getUSDBTC', function(){
+
+        var request = require("request")
+            , body = '';
+        var v = https.request(exchangeOptions, function(res){
+            if(res.statusCode != 200) {
+                console.log("coinbase error reqeusting USD / BTC" + res.statusCode + res);
+                return; }
+            res.on('data', function(d){
+                body += d;
+            });
+            res.on('end', function(){
+                var o = JSON.parse(body);
+                usdbtc = o.btc_to_usd;
+                jpybtc = o.btc_to_jpy;
+                o = null;
+                socket.emit('USDBTC', {amnt: usdbtc})
+            });
+        });
+        v.end();
+    });
+
+    socket.on('getJPYBTC', function(){
+    socket.emit('JPYBTC', {amnt: jpybtc})
+    })
+  }

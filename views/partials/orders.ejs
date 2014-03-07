@@ -3,8 +3,9 @@
             <thead>
             <th>Payment ID</th>
             <th>Amount</th>
-            <th>Product</th>
+            <th>Item</th>
             <th>Refunded</th>
+            <th>Refunded Amount</th>
             </thead>
             <tbody>
             Total # of payments: <%= orders.length %>
@@ -14,6 +15,7 @@
                 <td><%= orders[i].amount %></td>
                 <td><%= orders[i].pname %></td>
                 <td><%= orders[i].refundstatus %></td>
+                <td><%= orders[i].refundedAmount%></td>
             </tr>
             <% } %>
         </table>

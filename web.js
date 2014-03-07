@@ -26,7 +26,7 @@ app.configure(function(){
     app.use(express.static(__dirname + '/public'));
     app.use(express.bodyParser());
     app.use(express.cookieParser(process.env.COOKIE_SECRET));
-    app.use(express.session({ secret: process.env.SESSION_SECRET, key: 'abcd', store: sessionStore}));
+    app.use(express.session({ secret: process.env.SESSION_SECRET, key: 'connect.sid', store: sessionStore}));
     app.use(express.methodOverride());
     app.use(passport.initialize());
     app.use(passport.session())
@@ -61,7 +61,7 @@ global.db.sequelize.sync({force: false}).complete(function(err) {
             var store = sessionStore;
             if(data.headers.cookie){
                 data.cookie = cookie.parse(data.headers.cookie);
-                data.sessionID = parseSignedCookie(data.cookie['abcd'], process.env.SESSION_SECRET)
+                data.sessionID = parseSignedCookie(data.cookie['connect.sid'], process.env.SESSION_SECRET)
             }
             callback(null, true);
         })
@@ -83,13 +83,15 @@ sio.on('connection', function(socket){
         }
         if(session.passport.user){
             global.db.User.find( { where: {username: session.passport.user}}).success(function(u){
-                socket.join(u.username); console.log("socket joined " + u.username)
+                socket.join(u.username);
+                // We found a user in our system who has been authenticated by passportJS
                 require('./config/socket/socketcontrol')(socket, u);
                 require('./config/socket/socket_email')(socket, u);
                 require("./config/socket/socket_store")(socket, u);
-                socket.emit('my_username', {username: "Welcome " + u.dataValues.username});
+                socket.emit('hello');
                 })
             } else {
+            // This means we have an anonymouse "new" user.
                 socket.join(sessionID);
                 require('./config/socket/socketgeneral')(socket);
             }

@@ -1,11 +1,12 @@
-    <div class="row-fluid">
-                    <span class="label" id="profileLabel" data-toggle="tooltip"
-                          title="Keep me up to date">Profile</span>
-        <a href="/settings" class="btn btn-info btn-mini" id="settings"
-           data-toggle="tooltip" title="Account Settings"><i class="fa fa-pencil"> Edit</i></a>
-        <div id="displayError" class="cool-font" style="color: red"></div>
-    </div>
-    <div class="row-fluid cool-font">
+<script type="text/javascript" src="/js/profile.js"></script>
+
+
+<div class="row-fluid">
+    <span class="label" id="profileLabel" data-toggle="tooltip" title="Keep me up to date">Profile </span>
+    <div id="displayError" class="cool-font" style="color: red"></div>
+</div>
+
+<div class="row-fluid cool-font"  id="itemTable">
         <br>
         <table class="table">
             <tbody>
@@ -25,125 +26,104 @@
             </tr>
             <tr><td>Name:</td>
                 <td><%= user.name %> <a href="#"><i class="fa fa-pencil" id="authnameChange"></i></a>
-                    <script>
-                        $('#nameChangediv').hide();
-                        $('#authnameChange').click(function(){
-                            $('#nameChangediv').slideToggle();});
-                        $('#authNameChangeButton').click(function(){
-                            b = $('#newName').val();
-                            if (b === null || typeof b === 'undefined' || b.length == 0) {
-                                showError('Name Cannot be Blank')
-                                return;
-                            } else {
-                            socket.emit('changeUserData', {item: 'name', value: b.trim()});
-                            socket.emit('get_profile');
-                            }
-                        });
-                    </script>
                 <div id="nameChangediv">
                     <input type="text" id="newName"> <br>
                     <span class="btn btn-info btn-mini" id="authNameChangeButton">Change</span>
                 </div>
-                </td></tr>
-
+                </td>
+            </tr>
             <tr><td><p>Email:</p></td>
-                <td><%= user.email %> <%if (user.emailVerified) {%>
+                <td><%= user.email %> <a href="#"><i class="fa fa-pencil" id="authEmailChange"></i></a>
+                    <%if (user.emailVerified) {%>
                         <i class="fa fa-check-circle-o" id="emailVerified"
                            data-toggle="tooltip" title="Verified Email Address"></i> <%}%>
                         <% if (!user.emailVerified) {%>
-
                         <div id="emailDiv">
                         <a href="#"><span class="label" id="verifyMe" data-toggle="tooltip"
                              title="Send Verification Email">Verify</span></a> <%}%>
                         </div>
+                    <div id="authEmailChangeDiv"> <br>
+                        <input type="text" id="newEmail"> <br>
+                        <span class="btn btn-info btn-mini" id="authEmailChangeButton">Change</span>
+                    </div>
                     </td></tr>
             <tr><td><p>Address:</p></td>
-                <td><p><%= user.addressOne %></p></td></tr>
+                <td>
+                    <%= user.addressOne %> <a href="#"><i class="fa fa-pencil" id="authAddrOneChange"></i></a>
+                    <div id="addressOneChangeDiv">
+                        <input type="text" id="newAddressOne"><br>
+                        <span class="btn btn-info btn-mini" id="authAddressOneChangeButton">Change</span>
+                    </div>
+                </td>
+            </tr>
             <tr><td><p>(optional):</p></td>
-                <td><p><%= user.addressTwo %></p></td></tr>
+                <td><%= user.addressTwo %> <a href="#"><i class="fa fa-pencil" id="authAddrTwoChange"></i></a>
+                <div id="addressTwoChangeDiv">
+                    <input type="text" id="newAddressTwo"><br>
+                    <span class="btn btn-info btn-mini" id="authAddressTwoChangeButton">Change</span>
+                </div>
+                </td>
+            </tr>
             <tr><td><p>My Wallet Address:</p></td>
-                <td><div class="hidden-phone">
+                <td>
+                    <div class="hidden-phone">
                             <% var btc = user.homeBTC%>
                     <a href="http://blockchain.info/address/<%= btc %>">
-                        <%= btc %> </a> <% if (user.BTCverified) {%>
+                        <%= btc %> </a>
+                        <a href="#"><i class="fa fa-pencil" id="authBTCchange"> </i></a>
+
+                        <% if (user.BTCverified) {%>
                             <i class="fa fa-check-circle-o" id="btcVerified"
                                data-toggle="tooltip" title="Verified BTC Address"></i>
+                        <script>$('#details').hide();</script>
                             <%}%>
                             <% if (!user.BTCverified) {%>
                         <div id="btcDiv">
                             <a href="#"><span class="label" id="btcVerifyMe" data-toggle="tooltip"
                                               title="Verify Address (Necessary if using a shared wallet))">Verify</span></a> <%}%>
                         </div>
+                        <div id="btcChangeDiv">
+                            <input type="text" id="newBTC"><br>
+                            <span class="btn btn-info btn-mini" id="authChangeBTCaddressButton">Change</span>
+                        </div>
                             <br>
                 </div>
                     <div class="visible-phone">
-                        <p> <a href="https://blockchain.info/address/<%= btc %>">
+                        <a href="#"><i class="fa fa-pencil" id="authBTCchangePhone"></i></a>
+
+                        <div id="btcChangePhoneDiv">
+                            <input type="text" id="new_phone_BTC"><br>
+                            <span class="btn btn-info btn-mini" id="authChangeBTCaddressPhoneButton">Change</span>
+                        </div>
+
+                         <a href="https://blockchain.info/address/<%= btc %>">
                             <img src="https://blockchain.info/qr?data=<%= btc %>&size=100">
-                        </a><br> <%if (user.BTCverified) {%>
-                            <i class="fa fa-check-circle-o" id="btcVerified"
+                        </a> <%if (user.BTCverified) {%>
+                            <i class="fa fa-check-circle-o" id="btcVerifiedPhone"
                                data-toggle="tooltip" title="Verified BTC Address"></i> <%}%>
+                            <script>$('#details').hide(); </script>
+
                         <% if (!user.BTCverified) {%>
                         <a href="#"><span class="label" id="btcVerifyMe" data-toggle="tooltip"
                                           title="Verify Address (Necessary if using a shared wallet))">Verify</span></a> <%}%>
-                        </p>
+
                     </div>
-                    <div>[ If you own your Wallet above (i.e. if it is not a shared wallet) then there
+                    <div id="details">[ If you own your Wallet above (i.e. if it is not a shared wallet) then there
                     is no need to verify.  Verification will be automatic once you place an order.  If, however in a rare case
                     that your Bitcoin address does not match the above refund address, we may ask to manually verify your wallet ]</div>
 
                 </td></tr>
+            <tr>
+                <td><p><a href="https://en.wikipedia.org/wiki/Bitmessage">Bitmessage</a> Address
+                        <br> (optional):</p></td>
+                <td><%= user.bitMessegeAddr %> <a href="#"><i class="fa fa-pencil" id="authBitMessageChange"></i></a>
+                <div id="bitMessageChangeDiv">
+                    <input type="text" id="newBitMessageVal"><br>
+                    <span class="btn btn-info btn-mini" id="authBitmessageButton">Change</span>
+                </div>
+                </td>
+            </tr>
             </tbody>
         </table>
-
+    <span class="btn btn-mini" id="looksGood">Done</span>
     </div>
-
-        <script>
-            var showError = function(msg){
-                e = $('#displayError');
-                e.fadeOut(function(){
-                    e.html(msg).fadeIn();
-                });
-            };
-            $('#authpassDiv').hide();
-            socket.on('displayError', function(data){
-                showError(data.msg);
-            });
-            socket.on('renderVerification', function(data){
-                var buttonCode = data.buttonCode;
-                $('#btcDiv').html( '<a href="https://coinbase.com/checkouts/' + buttonCode + '" target="_blank"><img alt="Pay With Bitcoin" src="https://coinbase.com/assets/buttons/buy_now_small.png"></a>'
-                );
-            });
-            $('#authPassChangeButton').click(function(){
-                var a = $('#passOne').val();
-                var b = $('#passTwo').val();
-                if(a.length < 4){
-                    showError('Passwords are too short');
-                    return;
-                }
-                if(a !== b){
-                    showError('Passwords do not match');
-                    return;
-                }
-                socket.emit('authPassChange', a);
-            })
-            socket.on('authPasswordChanged', function(data){
-                $('#authpassDiv').html(data.msg);
-            });
-            $('#authPassChange').click(function(){
-                $('#authpassDiv').slideToggle();
-            })
-            $('#profileLabel').tooltip({ animation: true, html: true}).addClass('animated fadeInUp');
-            $('#settings').tooltip({ animation: true, html: true})
-            $('#settings').addClass('animated bounceIn');
-            $('#btcVerified').tooltip({animation: true, html:true})
-            $('#emailVerified').tooltip({animation: true, html:true});
-            $('#btcVerifyMe').tooltip({animation: true, html: true});
-            $('#verifyMe').tooltip({animation: true, html:true})
-            $('#verifyMe').click(function(){
-                socket.emit('send verification email');
-                $('#emailDiv').html( "<b> Email Sent</b>");
-            });
-            $('#btcVerifyMe').click(function(){
-                socket.emit('verifyMe');
-            })
-        </script>

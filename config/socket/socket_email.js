@@ -21,7 +21,8 @@ var tooManyEmails = function(user){
 module.exports = function(socket, user){
 
     socket.on('send verification email',function(){
-        if (tooManyEmails(usr)){  return; }
+        //TODO: keep a verified email field and check against that.  resetting the email doe snot keep the verification status
+        if (tooManyEmails(user)){  return; }
         user.oneTimeSecret = 'new_email';
         user.emailCount = user.emailCount+1;
         user.save().success(function(){

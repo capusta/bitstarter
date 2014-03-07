@@ -57,11 +57,17 @@ module.exports = function(app, passport){
                 var p = global.db.Payment;
                 //we now have a completed payment for a user, lets start building the payment first
                 //populate with basic information before we check the user.
+                var modifiedAmount = 0;
+                if (b.order.button.name === 'Verification') {
+                    modifiedAmount = b.order.total_native.cents;
+                } else {
+                    modifiedAmount = b.order.total_native.cents - 500;
+                }
                 var new_payment_instance = p.build({
                     time: b.order.created_at,
                     username: b.order.custom,
                     payment_ID: b.order.id,
-                    amount: b.order.total_native.cents,
+                    amount: modifiedAmount,
                     productName: b.order.button.name
                 });
                 //instance is built but not saved yet.  Lets find the user it belongs to.

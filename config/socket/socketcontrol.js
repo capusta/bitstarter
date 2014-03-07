@@ -1,5 +1,5 @@
 ejs = require('ejs'),
-    fs      = require('fs'),
+    fs = require('fs'),
     rest = require('restler'),
     async = require('async');
 
@@ -15,10 +15,42 @@ module.exports = function(socket, user){
         })
     });
     socket.on('changeUserData', function(data){
+        user.stepNumber = user.stepNumber.concat('a');
        switch(data.item){
            case 'name':
                user.name = data.value;
+               user.save()
+                   .error(function(err){ socket.emit('displayError', {msg: "Error Saving Name"})})
+                   .success(function(){
+                       console.log('new name sucessfully saved');
+                       socket.emit('changeOK')});
                break;
+           case 'email':
+               user.email = data.value;
+               user.save()
+                   .error(function(err){ socket.emit('displayError', {msg: err.email[0]})})
+                   .success(function(){ socket.emit('changeOK')})
+               break;
+           case 'addressOne':
+               user.addressOne = data.value;
+               user.save()
+                   .error(function(err){ socket.emit('displayError', {msg: err.addressOne[0]})})
+                   .success(function(){ socket.emit('changeOK')});
+               break;
+           case 'addressTwo':
+               user.addressTwo = data.value;
+               user.save()
+                   .error(function(err){ socket.emit('displayError', {msg: "Unable to save Address"})})
+                   .success(function(){ socket.emit('changeOK')});
+               break;
+           case 'bitmessege':
+               user.bitMessegeAddr = data.value;
+               user.save()
+                   .success(function() { socket.emit('changeOK')});
+               break;
+           case 'finished':
+               user.save()
+                   .success(function() { socket.emit('push_dashboard')})
            default:
                socket.emit('displayError', {msg: 'Unable to Change the ' + data.item})
        }
@@ -31,7 +63,7 @@ module.exports = function(socket, user){
             cards.forEach(function(c){
                 cards_json.push({cid: c.cardID, ct: c.type, cm: c.condition, amt: c.amount})
             })
-            console.log('emitting moneycards' + user.username)
+            console.log('emitting moneycards for ' + user.username)
             socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {cards: cards_json})})
         })
 });
@@ -40,9 +72,9 @@ module.exports = function(socket, user){
     var path = "./views/partials/orders.ejs";
     var payments_json = [];
     user.getPayments().success(function(payments){
-        console.log("payments for user: " + payments);
         payments.forEach(function(p){
-            payments_json.push({pid: p.payment_ID, amount: p.amount, pname: p.productName, refundstatus: p.refundstatus})
+            payments_json.push({pid: p.payment_ID, amount: p.amount, pname: p.productName,
+                refundstatus: p.refundstatus, refundedAmount: p.refundedAmount})
         })
         socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {orders: payments_json})})
 })
@@ -65,13 +97,6 @@ module.exports = function(socket, user){
             })
     });
 
-    socket.on('get_shop', function(){
-        var shopPath = "./views/partials/cardshop.ejs";
-        socket.emit('rendershop', {
-            data: ejs.render(fs.readFileSync(shopPath).toString(),{
-                u: user.dataValues.username})});
-        console.log(user.username + " store_load");
-    });
     socket.on('checkStepA', function(){
         function noDups( s ) {
             var chars = {}, rv = '';
