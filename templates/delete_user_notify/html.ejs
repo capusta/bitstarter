@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Really Simple HTML Email Template</title>
+
+</head>
+
+<body bgcolor="#f6f6f6">
+
+<!-- body -->
+<table class="body-wrap">
+    <tr>
+        <td></td>
+        <td class="container" bgcolor="#FFFFFF">
+
+            <!-- content -->
+            <div class="content">
+                <table>
+                    <tr>
+                        <td>
+                            <p>Hi <%= username %> </p>
+                            <p>We have received a user delete request.</p>
+                            <p>If this is correct, please click on the below link to delete yourself from our system, otherwise
+                            ignore this email and report it to us at info@suimo.pw</p>
+                            <p>What will happen:</p>
+                            <ul>
+                                <li>
+                                    All username information will be deleted.  (Addresses, names, etc).
+                                </li>
+                                <li>
+                                    Your message history will be completely deleted.
+                                </li>
+                                <li>
+                                    If we received your Pasmo and/or Suica cards - nothing will happen.  Otherwise we will take
+                                    ownership of your outstanding cards, and keep them on record (in case they show up somehow).
+                                </li>
+                                <li>
+                                    Your payment history will be archived.  It contains only your username and nothing else.
+                                </li>
+                            </ul>
+                            <table>
+                                <tr>
+                                    <td class="padding">
+
+                                        <p><a href="<%= process.env.SECRET_CALLBACK %><%= code %>" class="btn-secondary">
+                                                Confirm</a></p>
+                                        <p>If you cannot see the above link, please use: <br><br>
+                                            <%= process.env.SECRET_CALLBACK %><%= code %></p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p>Thank you very much for using Suimo!</p>
+                            <p>Very respectfuly,</p>
+                            <p>Suimo! Team</p>
+                            <p><a href="http://twitter.com/papaya_san">Follow @papaya_san on Twitter</a></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- /content -->
+
+        </td>
+        <td></td>
+    </tr>
+</table>
+<!-- /body -->
+
+<!-- footer -->
+<table class="footer-wrap">
+    <tr>
+        <td></td>
+        <td class="container">
+
+            <!-- content -->
+            <div class="content">
+                <table>
+                    <tr>
+                        <td align="center">
+                            <p>Don't like these annoying emails? Reply with the subject "UNSUBSCRIBE".
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- /content -->
+
+        </td>
+        <td></td>
+    </tr>
+</table>
+<!-- /footer -->
+
+</body>
+</html>

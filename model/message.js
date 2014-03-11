@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
                         u.alert = u.alert.concat('mc');
                         u.save();
                     })},
-             sendMessege: function(from, to, m, callback){
+              sendMessege: function(from, to, m, callback){
                   global.db.Message.create({to: to, from: from, message: m}).success(function(m){
                      global.db.User.find({ where: {username: to}}).success(function(u){
                          if (u != null) {

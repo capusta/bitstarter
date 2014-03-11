@@ -23,7 +23,7 @@ module.exports = function(socket, user){
     socket.on('send verification email',function(){
         //TODO: keep a verified email field and check against that.  resetting the email doe snot keep the verification status
         if (tooManyEmails(user)){  return; }
-        user.oneTimeSecret = 'new_email';
+        user.oneTimeSecret = 'verify_email';
         user.emailCount = user.emailCount+1;
         user.save().success(function(){
             locals = {username: user.username, code: b64.urlEncode(user.oneTimeSecret)};
@@ -49,4 +49,33 @@ module.exports = function(socket, user){
             });
         });
     });
+
+    socket.on('send user delete request', function(){
+        user.oneTimeSecret = 'delete_user';
+        user.save().success(function(){
+            locals = {username: user.username, code: b64.urlEncode(user.oneTimeSecret)};
+            emailTemplates(templateDir, function(err, template){
+                template('delete_user_notify', locals, function(err, html, text){
+                    if (err) {
+                        console.log("error in making the new user template " + err.message);
+                    } else {
+                        server.send({
+                            from: "Suimo <info@suimo.pw>",
+                            to: user.name+"<"+ user.email + ">",
+                            subject: "SuiMo - Delete Account Request",
+                            attachment:
+                                [
+                                    {data: html, alternative: true}
+                                ]
+                        }, function(err, message) {
+                            if(message) { console.log("user " + user.username + " delete account messege sent"); }
+                            else {console.log("socket email.js - error in sending email for user deletion template")}
+                        });
+                    }});
+                //remember to convert to url save base 64
+            });
+
+        })
+
+    })
 }

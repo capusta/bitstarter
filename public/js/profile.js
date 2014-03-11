@@ -110,6 +110,30 @@ $('#authAddressTwoChangeButton').click(function(){
     }
 });
 
+var badBTC = function(inp){
+    return (b === null || typeof b === 'undefined' || b.trim().length == 0);
+}
+
+$('#authChangeBTCaddressButton').click(function(){
+    b = $('#newBTC').val();
+    if (badBTC(b)){
+        showError('Invalid Bitcoin Address')
+        return;
+    } else {
+        socket.emit('changeUserData', {item: 'btcAddress', value: b.trim()});
+    }
+})
+
+$('#authChangeBTCaddressPhoneButton').click(function(){
+    b = $('#new_phone_BTC').val();
+    if(badBTC(b)){
+        showError('Invalid Bitcoin Address')
+        return;
+    } else {
+        socket.emit('changeUserData', {item: 'btcAddress', value: b.trim()});
+    }
+})
+
 $('#authBitmessageButton').click(function(){
     b = $('#newBitMessageVal').val();
     if (typeof b === 'undefined'){

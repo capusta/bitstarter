@@ -25,13 +25,12 @@ var c = function() {
     updateCouter();
     setTimeout(function() {
     d();
-    }, 10000);
+    }, 1000);
 }
 var d = function() {
-    updateCouter();
     setTimeout(function() {
     c();
-    }, 60000);
+    }, 30000);
 }
 
 socket.on('USDBTC', function(data){

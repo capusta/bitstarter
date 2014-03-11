@@ -36,6 +36,12 @@ $("#checkStepG").click(function(){
 $("#clearChecklist").click(function(){
     socket.emit('clear_checklist');
 })
+
+$('#checkStepH').click(function(){
+    socket.emit('send user delete request');
+    $('#checkStepH').fadeOut();
+    $('#Step8Paragraph').append('<b>Email Sent</b>')
+})
 // Little odd one out - changes the button text - when no orders have been received.
 socket.on('no_payments', function(){
     var d = $('#checkStepD');

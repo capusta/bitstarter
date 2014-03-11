@@ -59,6 +59,23 @@ module.exports = function(sequelize, DataTypes) {
                     return ans.slice(5,ans.length-5);
                 }
             },
+            verifiedEmail: {type: DataTypes.STRING, allowNull: true, defaultValue: 'user@domain.com',
+                validate: {
+                    isEmail: function(v){
+                        if(!validator.isEmail(crypto.decrypt(v))){
+                            throw  new Error("Not Valid Email");
+                        }
+                    }
+                },
+                set: function(v){
+                    n = (crypto.generate(5)).concat(v).concat(crypto.generate(5));
+                    return this.setDataValue('verifiedEmail', crypto.encrypt(n.toString('utf8')));
+                },
+                get: function(){
+                    ans = crypto.decrypt(this.getDataValue('verifiedEmail'));
+                    return ans.slice(5,ans.length-5);
+                }
+            },
             homeBTC: {type: DataTypes.STRING, allowNull: false, defaultValue: "1BTCorgHwCg6u2YSAWKgS17qUad6kHmtQW",
                 validate: {
                     isLength: function(v){
@@ -119,11 +136,26 @@ module.exports = function(sequelize, DataTypes) {
                     return this.setDataValue('BTCverified', result);
                 },
                 get: function(){
-                    result = this.getDataValue('paymentBTC') == this.getDataValue('homeBTC');
+                    return this.getDataValue('paymentBTC') == this.getDataValue('homeBTC');
                     return result;
                 }
             },
-            emailVerified: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: 'FALSE'},
+            emailVerified: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: 'FALSE',
+                set: function(v){
+                    a = crypto.decrypt(this.getDataValue('email'));
+                    b = crypto.decrypt(this.getDataValue('verifiedEmail'));
+                    a = a.slice(5,a.length-5);
+                    b = b.slice(5, b.length-5);
+                    return this.setDataValue('emailVerified', (a == b));
+                },
+                get: function(){
+                    a = crypto.decrypt(this.getDataValue('email'));
+                    b = crypto.decrypt(this.getDataValue('verifiedEmail'));
+                    a = a.slice(5,a.length-5);
+                    b = b.slice(5, b.length-5);
+                    return (a == b);
+                }
+            },
             emailCount: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 0},
             alert: {type: DataTypes.STRING, allowNull: true, defaultValue: ''}
     }, {

@@ -48,9 +48,23 @@ module.exports = function(socket, user){
                user.save()
                    .success(function() { socket.emit('changeOK')});
                break;
-           case 'finished':
+           case 'btcAddress':
+               user.homeBTC = data.value;
                user.save()
-                   .success(function() { socket.emit('push_dashboard')})
+                   .error(function(err) { socket.emit('displayError', {msg: err.homeBTC})})
+                   .success(function(){ socket.emit('changeOK')})
+               break;
+           case 'finished':
+               //sendMessege ( from to callback)
+               global.db.Message.sendMessege("admin",user.username,"Profile Successfully Updated",function(isOK){
+                   if(isOK){} else {
+                       socket.emit('displayError', {msg: 'Error - unable to send messege.  Should probably notify side Admin'})}});
+               user.save()
+                   .success(function() {
+                       socket.emit('new mail');
+                       socket.emit('push_dashboard')
+                   });
+               break;
            default:
                socket.emit('displayError', {msg: 'Unable to Change the ' + data.item})
        }

@@ -37,16 +37,21 @@
 <body>
     <% include _navbar.ejs %>
 
-<div class="container">
+<div class="container cool-font">
 
-    <div class="row-fluid cool-font">
-
+    <div class="row-fluid">
         <h3>SuiMo -> (Suica x Passmo) + BitCoin</h3>
-        <p>Got Bitcoins?  Traveling to Japan? Hate carrying cash?</p>
-        <p><a href="/info" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+    </div>
+    <div class="row-fluid">
+        <div class="span6" style="text-align: left">
+            <p>Got Bitcoins?  Traveling to Japan? Hate carrying cash?
+        </div>
+        <div class="span6" style="text-align: right">
+          <a href="/info" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+        </div>
     </div>
     <div class="row-fluid section1">
-        <div class="span12 cool-font">
+        <div class="span12">
             <div class="span3">
                 <img class="displayed" id="btcimage" src="https://dl.dropboxusercontent.com/u/8869944/suimo/btc.jpg"/>
                 <h3 class="text-center"> pay by bitcoins </h3>
@@ -108,40 +113,38 @@
             </div>
         </div>
     </div>
-    <div class="container hidden-tablet hidden-phone">
-    <div class="row-fluid" style="padding: 1%" id="branding">
-        <div class="span4"></div>
-        <div class="span4">
-            <div class="span2">
-                <img  class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/coinbase_gray_logo.png"
-                      data-toggle="tooltip" title="Payments through Coinbase" id="coinbaselogo">
-            </div>
-            <div class="span2">
-                <img class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/github_logo.png"
-                     data-toggle="tooltip" title="Versioned on Github" id="githublogo">
-            </div>
-            <div class="span2">
-                <img  class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/heroku_logo.png"
-                      data-toggle="tooltip" title="Hosted on Heroku" id="herokulogo">
-            </div>
-            <div class="span2">
-                <img class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/nodejs_gray_logo.png"
-                     data-toggle="tooltip" title="Made with Node JS" id="nodelogo">
-            </div>
-        </div>
-        <div class="span4"></div>
 
-    </div>
-    </div>
-    <script>$('#coinbaselogo, #githublogo, #herokulogo, #nodelogo').tooltip({ animation: true, html: true})</script>
-    <div class="row-fluid footer cool-font smallround">
+
+    <div class="row-fluid footer">
             <div class="span4">Legal</div>
             <div class="span4">Contact</div>
             <div class="span4">Transparency</div>
+            <div class="row-fluid hidden-tablet hidden-phone" style="padding: 1%" id="branding">
+                <div class="span4"></div>
+                <div class="span4">
+                    <div class="span3">
+                        <img  class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/coinbase_gray_logo.png"
+                              data-toggle="tooltip" title="Payments through Coinbase" id="coinbaselogo">
+                    </div>
+                    <div class="span3">
+                        <img class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/github_logo.png"
+                             data-toggle="tooltip" title="Versioned on Github" id="githublogo">
+                    </div>
+                    <div class="span3">
+                        <img  class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/heroku_logo.png"
+                              data-toggle="tooltip" title="Hosted on Heroku" id="herokulogo">
+                    </div>
+                    <div class="span3">
+                        <img class="greyBranding" src="https://dl.dropboxusercontent.com/u/8869944/suimo/nodejs_gray_logo.png"
+                             data-toggle="tooltip" title="Made with Node JS" id="nodelogo">
+                    </div>
+                </div>
+                <div class="span4"></div>
+            </div>
 
     </div>
 </div>
-
+    <script>$('#coinbaselogo, #githublogo, #herokulogo, #nodelogo').tooltip({ animation: true, html: true})</script>
 <!-- google analytics.js -->
 <script>
 

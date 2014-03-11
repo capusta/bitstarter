@@ -33,6 +33,7 @@ module.exports = function(app, passport, usr){
         }
     });
 
+    //TODO: I THINK WE CAN DELETE THIS TOO
     app.get('/settings', usr.can('access profile'), function(req, res) {
         if(req.isAuthenticated()) {
             try { res.render("updateprofile", { user : req.user, message: req.flash('info')}) }
@@ -44,7 +45,7 @@ module.exports = function(app, passport, usr){
             res.redirect("login");
         }
     })
-
+    //TODO: DELETE THE SECTION BELOW
     app.post('/settings', usr.can('access profile'), function(req, res) {
         if(req.isAuthenticated()) {
 

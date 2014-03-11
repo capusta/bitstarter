@@ -28,8 +28,9 @@ socket.on('request password reset', function(username){
 
 global.db.User.find({ where: { username: username}}).success(function(user){
     if(user == null){
-    //probably a misspelled email account
-    socket.emit('login_msg', {msg: 'Username not Found'});
+    //probably a misspelled email account ... but this is a lie ... because
+        // it would be really easy to check for usernames this way.
+    socket.emit('login_msg', {msg: 'Email Sent'});
     return;
     }
     user.oneTimeSecret = 'resetpassword';
