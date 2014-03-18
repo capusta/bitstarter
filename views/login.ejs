@@ -92,7 +92,7 @@
         var e = $('#passResetEmail').val();
         socket.emit('request password reset', e)
         $('#resetPassDiv').slideToggle();
-        $('#passResetEmail').val('');
+        e.val('');
         sm.html('We have emailed the instructions to the email we have on file.')
     })
     socket.on('login_msg', function(data){

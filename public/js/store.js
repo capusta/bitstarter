@@ -17,8 +17,8 @@ var updateCouter = function() {
     socket.emit('getJPYBTC');
     usd = null; jpy = null;
     var usd = new countUp("usdtargetprice", fromusd, tousd, 2, 10, options);
-    var jpy = new countUp("jpytargetprice", fromjpy, tojpy, 1, 15, options);
     usd.start();
+    var jpy = new countUp("jpytargetprice", fromjpy, tojpy, 1, 15, options);
     jpy.start();
     }
 var c = function() {
@@ -44,7 +44,8 @@ socket.on('JPYBTC', function(data){
 })
 
 // Declare our variables ... for now, only two cards.  If we get too many store items
-// we will have to automate that with jquery regex expressions
+// we will have to automate that with jquery regex expressions or make a model
+// specifically to different type of cards.
 var suica_prices = $('#suicaPrices');
 var pasmo_prices = $('#pasmoPrices');
 
@@ -56,6 +57,7 @@ var pasmo_code = $('#pasmoCode');
 // Start with hiding all components
 suica_d.hide();
 pasmo_d.hide();
+
 suica_code.hide();
 pasmo_code.hide();
 

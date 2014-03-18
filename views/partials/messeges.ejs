@@ -26,7 +26,7 @@
                 <div class="row-fluid controls controls-row">
                     <div class="span3">Messege:</div>
                     <div class="span3">
-                        <textarea rows="3" name="messegeToAdmin">sdf</textarea>
+                        <textarea rows="3" name="messegeToAdmin">Message</textarea>
                     </div>
                 </div>
             </div>
@@ -50,6 +50,13 @@
             <td><%= messeges[i].time %></td>
             <td><%= messeges[i].from %></td>
             <td><%= messeges[i].message %></td>
+            <td><a href="#"><span class="label" data-toggle="tooltip" id="delete<%= messeges[i].id%>"
+                      title=" <%= messeges[i].id%>">Delete</span></a>
+                <script> $("#delete<%= messeges[i].id%>").click(function(){
+                        socket.emit('delete message', {id: <%= messeges[i].id%>})
+                    })</script>
+
+            </td>
         </tr>
         <% } %>
     </table>

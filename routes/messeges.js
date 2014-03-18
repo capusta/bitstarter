@@ -45,8 +45,12 @@ module.exports = function(app, passport, usr){
             }
             u.getSecretAction(function(err, actn){
                 //this is a model instance method that will decode the one time encrypted action
-                if(!err){
-                    command = actn.toString('utf8').slice(5,actn.length-5).split(",")[0];
+                if(err){
+                    console.log('unable to get secret action for user ' + u.username)
+                    console.log(err.message)
+                    return;
+                }
+                    var command = actn.toString('utf8').slice(5,actn.length-5).split(",")[0];
                     console.log('command is ' + command)
                     if (command === 'verify_email'){
                         u.verifiedEmail = u.email;
@@ -94,25 +98,43 @@ module.exports = function(app, passport, usr){
                         })
                     }
                     if (command === 'delete_user') {
-                        u.removeOneTimeSecret(function(err){
-                            if(err) { console.log(' unable to remove the "delete user" one time secret')}
-                        })
-                        //TODO: MOVE MONEYCARDS, AND PAYMENTS.  DELETE MESSEGES AND USER
-                        u.getMoneycards().success(function(cards){
-                            console.log('got ' + cards.length + ' moneycards - xfer to admin');
+//                        u.removeOneTimeSecret(function(err){
+//                            if(err) { console.log(' unable to remove the "delete user" one time secret')}});
+
+                        global.db.User.find( { where: {username: 'admin'}}).success(function(adminuser){
+                            u.getMoneycards().success(function(cards){
+                                console.log('got ' + cards.length + ' moneycards - xfer to admin');
+                                async.forEach(cards, function(item, callback){
+                                    u.removeMoneycard(item).success(function(){
+                                        adminuser.addMoneycard(item);
+                                        callback();
+                                    })
+                                })
+                            });
+                            u.getMesseges().success(function(messeges){
+                                console.log('got ' + messeges.length + ' messeges to delete');
+                                async.forEach(messeges, function(item, callback){
+                                    item.destroy();
+                                });
+                            });
+                            u.getPayments().success(function(payments){
+                                console.log('got ' + payments.length + ' payments to archive under admin');
+                                async.forEach(payments, function(p, callback){
+                                    u.removePayment(p).success(function(){
+                                        adminuser.addPayment(p);
+                                        p.archived = true;
+                                        p.save();
+                                        callback();
+                                    })
+                                })
+                            });
+                            u.destroy();
+                            req.logout();
+                            req.flash('error','Your account has been deleted')
+                            res.redirect("login")
                         });
-                        u.getMesseges().success(function(messeges){
-                            console.log('got ' + messeges.length + ' messeges to delete');
-                        })
-                        u.getPayments().success(function(payments){
-                            console.log('got ' + payments.length + ' payments to archive under admin');
-                        })
-                        console.log('now we will delete the user')
                     }
-                } else{
-                   console.log('unable to get secret action for user ' + u.username)
-                   console.log(err.message)
-                }})
+                })
             }).error(function(e){
                 console.log('got sercret messege error on finding user from database');
             })

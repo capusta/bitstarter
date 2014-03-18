@@ -1,18 +1,15 @@
-// Define routes for simple SSJS web app. 
-// Writes Coinbase orders to database.
 var express = require('express')
     , connect = require('connect')
-  , cookie = require('cookie')
-  , routes  = require('./routes')
-  , http    = require('http')
-  , passport = require("passport")
-  , flash = require('connect-flash')
-  , usr = require('connect-roles')
-  , passportSocketIo = require('passport.socketio')
-  , io = require('socket.io')
-  , app = express()
-  , SequelizeStore = require('connect-session-sequelize')(express)
-  , parseSignedCookie = connect.utils.parseSignedCookie;
+    , cookie = require('cookie')
+    , routes  = require('./routes')
+    , http    = require('http')
+    , passport = require("passport")
+    , flash = require('connect-flash')
+    , usr = require('connect-roles')
+    , passportSocketIo = require('passport.socketio')
+    , io = require('socket.io')
+    , app = express()
+    , parseSignedCookie = connect.utils.parseSignedCookie;
 
 require('./model/index')
 console.log("connecting session store")
@@ -27,7 +24,6 @@ app.configure(function(){
     app.use(express.bodyParser());
     app.use(express.cookieParser(process.env.COOKIE_SECRET));
     app.use(express.session({ secret: process.env.SESSION_SECRET, key: 'connect.sid', store: sessionStore}));
-    app.use(express.methodOverride());
     app.use(passport.initialize());
     app.use(passport.session())
     app.use(flash());
@@ -50,13 +46,11 @@ sio.configure(function(){
     sio.set("heartbeat timeout", 60000)
 })
 
-    console.log("socket.io authorization complete")
-
 global.db.sequelize.sync({force: false}).complete(function(err) {
     if (err) {
         throw err;
     } else {
-        console.log("starting server to listen")
+        console.log("starting server authorization")
         sio.set("authorization", function (data, callback){
             var store = sessionStore;
             if(data.headers.cookie){
@@ -74,9 +68,8 @@ global.db.sequelize.sync({force: false}).complete(function(err) {
 //listening for connections
 sio.on('connection', function(socket){
     var user = null;
-    var sessionStore = global.sessionStore;
     var sessionID = socket.handshake.sessionID;
-    sessionStore.get(sessionID, function(err, session){
+    global.sessionStore.get(sessionID, function(err, session){
         if(!session || err){
             console.log(' no session found ')
            return null;
@@ -88,10 +81,11 @@ sio.on('connection', function(socket){
                 require('./config/socket/socketcontrol')(socket, u);
                 require('./config/socket/socket_email')(socket, u);
                 require("./config/socket/socket_store")(socket, u);
+                //TODO: add socket admin for authorized users
                 socket.emit('hello');
                 })
             } else {
-            // This means we have an anonymouse "new" user.
+            // This means we have an anon user or someone who is not authenticated.
                 socket.join(sessionID);
                 require('./config/socket/socketgeneral')(socket);
             }

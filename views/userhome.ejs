@@ -16,19 +16,20 @@
                   padding-top: 60px;
               }
           }
-          .carousel-control {
-              top: 90%;
-          }
       </style>
       <script>
           var socket = io.connect(window.location.hostname);
           socket.on('hello', function(){
               socket.emit("get_data");
+          });
+          socket.on('repeat', function(cmd){
+              socket.emit(cmd)
           })
+
           socket.on('push_dashboard', function(){
               //we need to re-query the possibly new data
               socket.emit("get_data");
-          })
+          });
           socket.on('render', function(data){
               $('#spinhere').html('');
               $('#customcontent').html(data.data);
@@ -38,10 +39,10 @@
               $('#customcontent').html(data.data);
               // c , below, starts our mutually recursive exchange rate functions
               c();
-          })
+          });
           socket.on('new mail', function(){
               $('#messegebadge').show();
-          })
+          });
           var opts = {
               lines: 11, // The number of lines to draw
               length: 5, // The length of each line
@@ -96,31 +97,31 @@
                  </div>
                  <div id="spinhere" style="left: 50%; position: relative; padding-top: 30%"></div>
              </div>
-             <div class="span9" style=" padding-bottom: 5px" id="customcontent" />
+             <div class="span9" style=" padding-bottom: 5px" id="customcontent">.</div>
          </div>
     </div>
      <script>
          var spinIt = function(){
              $("#spinhere").html(spinner.el);
-         }
+         };
          $( "#logo").addClass('animated fadeInLeft');
          $("#displaycards").click(function(){
              spinIt();
              socket.emit("get_mycards");
-         })
+         });
          $("#displaymyprofile").click(function(){
              spinIt();
              socket.emit("get_profile")
-         })
+         });
          $("#displaymymesseges").click(function(){
              spinIt();
              socket.emit("get_messeges");
-         })
+         });
          $("#displayshop").click(function(){
              spinIt();
              socket.emit('checkStepA');
              socket.emit('get_shop');
-         })
+         });
          $("#displayorders").click(function(){
              spinIt();
              socket.emit('get_orders');

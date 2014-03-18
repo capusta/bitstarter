@@ -98,12 +98,23 @@ module.exports = function(socket, user){
         var html = ejs.render(fs.readFileSync(path).toString(), {user: user});
         socket.emit('render', {data: html});
     })
+
+    socket.on('delete message', function(msgID){
+        console.log('deleting msg ' + msgID.id)
+        user.getMesseges({ where: {id: msgID.id }}).success(function(msg){
+            if (msg != null) {
+                console.log('found ' + msg.length + ' deleting messege with id ' + msg[0].id)
+                msg[0].destroy(); }
+            socket.emit('repeat', 'get_messeges')
+        })
+    })
+
     socket.on('get_messeges', function(){
     var path = "./views/partials/messeges.ejs"
     var messeges_json = [];
             user.getMesseges().success(function(messeges){
                 messeges.forEach(function(c){
-                    messeges_json.push({time: c.time, from: c.from, message: c.message})
+                    messeges_json.push({time: c.time, from: c.from, message: c.message, id: c.id})
                 })
                 socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(),
                     {messeges: messeges_json

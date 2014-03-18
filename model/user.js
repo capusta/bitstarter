@@ -11,7 +11,15 @@ module.exports = function(sequelize, DataTypes) {
                 }},
             phash: {type: DataTypes.STRING(255), unique: false, allowNull: false},
             salt: {type: DataTypes.STRING, unique: false, allowNull: false, defaultValue:crypto.generate()},
-            usertype: {type: DataTypes.STRING, allowNull: false, defaultValue: 'user'},
+            usertype: {type: DataTypes.STRING, allowNull: false, defaultValue: 'user',
+            set: function(v){
+                //no one is allowed to change this.
+                return null;
+            },
+                get: function(){
+                    return this.getDataValue('usertype');
+                }
+            },
             name: {type: DataTypes.STRING, allowNull: true, defaultValue: 'Weary Traveler',
                 set: function(v){
                     n = (crypto.generate(5)).concat(v).concat(crypto.generate(5));

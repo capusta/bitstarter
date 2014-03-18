@@ -11,7 +11,7 @@ module.exports = function(app, passport, usr){
     require('./messeges.js')(app, passport, usr);
 
     app.get('/', function(req, res) {
-        res.render("_index", {user: req.user});
+        res.render("_index");
     });
 
     app.get('/info', function(req, res){
@@ -28,71 +28,9 @@ module.exports = function(app, passport, usr){
 
             res.render("userhome", { message: req.flash('info'), user: req.user})
         } else {
-
             res.redirect("login")
         }
     });
-
-    //TODO: I THINK WE CAN DELETE THIS TOO
-    app.get('/settings', usr.can('access profile'), function(req, res) {
-        if(req.isAuthenticated()) {
-            try { res.render("updateprofile", { user : req.user, message: req.flash('info')}) }
-            catch (err) {
-                console.log("unable to render update profile screen")
-                res.redirect("login")
-            }
-        } else {
-            res.redirect("login");
-        }
-    })
-    //TODO: DELETE THE SECTION BELOW
-    app.post('/settings', usr.can('access profile'), function(req, res) {
-        if(req.isAuthenticated()) {
-
-            global.db.User.find( { where: {username: req.user.username}})
-                .success(function(u){
-                    var cache_email = u.email;
-                    var cache_homeBTC = u.homeBTC;
-                u.name = req.body.nameUpdate;
-                u.addressOne = req.body.addrOneUpdate;
-                u.addressTwo = req.body.addrTwoUpdate;
-                    if(req.body.homeBTCUpdate != null){
-                        u.homeBTC = req.body.homeBTCUpdate.trim();
-                    } else {
-                        u.homeBTC = req.body.homeBTCUpdate;
-                    }
-                if (cache_email != req.body.emailUpdate){
-                    u.email = req.body.emailUpdate;
-                    u.emailVerified = 'FALSE';
-                }
-                u.stepNumber = u.stepNumber.concat('a');
-                u.bitMessegeAddr = req.body.bitmessege;
-                u.usertype = 'user';
-                u.save()
-                    .success(function() {
-                    global.db.Message.sendMessege("admin",u.username,"Profile Updated",function(isOK){
-                        if(isOK){
-                            res.redirect("userhome")
-                        }})})
-                    .error(function(err){
-                        if(err.email){
-                            req.flash('info',err.email[0]);res.redirect("settings"); return;}
-                        if(err.homeBTC){
-                            req.flash('info',err.homeBTC[0]);res.redirect("settings"); return;}
-                        req.flash('info', 'oops error occured');
-                        res.redirect("settings")
-                    }
-                )
-                }
-            )
-                .error(function(err){
-                    req.flash('info', 'user not found')
-                    res.redirect("settings")
-                })
-        } else {
-            res.redirect("login")
-        }
-    })
 
     app.post('/settings/sendmessege', usr.can('access profile'), function(req, res){
         if(req.isAuthenticated()){
@@ -107,7 +45,7 @@ module.exports = function(app, passport, usr){
         } else {
             res.redirect("login")
         }
-    })
+    });
 
     app.get('/login', function(req, res) {
         if (req.isAuthenticated()){
@@ -135,7 +73,7 @@ module.exports = function(app, passport, usr){
                 if(req.body.password1 !== req.body.password2){
                     console.log("passwords do not match");
                     req.flash('error', "Passwords does not match");
-                    res.redirect("signup")
+                    res.redirect("signup");
                     return;
                 }
                 global.db.User.signup(req.body.username.toLowerCase().trim(), req.body.password1, function(err, user){

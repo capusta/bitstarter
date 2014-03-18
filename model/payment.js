@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
       amount: {type: DataTypes.INTEGER, allowNull:false, defaultValue: 0},
       refundstatus: {type: DataTypes.STRING, defaultValue: 'No',
           validate: {
-              isIn: [['Yes', 'No']]
+              isIn: [['Yes', 'No', 'NA']]
           }
       },
       refundedAmount: {type: DataTypes.INTEGER, allowNull: false, defaultValue:0},
