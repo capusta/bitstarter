@@ -51,7 +51,7 @@ module.exports = function(app, passport, usr){
                     return;
                 }
                     var command = actn.toString('utf8').slice(5,actn.length-5).split(",")[0];
-                    console.log('command is ' + command)
+                    console.log('command is ' + command + " for " + u.username)
                     if (command === 'verify_email'){
                         u.verifiedEmail = u.email;
                         u.emailVerified = true;

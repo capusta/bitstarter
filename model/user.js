@@ -67,7 +67,7 @@ module.exports = function(sequelize, DataTypes) {
                     return ans.slice(5,ans.length-5);
                 }
             },
-            verifiedEmail: {type: DataTypes.STRING, allowNull: true, defaultValue: 'user@domain.com',
+            verifiedEmail: {type: DataTypes.STRING, allowNull: true, defaultValue: 'none@notvalid.com',
                 validate: {
                     isEmail: function(v){
                         if(!validator.isEmail(crypto.decrypt(v))){
@@ -145,7 +145,6 @@ module.exports = function(sequelize, DataTypes) {
                 },
                 get: function(){
                     return this.getDataValue('paymentBTC') == this.getDataValue('homeBTC');
-                    return result;
                 }
             },
             emailVerified: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: 'FALSE',

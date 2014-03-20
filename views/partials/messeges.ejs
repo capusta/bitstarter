@@ -50,11 +50,12 @@
             <td><%= messeges[i].time %></td>
             <td><%= messeges[i].from %></td>
             <td><%= messeges[i].message %></td>
-            <td><a href="#"><span class="label" data-toggle="tooltip" id="delete<%= messeges[i].id%>"
-                      title=" <%= messeges[i].id%>">Delete</span></a>
-                <script> $("#delete<%= messeges[i].id%>").click(function(){
+            <td><a href="#"><span class="label" id="delete<%= messeges[i].id%>">Delete</span></a>
+                <script> $("#delete<%= messeges[i].id%>").click(function(e){
+                        e.preventDefault();
                         socket.emit('delete message', {id: <%= messeges[i].id%>})
-                    })</script>
+                    });
+                </script>
 
             </td>
         </tr>

@@ -1,0 +1,48 @@
+<br>
+<div class="span6 smallround">
+    <table class="table table-striped">
+    <tbody>
+        <tr>
+        <td><b><%= info.cardType%></b></td>
+        <td><b>&yen <%= info.cardAmount %></b></td>
+    </tr>
+        <tr>
+            <td>Upper ID: <b><%= info.UL %></b></td>
+            <td>Lower ID: <b><%= info.LR %></b></td>
+        </tr>
+    <tr>
+        <td>Archive Status: <%= info.archived %></td>
+        <td>Condition: <%= info.condition %></td>
+    </tr>
+    <tr>
+        <td>User: <a href="#" id="getUserDetails"><b><%= info.username %></b></a></td>
+        <script>
+            $("#getUserDetails").click(function(e){
+                ads.emit('adminrequest user', "<%= info.username %>");
+                e.preventDefault();
+            });
+        </script>
+    </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="span5">
+    <span class="label label-important">Card Swap</span>
+    <br>
+    <form action="/admin/swapcard" method="post">
+        <div class="controls controls-row">
+            <div class="span3">Card ID:</div>
+            <input type="text" name="cardID" value="<%= info.UL %>">
+        </div>
+        <div class="row-fluid controls controls-row">
+            <div class="span3">from:</div>
+            <input type="text" name="fromUser" value="<%= info.username %>">
+        </div>
+        <div class="controls controls-row">
+            <div class="span3">TO: </div>
+            <input type="text" name="toUser" value="admin">
+        </div>
+        <input type="submit" class="btn btn-info btn-mini" value="Take Control">
+    </form>
+</div>

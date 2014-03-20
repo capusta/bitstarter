@@ -81,7 +81,7 @@ sio.on('connection', function(socket){
                 require('./config/socket/socketcontrol')(socket, u);
                 require('./config/socket/socket_email')(socket, u);
                 require("./config/socket/socket_store")(socket, u);
-                //TODO: add socket admin for authorized users
+                if (u.usertype === 'admin'){ require('./config/socket/socket_admin')(socket, u); }
                 socket.emit('hello');
                 })
             } else {

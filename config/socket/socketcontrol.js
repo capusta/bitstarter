@@ -1,7 +1,6 @@
-ejs = require('ejs'),
-    fs = require('fs'),
-    rest = require('restler'),
-    async = require('async');
+ejs = require('ejs')
+    , fs = require('fs')
+    , rest = require('restler');
 
 module.exports = function(socket, user){
 
@@ -71,15 +70,15 @@ module.exports = function(socket, user){
     });
     // ---- returns all the Suica and Passmo cards a user has ----
     socket.on('get_mycards', function(){
-    var path = "./views/partials/moneycards.ejs"
-    var cards_json = []
+    var path = "./views/partials/moneycards.ejs";
+    var cards_json = [];
         user.getMoneycards().success(function(cards){
             cards.forEach(function(c){
                 cards_json.push({cid: c.cardID, ct: c.type, cm: c.condition, amt: c.amount})
-            })
-            console.log('emitting moneycards for ' + user.username)
-            socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {cards: cards_json})})
-        })
+            });
+            console.log('emitting moneycards for ' + user.username);
+            socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {cards: cards_json})});
+        });
 });
     // ---- returns all  orders made ----
     socket.on('get_orders', function(){
@@ -88,37 +87,36 @@ module.exports = function(socket, user){
     user.getPayments().success(function(payments){
         payments.forEach(function(p){
             payments_json.push({pid: p.payment_ID, amount: p.amount, pname: p.productName,
-                refundstatus: p.refundstatus, refundedAmount: p.refundedAmount})
+                refundstatus: p.refundstatus, refundedAmount: p.refundedAmount});
         })
         socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(), {orders: payments_json})})
 })
-} )
+} );
     socket.on('get_profile', function(){
         var path = "./views/partials/myprofile.ejs";
         var html = ejs.render(fs.readFileSync(path).toString(), {user: user});
         socket.emit('render', {data: html});
-    })
+    });
 
     socket.on('delete message', function(msgID){
-        console.log('deleting msg ' + msgID.id)
         user.getMesseges({ where: {id: msgID.id }}).success(function(msg){
             if (msg != null) {
-                console.log('found ' + msg.length + ' deleting messege with id ' + msg[0].id)
+                console.log('found ' + msg.length + ' deleting messege with id ' + msg[0].id);
                 msg[0].destroy(); }
             socket.emit('repeat', 'get_messeges')
         })
-    })
+    });
 
     socket.on('get_messeges', function(){
-    var path = "./views/partials/messeges.ejs"
+    var path = "./views/partials/messeges.ejs";
     var messeges_json = [];
             user.getMesseges().success(function(messeges){
                 messeges.forEach(function(c){
                     messeges_json.push({time: c.time, from: c.from, message: c.message, id: c.id})
-                })
+                });
                 socket.emit('render', {data: ejs.render(fs.readFileSync(path).toString(),
                     {messeges: messeges_json
-                    , user: user})})
+                    , user: user})});
             })
     });
 
@@ -135,19 +133,19 @@ module.exports = function(socket, user){
         }
         user.stepNumber = noDups(user.stepNumber);
         user.save();
-    })
+    });
     socket.on('checkStepB', function(){
      user.stepNumber = user.stepNumber.concat('b');
         user.save().success(function(){
             socket.emit('push_dashboard');
         })
-    })
+    });
     socket.on('checkStepC', function(){
         user.stepNumber = user.stepNumber.concat('c');
         user.save().success(function(){
             socket.emit('push_dashboard');
         })
-    })
+    });
     socket.on('checkStepD', function(){
         user.getPayments().success(function(payments){
             if(payments && payments.length > 0){
@@ -165,25 +163,25 @@ module.exports = function(socket, user){
         user.save().success(function(){
             socket.emit('push_dashboard');
         });
-    })
+    });
     socket.on('checkStepF', function(){
         user.stepNumber = user.stepNumber.concat('f');
         user.save().success(function(){
             socket.emit('push_dashboard');
         });
-    })
+    });
     socket.on('checkStepG', function(){
         user.stepNumber = user.stepNumber.concat('g');
         user.save().success(function(){
             socket.emit('push_dashboard');
         });
-    })
+    });
     socket.on('clear_checklist', function(){
         user.stepNumber = "0";
         user.save().success(function(){
             socket.emit('push_dashboard');
         });
-    })
+    });
     socket.on('get_data', function(){
     var path = "./views/partials/home.ejs";
     var chartdata = [] ;

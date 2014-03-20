@@ -2,7 +2,7 @@
 
 
 <div class="row-fluid">
-    <span class="label" id="profileLabel" data-toggle="tooltip" title="Keep me up to date">Profile </span>
+    <span class="label cool-font" id="profileLabel" data-toggle="tooltip" title="Keep me up to date">Profile </span>
     <div id="displayError" class="cool-font" style="color: red"></div>
 </div>
 
@@ -103,8 +103,10 @@
                             <script>$('#details').hide(); </script>
 
                         <% if (!user.BTCverified) {%>
-                        <a href="#"><span class="label" id="btcVerifyMe" data-toggle="tooltip"
+                        <div id="btcDiv_phone">
+                        <a href="#"><span class="label" id="btcVerifyMe_phone" data-toggle="tooltip"
                                           title="Verify Address (Necessary if using a shared wallet))">Verify</span></a> <%}%>
+                        </div>
 
                     </div>
                     <div id="details">[ If you own your Wallet above (i.e. if it is not a shared wallet) then there

@@ -1,16 +1,6 @@
+
 // Let's start with the error handling first.  We will need to do some basic error checking and be
 // able to display that, for passwords, email names, etc...
-function scrollToElement(selector, time, verticalOffset) {
-    time = typeof(time) != 'undefined' ? time : 1000;
-    verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
-    element = $(selector);
-    offset = element.offset();
-    offsetTop = offset.top + verticalOffset;
-    $('html, body').animate({
-        scrollTop: offsetTop
-    }, time);
-}
-
 var showError = function(msg){
     e = $('#displayError');
     e.fadeOut(function(){
@@ -37,41 +27,41 @@ $('#btcChangeDiv, #btcChangePhoneDiv').hide();
 
 // These are going to be all the little pencil icons that users can click to display certain portions
 // of the divs that we hidden earlier
-$('#authnameChange').click(function(){
-    scrollToElement('#authnameChange');
+$('#authnameChange').click(function(e){
+    e.preventDefault();
     $('#nameChangediv').slideToggle();});
 
-$('#authEmailChange').click(function(){
-    scrollToElement('#authEmailChange');
+$('#authEmailChange').click(function(e){
+    e.preventDefault();
     $('#authEmailChangeDiv').slideToggle();
 });
-$('#authAddrOneChange').click(function(){
-    scrollToElement('#authAddrOneChange');
+$('#authAddrOneChange').click(function(e){
+    e.preventDefault();
     $('#addressOneChangeDiv').slideToggle();
 });
-$('#authAddrTwoChange').click(function(){
-    scrollToElement('#authAddrTwoChange');
+$('#authAddrTwoChange').click(function(e){
+    e.preventDefault();
     $('#addressTwoChangeDiv').slideToggle();
 });
-$('#authBitMessageChange').click(function(){
-    scrollToElement('#authBitMessageChange');
+$('#authBitMessageChange').click(function(e){
+    e.preventDefault();
     $('#bitMessageChangeDiv').slideToggle();
 });
-$('#authBTCchange').click(function(){
-    scrollToElement('#authBTCchange');
+$('#authBTCchange').click(function(e){
+    e.preventDefault();
     $('#btcChangeDiv').slideToggle();
 });
-$('#authBTCchangePhone').click(function(){
-    scrollToElement('#authBTCchangePhone');
+$('#authBTCchangePhone').click(function(e){
+    e.preventDefault();
     $('#btcChangePhoneDiv').slideToggle(function(){
-
     });
 
 })
 
 // This is where all the change buttons submit the inputs to socket to be written to the database
 // Code is a bit repetative, but limited and manageable.  Also allows us to add/remove fields easily
-$('#authNameChangeButton').click(function(){
+$('#authNameChangeButton').click(function(e){
+    e.preventDefault();
     b = $('#newName').val();
     if (b === null || typeof b === 'undefined' || b.trim().length == 0) {
     showError('Name Cannot be Blank');
@@ -80,7 +70,8 @@ $('#authNameChangeButton').click(function(){
     socket.emit('changeUserData', {item: 'name', value: b.trim()});
 }});
 
-$('#authEmailChangeButton').click(function(){
+$('#authEmailChangeButton').click(function(e){
+    e.preventDefault();
     b = $('#newEmail').val();
     if (b === null || typeof b === 'undefined' || b.trim().length == 0){
         showError('Invalid Email');
@@ -90,7 +81,8 @@ $('#authEmailChangeButton').click(function(){
     }
 });
 
-$('#authAddressOneChangeButton').click(function(){
+$('#authAddressOneChangeButton').click(function(e){
+    e.preventDefault();
     b = $('#newAddressOne').val();
     if (b === null || typeof b === 'undefined' || b.trim().length == 0){
         showError('Invalid Address');
@@ -100,7 +92,8 @@ $('#authAddressOneChangeButton').click(function(){
     }
 });
 
-$('#authAddressTwoChangeButton').click(function(){
+$('#authAddressTwoChangeButton').click(function(e){
+    e.preventDefault();
     b = $('#newAddressTwo').val();
     if (b === null || typeof b === 'undefined' || b.trim().length == 0){
         showError('Invalid Address');
@@ -114,7 +107,8 @@ var badBTC = function(inp){
     return (b === null || typeof b === 'undefined' || b.trim().length == 0);
 }
 
-$('#authChangeBTCaddressButton').click(function(){
+$('#authChangeBTCaddressButton').click(function(e){
+    e.preventDefault();
     b = $('#newBTC').val();
     if (badBTC(b)){
         showError('Invalid Bitcoin Address')
@@ -124,7 +118,8 @@ $('#authChangeBTCaddressButton').click(function(){
     }
 })
 
-$('#authChangeBTCaddressPhoneButton').click(function(){
+$('#authChangeBTCaddressPhoneButton').click(function(e){
+    e.preventDefault();
     b = $('#new_phone_BTC').val();
     if(badBTC(b)){
         showError('Invalid Bitcoin Address')
@@ -134,7 +129,8 @@ $('#authChangeBTCaddressPhoneButton').click(function(){
     }
 })
 
-$('#authBitmessageButton').click(function(){
+$('#authBitmessageButton').click(function(e){
+    e.preventDefault();
     b = $('#newBitMessageVal').val();
     if (typeof b === 'undefined'){
         showError('Invalid BitMessage Address');
@@ -145,22 +141,31 @@ $('#authBitmessageButton').click(function(){
 });
 
 // The two labels, when clicked, will handle the verifications for the btc and email addresses
-$('#verifyMe').click(function(){
+$('#verifyMe').click(function(e){
+    e.preventDefault();
     socket.emit('send verification email');
     $('#emailDiv').html( "<b> Email Sent</b>");
 });
-$('#btcVerifyMe').click(function(){
+$('#btcVerifyMe').click(function(e){
+    e.preventDefault();
     socket.emit('verifyMe');
-})
+});
+$('#btcVerifyMe_phone').click(function(e){
+    e.preventDefault();
+    socket.emit('verifyMe');
+});
 // need a way to display the coinbase code for the payment.
 socket.on('renderVerification', function(data){
     var buttonCode = data.buttonCode;
     $('#btcDiv').html( '<a href="https://coinbase.com/checkouts/' + buttonCode + '" target="_blank"> ' +
         '<img alt="Pay With Bitcoin" src="https://coinbase.com/assets/buttons/buy_now_small.png"></a>' );
-    });
+$('#btcDiv_phone').html( '<a href="https://coinbase.com/checkouts/' + buttonCode + '" target="_blank"> ' +
+    '<img alt="Pay With Bitcoin" src="https://coinbase.com/assets/buttons/buy_now_small.png"></a>' );
+});
 
 // Everything that has to do with password change.
-$('#authPassChangeButton').click(function(){
+$('#authPassChangeButton').click(function(e){
+    e.preventDefault();
     var a = $('#passOne').val();
     var b = $('#passTwo').val();
     if(a.length < 4){
@@ -179,7 +184,8 @@ socket.on('authPasswordChanged', function(data){
     $('#authpassDiv').html(data.msg);
     // the above messege could be an error - which means that nothing happened on the back end.
     });
-$('#authPassChange').click(function(){
+$('#authPassChange').click(function(e){
+    e.preventDefault();
     $('#authpassDiv').slideToggle();
     })
 

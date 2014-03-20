@@ -62,6 +62,8 @@ module.exports = global.db;
 exports.sq = sq;
 
 console.log("database  connected")
+global.db.Moneycard.belongsTo(global.db.User);
+global.db.Payment.belongsTo(global.db.User);
 global.db.User.hasMany(global.db.Payment, {as: 'Payments'});
 global.db.User.hasMany(global.db.Message, {as: "Messeges"});
 global.db.User.hasMany(global.db.Moneycard, {as: "Moneycards"});

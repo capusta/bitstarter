@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Main</title>
+    <title>Suimo!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
       <% include _headers.ejs %>
@@ -24,8 +24,7 @@
           });
           socket.on('repeat', function(cmd){
               socket.emit(cmd)
-          })
-
+          });
           socket.on('push_dashboard', function(){
               //we need to re-query the possibly new data
               socket.emit("get_data");
@@ -105,24 +104,29 @@
              $("#spinhere").html(spinner.el);
          };
          $( "#logo").addClass('animated fadeInLeft');
-         $("#displaycards").click(function(){
+         $("#displaycards").click(function(e){
+             e.preventDefault();
              spinIt();
              socket.emit("get_mycards");
          });
-         $("#displaymyprofile").click(function(){
+         $("#displaymyprofile").click(function(e){
+             e.preventDefault();
              spinIt();
              socket.emit("get_profile")
          });
-         $("#displaymymesseges").click(function(){
+         $("#displaymymesseges").click(function(e){
+             e.preventDefault();
              spinIt();
              socket.emit("get_messeges");
          });
-         $("#displayshop").click(function(){
+         $("#displayshop").click(function(e){
+             e.preventDefault();
              spinIt();
              socket.emit('checkStepA');
              socket.emit('get_shop');
          });
-         $("#displayorders").click(function(){
+         $("#displayorders").click(function(e){
+             e.preventDefault();
              spinIt();
              socket.emit('get_orders');
          });

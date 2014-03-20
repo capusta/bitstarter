@@ -13,6 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       refundedAmount: {type: DataTypes.INTEGER, allowNull: false, defaultValue:0},
       productName: {type: DataTypes.STRING, allowNull: false, defaultValue:"Unknown Product"},
       // Will be used for archiving purposes when users delete their account.
-      archived: {type: DataTypes.BOOLEAN, allowNull:false, defaultValue: false}
+      archived: {type: DataTypes.BOOLEAN, allowNull:false, defaultValue: false},
+      refundHash: {type: DataTypes.STRING, allowNull:true}
   });
 };

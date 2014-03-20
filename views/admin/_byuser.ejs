@@ -1,0 +1,65 @@
+<br>
+<div class="span6 smallround">
+<table class="table table-striped">
+    <tbody>
+    <tr>
+        <td>ID: <%= user.id %> <br> Username: <b><%= user.username %></b></td>
+        <td><%= user.email %> <br> (Verified: <%= user.emailVerified %> )</td>
+    </tr>
+    <tr>
+        <td>Name: <%= user.name %> <br> (<%= user.usertype %>)</td>
+
+        <td>Address: <%= user.addressOne %> <br>
+            Address: <%= user.addressTwo %>
+        </td>
+    </tr>
+    <tr>
+        <td>BTC Address: <%= user.homeBTC %> <br>
+        Verified: <%= user.BTCverified %>
+        </td>
+    </tr>
+</table>
+    </div>
+<div class="span5">
+    <span class="label label-important" id="cardsLabel">Send Messege</span>
+    <form action="/admin/sendmessege" method="post">
+        <div class="controls controls-row">
+            <div class="span3">To:</div>
+            <input type="text" name="toUser" value="<%= user.username %>">
+        </div>
+        <div class="controls controls-row">
+            <div class="span3">From:  </div>
+            <input type="text" name="fromUser" value="admin">
+        </div>
+        <div class="controls controls-row">
+            <div class="span3">Message: </div>
+            <input type="text" name="m" value="">
+        </div>
+        <input type="submit" class="btn btn-info btn-mini" value="send">
+    </form>
+
+    <!--Going to cram the Send Messege and Password Reset-->
+
+        <span class="label label-important">password reset</span>
+        <br><br>
+        <form action="/admin/changepassword" method="post">
+            <div class="controls controls-row">
+                <div class="span3">username</div>
+                <input type="text" name="username" value="<%= user.username %>">
+            </div>
+            <div class="row-fluid controls controls-row">
+                <div class="span3">new password</div>
+                <input type="text" id="adminNewpass" name="newpass" value="">
+            </div>
+            <input type="submit" id="adminchangePassword" class="btn btn-info btn-mini" value="change">
+        </form>
+</div>
+<script>
+    $('#adminchangePassword').click(function(e){
+        e.preventDefault();
+        var np = $('#adminNewpass').val();
+        if(np == null || np.length < 2) { $('#logo').html('Bad Password - too short'); return;}
+        ads.emit('adminrequest changepassword', {username: "<%= user.username %>", newpass: np})
+
+    })
+</script>

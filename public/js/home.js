@@ -12,32 +12,41 @@ $('#stepA, #stepB, #stepC').height(r1);
 $('#stepD, #stepE').height(r2)
 $('#stepF, #stepG, #stepH').height(r3);
 
-$('#checkStepA').click(function(){
+$('#checkStepA').click(function(e){
+    e.preventDefault();
     socket.emit('get_profile');
 })
-$("#checkStepB").click(function(){
+$("#checkStepB").click(function(e){
+    e.preventDefault();
     socket.emit('checkStepB');
 })
-$("#checkStepC").click(function(){
+$("#checkStepC").click(function(e){
+    e.preventDefault();
     socket.emit('checkStepC');
 })
-$("#checkStepD").click(function(){
+$("#checkStepD").click(function(e){
+    e.preventDefault();
     socket.emit('checkStepD');
 })
-$("#checkStepE").click(function(){
+$("#checkStepE").click(function(e){
+    e.preventDefault();
     socket.emit('checkStepE');
 })
-$("#checkStepF").click(function(){
+$("#checkStepF").click(function(e){
+    e.preventDefault();
     socket.emit('checkStepF');
 })
-$("#checkStepG").click(function(){
+$("#checkStepG").click(function(e){
+    e.preventDefault();
     socket.emit('checkStepG');
 })
-$("#clearChecklist").click(function(){
+$("#clearChecklist").click(function(e){
     socket.emit('clear_checklist');
+    e.preventDefault();
 })
 
-$('#checkStepH').click(function(){
+$('#checkStepH').click(function(e){
+    e.preventDefault();
     socket.emit('send user delete request');
     $('#checkStepH').fadeOut();
     $('#Step8Paragraph').append('<b>Email Sent</b>')
