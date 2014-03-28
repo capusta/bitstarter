@@ -123,6 +123,7 @@ module.exports = function(app, passport, usr){
                                     u.removePayment(p).success(function(){
                                         adminuser.addPayment(p);
                                         p.archived = true;
+                                        p.refundstatus = 'NA';
                                         p.save();
                                         callback();
                                     })

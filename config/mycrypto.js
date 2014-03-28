@@ -6,7 +6,7 @@ var m = crypto.createHash('md5');
 m.update(password);
 var key = m.digest('hex');
 m = crypto.createHash('md5');
-m.update(password+key);
+m.update(password+key+(new Date()).getTime());
 var iv = m.digest('hex');
 var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
 
@@ -32,8 +32,7 @@ var generate = function(length) {
         string += chars.substring(randomNumber, randomNumber + 1);
     }
     return string.toString('utf8');
-}
-
+};
 
 module.exports.encrypt = encrypt;
 module.exports.decrypt = decrypt;

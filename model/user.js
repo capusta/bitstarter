@@ -14,7 +14,6 @@ module.exports = function(sequelize, DataTypes) {
             usertype: {type: DataTypes.STRING, allowNull: false, defaultValue: 'user',
             set: function(v){
                 //no one is allowed to change this.
-                return null;
             },
                 get: function(){
                     return this.getDataValue('usertype');
@@ -149,8 +148,8 @@ module.exports = function(sequelize, DataTypes) {
             },
             emailVerified: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: 'FALSE',
                 set: function(v){
-                    a = crypto.decrypt(this.getDataValue('email'));
-                    b = crypto.decrypt(this.getDataValue('verifiedEmail'));
+                    var a = crypto.decrypt(this.getDataValue('email'));
+                    var b = crypto.decrypt(this.getDataValue('verifiedEmail'));
                     a = a.slice(5,a.length-5);
                     b = b.slice(5, b.length-5);
                     return this.setDataValue('emailVerified', (a == b));
@@ -173,11 +172,11 @@ module.exports = function(sequelize, DataTypes) {
                 if (err) {done(err, null, {message: "bad hash"})}
 
                 global.db.User.build({ username: uname.toLowerCase(), phash: ret_hash.toString('base64'), salt: s}).save()
-                    .success(function(u){console.log(uname + " signed up")
+                    .success(function(u){console.log(uname + " signed up");
                         done(null, u);})
                     .error(function(err){
-                        console.log("User model got error on signup " + err.message)
-                        done(err, null)
+                        console.log("User model got error on signup " + err.message);
+                        done(err, null);
                     })
             })
         }},
@@ -189,13 +188,13 @@ module.exports = function(sequelize, DataTypes) {
                 var uname = this.username;
                 var s = this.salt;
                      hash(pword, s, function (err, ret_hash) {
-                        if (err) {return answer(false);}
+                        if (err) {answer(false); return;}
                         if (ret_hash.toString('base64') !== myhash) {
                             answer(false);
                      }
                      else {
                             console.log(uname + " authenticated / logged in");
-                            return answer(true);
+                            answer(true);
                      }});
               },
             /*Allows a user to change their password, assuming the request is authenticated.*/
@@ -206,13 +205,13 @@ module.exports = function(sequelize, DataTypes) {
                 //New salt is generated every single time a password is changed.
                 hash(p, s, function(err, ret_hash){
                     if (err){
-                             console.log("password change for user " + usr.username + " failed ")
+                             console.log("password change for user " + usr.username + " failed ");
                              callback(false)
                          }
                     else {
                         console.log("password changed for " + usr.username);
                         usr.updateAttributes({phash: ret_hash.toString('base64'), salt: s});
-                        callback(true)
+                        callback(true);
                     }
                 })
             },
@@ -225,13 +224,13 @@ module.exports = function(sequelize, DataTypes) {
                 s = crypto.generate();
                 hash(p, s, function(err, ret_hash){
                     if (err){
-                        console.log("user.js - password change for user " + usr.username + " failed ")
-                        callback(false)
+                        console.log("user.js - password change for user " + usr.username + " failed ");
+                        callback(false);
                     }
                     else {
                         console.log("new password generated for " + usr.username);
                         usr.updateAttributes({phash: ret_hash.toString('base64'), salt: s});
-                        callback(p)
+                        callback(p);
                     }
                 })
             },
@@ -253,14 +252,14 @@ module.exports = function(sequelize, DataTypes) {
                 if(i !== null && ~i.indexOf('c')){
                     this.updateAttributes({alert: i.replace(/c/g,'')});
                     return true;
-                } else {return false};
+                } else {return false}
             },
             hasMessegesAlert: function(){
                 i = this.getDataValue('alert');
                 if(i !== null && ~i.indexOf('m')){
                     this.updateAttributes({alert: i.replace(/m/g,'')});
                     return true;
-                } else { return false;};
+                } else { return false;}
             }
         }
         }
