@@ -5,11 +5,24 @@ var express = require('express')
     , http    = require('http')
     , passport = require("passport")
     , flash = require('connect-flash')
-    , usr = require('connect-roles')
+    , connectRoles = require('connect-roles')
     , passportSocketIo = require('passport.socketio')
     , io = require('socket.io')
     , app = express()
-    , parseSignedCookie = connect.utils.parseSignedCookie;
+    , parseSignedCookie = connect.utils.parseSignedCookie
+    , usr = new connectRoles({
+        failureHandler: function(req, res, action){
+            console.log("connect roles failure:  " + action)
+            var accept = req.headers.accept || '';
+            //res.status(403);
+            if (~accept.indexOf('html')) {
+                res.redirect("login");
+                //res.send('access-denied (but can be rendered)', {action: action})
+            } else {
+                res.send("Access Denied - you do not have permission to: " + action);
+            }
+        }
+    });
 
 require('./model/index')
 console.log("connecting session store")
@@ -25,14 +38,14 @@ app.configure(function(){
     app.use(express.cookieParser(process.env.COOKIE_SECRET));
     app.use(express.session({ secret: process.env.SESSION_SECRET, key: 'connect.sid', store: sessionStore}));
     app.use(passport.initialize());
-    app.use(passport.session())
+    app.use(passport.session());
     app.use(flash());
     app.use(app.router);
-    app.use(usr);
-})
+    app.use(usr.middleware());
+});
 
-require('./config/passport')(passport)
-require('./config/connectroles')(usr)
+require('./config/passport')(passport);
+require('./config/connectroles')(usr);
 require('./routes')(app, passport, usr);
 
 srv = http.createServer(app);
@@ -46,7 +59,7 @@ sio.configure(function(){
     sio.set("heartbeat timeout", 60000)
 })
 
-global.db.sequelize.sync({force: true}).complete(function(err) {
+global.db.sequelize.sync({force: false}).complete(function(err) {
     if (err) {
         throw err;
     } else {

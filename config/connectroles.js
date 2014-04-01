@@ -26,16 +26,4 @@ module.exports = function(user){
             return true;
         }
     })
-
-    user.setFailureHandler(function(req, res, action){
-        console.log("connect roles failure:  " + action)
-        var accept = req.headers.accept || '';
-        //res.status(403);
-        if (~accept.indexOf('html')) {
-            res.redirect("login");
-            //res.send('access-denied (but can be rendered)', {action: action})
-        } else {
-            res.send("Access Denied - you do not have permission to: " + action);
-        }
-    });
-}
+};
