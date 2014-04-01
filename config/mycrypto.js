@@ -3,7 +3,7 @@ var crypto = require('crypto');
 var password = process.env.AES_PASS;
 console.log("starting encryption")
 var m = crypto.createHash('md5');
-m.update(password);
+m.update(password.toStrin());
 var key = m.digest('hex');
 m = crypto.createHash('md5');
 m.update(password+key+(new Date()).getTime());
