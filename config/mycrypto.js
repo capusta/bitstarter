@@ -6,7 +6,7 @@ var m = crypto.createHash('md5');
 m.update(password.toString());
 var key = m.digest('hex');
 m = crypto.createHash('md5');
-m.update(password+key+(new Date()).getTime());
+m.update(password+key);
 var iv = m.digest('hex');
 var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
 

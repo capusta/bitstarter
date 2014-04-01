@@ -59,7 +59,9 @@ module.exports = function(socket, user){
     socket.on('adminrequest user', function(uname){
         if(uname == null){ socket.emit('adminalert', "Empty Username"); return;};
         //going to get the user and all of his/her associated values (eager loading)
-        global.db.User.find({ where: {username: uname}, include: [ global.db.Payment, global.db.Moneycard ]}).success(function(usr){
+        global.db.User.find({ where: {username: uname}, include: [
+            {model: global.db.Payment, as: 'Payments'},
+            {model: global.db.Moneycard, as: 'Moneycards'} ]}).success(function(usr){
             if(usr == null) {
                 console.log('error finding requested user ' + uname);
                 socket.emit('adminalert', "Unable to find the user");
@@ -68,6 +70,9 @@ module.exports = function(socket, user){
             var upath = './views/admin/_byuser.ejs';
             socket.emit('adminrender', {html: ejs.render(fs.readFileSync(upath).toString(), {user: usr})});
         })
+            .error(function(){
+                console.log('no payments or moneycards')
+            })
     })
 
     socket.on('adminrequest changepassword', function(data){

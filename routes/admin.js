@@ -2,7 +2,7 @@ module.exports = function(app, passport, usr){
 
     app.get('/admin', usr.can('access admin page'), function(req, res) {
         if(req.isAuthenticated()) {
-            res.render('admin/cardmanage');
+            res.render('admin/cardmanage', {message: "", user: "yes"});
         } else {
             req.flash('error');
             res.render("login", {message: "Please Login"});
