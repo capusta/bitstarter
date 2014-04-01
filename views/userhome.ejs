@@ -2,23 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Main</title>
+    <title>Suimo!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">
-    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    <!--<link href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css" rel="stylesheet">-->
 
-    <link rel='stylesheet' href='/site.css' />
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" type="text/css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" type="text/css" />
-
-    <script type="text/javascript" src="/jquery.js"></script>
-    <script type="text/javascript" src="/bootstrap.js"></script>
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="/Chart.js"></script>
-    <link rel="stylesheet" href="/animate.css" />
+      <% include _headers.ejs %>
       <link rel="stylesheet" href="/bootstrap-responsive.css" />
+      <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
 
       <style type="text/css">
           @media (min-width: 980px) {
@@ -26,106 +16,122 @@
                   padding-top: 60px;
               }
           }
-          .carousel-control {
-              top: 90%;
-          }
       </style>
-
       <script>
           var socket = io.connect(window.location.hostname);
-
-          socket.on('my_username', function(u){
-              $('#welcome').text(u.username);
+          socket.on('hello', function(){
               socket.emit("get_data");
-          })
+          });
+          socket.on('repeat', function(cmd){
+              socket.emit(cmd)
+          });
           socket.on('push_dashboard', function(){
+              //we need to re-query the possibly new data
               socket.emit("get_data");
-          })
-          socket.on('mymoneycards', function(data){
-              $('#customcontent').html(data.data)
-          })
-          socket.on('myprofile', function(data){
-              $('#customcontent').html(data.data)
-          })
-          socket.on('mymesseges', function(data){
-              $('#customcontent').html(data.data)
-          })
-          socket.on('displayshop', function(data){
-              $('#customcontent').html(data.data)
-          })
-          socket.on('myorders', function(data){
-              $('#customcontent').html(data.data)
-          })
-          socket.on('renderchart', function(data){
-              $('#customcontent').html(data.content)
-          })
+          });
+          socket.on('render', function(data){
+              $('#spinhere').html('');
+              $('#customcontent').html(data.data);
+          });
+          socket.on('rendershop', function(data){
+              $('#spinhere').html('');
+              $('#customcontent').html(data.data);
+              // c , below, starts our mutually recursive exchange rate functions
+              c();
+          });
+          socket.on('new mail', function(){
+              $('#messegebadge').show();
+          });
+          var opts = {
+              lines: 11, // The number of lines to draw
+              length: 5, // The length of each line
+              width: 9, // The line thickness
+              radius: 14, // The radius of the inner circle
+              corners:.9, // Corner roundness (0..1)
+              rotate: 52, // The rotation offset
+              direction: 1, // 1: clockwise, -1: counterclockwise
+              color: '#CCFFE5', // #rgb or #rrggbb or array of colors
+              speed: 0.5, // Rounds per second
+              trail: 93, // Afterglow percentage
+              shadow: false, // Whether to render a shadow
+              hwaccel: false, // Whether to use hardware acceleration
+              className: 'spinner', // The CSS class to assign to the spinner
+              zIndex: 2e9, // The z-index (defaults to 2000000000)
+              top: 'auto', // Top position relative to parent in px
+              left: 'auto' // Left position relative to parent in px
+          };
+          var spinner = new Spinner(opts).spin();
       </script>
-
   </head>
   <body>
      <% include _navbar.ejs %>
+     <div class="container-fluid-full">
+         <div class="row-fluid">
+             <div class="span2">
 
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span2 text-center">
-                <a href="#" id="displaycards" class="btn btn-primary"><i class="icon-white icon-star"></i>eCash Cards</a>
-            </div>
-            <div class="span2 text-center">
-            <a href="#" id="displaymyprofile" class="btn btn-inverse"><i class="icon-white icon-user"></i> Profile</a>
-                </div>
-            <div class="span2 text-center">
-            <a href="#" id="displaymymesseges" class="btn btn-inverse"><i class="icon-white icon-envelope"></i> Messeges</a>
-                </div>
-            <div class="span2 text-center">
-            <a href="#" id="displayorders" class="btn btn-inverse"><i class="icon-white icon-list-alt"></i> My Orders</a>
-                </div>
-                <div class="span2 text-center">
-            <a href="#" id="displayshop" class="btn btn-info"><i class="icon-white icon-shopping-cart"></i> Card Shop</a>
-                    </div>
-            <div class="span2 text-center">
-            <a href="/logout" class="btn btn-inverse" id="displaylogout"><i class="fa fa-star"></i> Log Out</a>
-                </div>
-        </div>
-        <br>
-        <div class="row-fluid">
-            <div id="logo" class="cool-font span10">
-                <h4 id="welcome"> </h4>
-                <% if (message) { %>
-                <p><%= message %></p>
-                <% } %>
-            </div>
-            </div>
+                 <div class="collapse nav-collapse" id="sideMenu" >
+                     <ul class="nav nav-pills nav-stacked nav-justified" id="sidebarUL">
 
-        <div class="row-fluid" style="box-shadow: 1px 1px 1px 1px lightgrey; padding-bottom: 5px" id="customcontent">
-        <br>
-        </div>
+                         <li><a href="#" id="displaycards">
+                                     <i class="fa fa-credit-card"></i> Cash Cards
+                                         <% if (user.hasCashCardAlert()) {%>
+                                         <span class="badge badge-info" id="cardbadge">!</span> <%}%> </a>
+                             </li>
+                         <li><a href="#" id="displaymyprofile"><i class="fa fa-user"></i>
+                                 Profile
+                             </a></li>
+                         <li><a href="#" id="displaymymesseges"><i class="fa fa-envelope-o"></i>
+                                 Messeges <span class="badge badge-warning" id="messegebadge">!</span>
+                             </a></li>
+                         <li><a href="#" id="displayorders"><i class="fa fa-list-ul"></i>
+                                 My Orders
+                             </a></li>
+                         <li><a href="#" id="displayshop"><i class="fa fa-shopping-cart"></i>
+                                 Card Shop
+                             </a></li>
+                         <li><a href="/logout" id="displayshop"><i class="fa fa-sign-out"></i>
+                                 Log Out
+                             </a></li>
+                     </ul>
+                 </div>
+                 <div id="spinhere" style="left: 50%; position: relative; padding-top: 30%"></div>
+             </div>
+             <div class="span9" style=" padding-bottom: 5px" id="customcontent">.</div>
+         </div>
     </div>
-
      <script>
+         var spinIt = function(){
+             $("#spinhere").html(spinner.el);
+         };
          $( "#logo").addClass('animated fadeInLeft');
-         $('#messeges').tooltip({ animation: true, html: true})
-         $("#displaycards").click(function(){
-             socket.emit("get_mycards")
-         })
-         $("#displaymyprofile").click(function(){
+         $("#displaycards").click(function(e){
+             e.preventDefault();
+             spinIt();
+             socket.emit("get_mycards");
+         });
+         $("#displaymyprofile").click(function(e){
+             e.preventDefault();
+             spinIt();
              socket.emit("get_profile")
-         })
-         $("#displaymymesseges").click(function(){
-             socket.emit("get_messeges")
-         })
-         $("#displayshop").click(function(){
-             socket.emit('get_shop');
+         });
+         $("#displaymymesseges").click(function(e){
+             e.preventDefault();
+             spinIt();
+             socket.emit("get_messeges");
+         });
+         $("#displayshop").click(function(e){
+             e.preventDefault();
+             spinIt();
              socket.emit('checkStepA');
-         })
-         $("#displayorders").click(function(){
+             socket.emit('get_shop');
+         });
+         $("#displayorders").click(function(e){
+             e.preventDefault();
+             spinIt();
              socket.emit('get_orders');
-         })
-
-         $('#displaymyprofile').width($('#displaycards').width());
-         $('#displaymymesseges').width($('#displaycards').width());
-         $('#displayorders').width($('#displaycards').width());
-         $('#displayshop').width($('#displaycards').width());
-         $('#displaylogout').width($('#displaycards').width());
+         });
+         $("#spinhere").html(spinner.el);
+         $('#messegebadge').hide();
      </script>
   </body>
 </html>

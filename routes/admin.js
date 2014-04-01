@@ -1,72 +1,13 @@
 module.exports = function(app, passport, usr){
+
     app.get('/admin', usr.can('access admin page'), function(req, res) {
-
         if(req.isAuthenticated()) {
-
-            var cards_json = [];
-            var payments_json = [];
-
-            var populate = function(u, callback){
-                var cardsDone = false;
-                var ordersDone = false;
-                u.getMoneycards().success(function(cards){
-                    cards.forEach(function(c){
-                        cards_json.push({cid: c.cardID, ct: c.type, ccond: c.condition, camt: c.amount, usr: u.username});
-                    })
-                    cardsDone = true;
-                    if (cardsDone & ordersDone) {callback(null);}
-                })
-                u.getPayments().success(function(payments){
-                    payments.forEach(function(p){
-                        payments_json.push({user: p.username, pid: p.payment_ID, amount: p.amount, pname: p.productName})
-                    })
-                    ordersDone = true;
-                    if (cardsDone & ordersDone) {callback(null)}
-                })
-            }
-
-            global.db.User.findAll().success(function(users){
-                async.each(users, populate, function(err){
-                    if (err){console.log("error - cannot get all users in db.user.findall")}
-                    else {
-                        res.render('admin/cardmanage', {user: req.user, allcards: cards_json, allpayments: payments_json,
-                                                        message: req.flash('info')});
-                        console.log(req.user.dataValues.username + " logged into user console")
-                    }
-                });
-        });
-
+            res.render('admin/cardmanage');
         } else {
             req.flash('error');
             res.render("login", {message: "Please Login"});
-        }
-
-    })
-    app.post('/admin/changepassword',usr.can('access admin page'),function(req, res){
-        if(req.isAuthenticated()){
-            global.db.User.find( { where: { username: req.body.username}}).success(function(u){
-                if(u==null) {
-                    req.flash('info','Error - user not found');
-                    res.redirect("admin")
-                    return
-                }
-                u.changepassword(req.body.newpass, function(isOK){
-                    if(isOK) {
-                        req.flash('info','password changed OK')
-                        res.redirect("admin")
-                        return
-                    }
-                    else {
-                        req.flash('info','password chagne failed')
-                        res.redirect("admin")
-                        return
-                    }
-                })
-            })
-        }else{
-         res.redirect("login")
-        }
-    })
+        };
+    });
     app.post('/admin/addcard',  usr.can('access admin page'), function(req, res) {
         if(req.isAuthenticated()) {
             global.db.User.find( { where: {username: req.body.username}}).success(function(u){
@@ -89,8 +30,7 @@ module.exports = function(app, passport, usr){
                         global.db.Message.addCard(req.body.cardType, req.body.cardID, u);
                         console.log("Card " + c.cardID + " added to " + u.username);
                         req.flash('info', 'Yay, card added to ' + u.username)
-                        res.redirect("admin")
-                        return
+                        res.redirect("admin");
                     })
             })
 

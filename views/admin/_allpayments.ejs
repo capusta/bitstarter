@@ -1,0 +1,21 @@
+<br>
+<table class="table table-striped">
+    <thead>
+    <th>Time </th>
+    <th>ID </th>
+    <th>Username</th>
+    <th>Amount</th>
+    <th>Refunded?</th>
+    </thead>
+    <tbody>
+    <% for(var i=payments.length-1; i>=0; i--) {%>
+    <tr>
+        <td><%= payments[i].time %></td>
+        <td><%= payments[i].ID %></td>
+        <td><%= payments[i].username %></td>
+        <td><%= payments[i].amount %></td>
+        <td><%= payments[i].rfstatus %></td>
+    </tr>
+    <% } %>
+</table>
+

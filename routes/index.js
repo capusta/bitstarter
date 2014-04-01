@@ -6,12 +6,12 @@ module.exports =    global.https   = require('https'),
 
 module.exports = function(app, passport, usr){
 
-    require('./money.js')(app, passport, usr);
+    require('./money.js')(app, passport);
     require('./admin.js')(app, passport, usr);
     require('./messeges.js')(app, passport, usr);
 
     app.get('/', function(req, res) {
-        res.render("_index", {user: req.user});
+        res.render("_index");
     });
 
     app.get('/info', function(req, res){
@@ -26,51 +26,11 @@ module.exports = function(app, passport, usr){
     app.get('/userhome', usr.can('access profile'), function(req, res) {
         if(req.isAuthenticated()){
 
-            res.render("userhome", { message: req.flash('info'), user: true})
+            res.render("userhome", { message: req.flash('info'), user: req.user})
         } else {
-
             res.redirect("login")
         }
     });
-
-    app.get('/settings', usr.can('access profile'), function(req, res) {
-        if(req.isAuthenticated()) {
-            res.render("updateprofile", { user : req.user, message: req.flash('info')})
-        } else {
-            res.redirect("login");
-        }
-    })
-
-    app.post('/settings', usr.can('access profile'), function(req, res) {
-        if(req.isAuthenticated()) {
-
-            global.db.User.find( { where: {username: req.user.username}})
-                .success(function(u){
-                u.name = req.body.nameUpdate;
-                u.email = req.body.emailUpdate;
-                u.addressOne = req.body.addrOneUpdate;
-                u.addressTwo = req.body.addrTwoUpdate;
-                u.homeBTC = req.body.homeBTCUpdate;
-                u.stepNumber = u.stepNumber.concat('a')
-                u.save()
-                    .success(function() {
-
-                    global.db.Message.sendMessege("admin",u.username,"Profile Updated",function(isOK){
-                        if(isOK){
-                            res.redirect("userhome")
-                        }})})
-                    .error(function(err){
-                       req.flash('info','invalid email')
-                        res.redirect("settings")
-                    })})
-                .error(function(err){
-                    req.flash('info', 'user not found')
-                    res.redirect("settings")
-                })
-        } else {
-            res.redirect("login")
-        }
-    })
 
     app.post('/settings/sendmessege', usr.can('access profile'), function(req, res){
         if(req.isAuthenticated()){
@@ -85,7 +45,7 @@ module.exports = function(app, passport, usr){
         } else {
             res.redirect("login")
         }
-    })
+    });
 
     app.get('/login', function(req, res) {
         if (req.isAuthenticated()){
@@ -97,8 +57,7 @@ module.exports = function(app, passport, usr){
 
     });
 
-    app.post('/login',
-        passport.authenticate('local', {
+    app.post('/login',passport.authenticate('local', {
             successRedirect: '/userhome',
             failureRedirect: '/login',
             failureFlash: true
@@ -110,29 +69,33 @@ module.exports = function(app, passport, usr){
                 console.log("user already exists " + n);
                 res.locals.oldname = req.body.username || "user";
                 res.render("signup", {message: req.flash('error')});
-
             } else {
-                if(req.body.password1 != req.body.password2){
+                if(req.body.password1 !== req.body.password2){
                     console.log("passwords do not match");
                     req.flash('error', "Passwords does not match");
-                    res.redirect("signup")
+                    res.redirect("signup");
                     return;
                 }
                 global.db.User.signup(req.body.username.toLowerCase().trim(), req.body.password1, function(err, user){
                     if(err) {
-                        console.log("got error on signup " + err)
-                        req.flash('error', "Username must be alphanumeric, " + err)
+                        console.log("got errors on signup " + err)
+                        req.flash('error', "Username must be alphanumeric, " + err.message)
                         res.redirect("signup")
-                        return};
+                        return
+                    };
+                    if(user){
                     global.db.Message.create({to: user.username, from: "admin", message: "Welcome to Suimo! "})
                         .success(function(m){
                             user.addMessege(m);
                         });
                     req.login(user, function(err){
-                        if(err) return next(err);
-                        res.redirect("/settings");
-                    });
-                    console.log(req.body.username + " signed up")
+                        if(err) {
+                            return next(err); }
+                        else {
+                            res.redirect("login");
+                        }
+                    })};
+
                 });
             }
         });

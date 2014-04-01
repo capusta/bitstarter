@@ -15,11 +15,9 @@ module.exports = function(user){
           if (req.isAuthenticated()) { return true;}
     })
 
-    user.use('access admin console','/admin', function(req){
+    user.use('access admin page','/admin', function(req){
         console.log("admin console permissions given");
-        if (req.isAuthenticated() && (req.user.dataValues.usertype === 'admin')){
-            return true;
-        }
+        return (req.isAuthenticated() && (req.user.dataValues.usertype === 'admin'));
     })
 
     /* admins have access to the current request*/
@@ -28,16 +26,4 @@ module.exports = function(user){
             return true;
         }
     })
-
-    user.setFailureHandler(function(req, res, action){
-        console.log("connect roles failure:  " + action)
-        var accept = req.headers.accept || '';
-        //res.status(403);
-        if (~accept.indexOf('html')) {
-            res.redirect("login");
-            //res.send('access-denied (but can be rendered)', {action: action})
-        } else {
-            res.send("Access Denied - you do not have permission to: " + action);
-        }
-    });
-}
+};

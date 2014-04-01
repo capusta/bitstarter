@@ -1,125 +1,131 @@
+<style>
+    .alignBottom {
+        position: absolute;
+        bottom: 5px;
+        right: 10%;
+    }
+    .disabled {
+        background-color: transparent;
+        color: lightgray;
+    }
+</style>
 
-    <script>
-    var ctx = $("#myChart").get(0).getContext("2d");
-    new Chart(ctx).Doughnut(<%- JSON.stringify(chart) %>,{segmentStrokeWidth: 3});
-    //var socket = io.connect(window.location.hostname);
-    $("#checkStepB").click(function(){
-        socket.emit('checkStepB');
-    })
-    $("#checkStepC").click(function(){
-        socket.emit('checkStepC');
-    })
-    $("#checkStepD").click(function(){
-        socket.emit('checkStepD');
-    })
-    $("#checkStepE").click(function(){
-        socket.emit('checkStepE');
-    })
-    $("#checkStepF").click(function(){
-        socket.emit('checkStepF');
-    })
-    $("#checkStepG").click(function(){
-        socket.emit('checkStepG');
-    })
-    $("#clearChecklist").click(function(){
-        socket.emit('clear_checklist');
-    })
-</script>
-
-<div class="row-fluid cool-font" style="overflow: hidden;">
-    <div class="span4"><p><b>Step 1:</b></p><p>Update Shipping address - so we know where to ship your Suica/Passmo Card</p>
-            <br><br>
-            <ul class="fa-ul">
-                <% if (step_a) { %>
-                <li><i class="fa-li fa fa-check-square-o"></i>Profile Updated </li>
-                <% } else{ %>
-                <li><a href="/settings" class="btn btn-small">Update Profile </a></li>
-                <% } %>
-            </ul>
-        </div>
-    <div class="span4"><p><b>Step 2:</b></p><p>Read Bitcoin Literature and get a bitcoin Wallet.  Here is something to get started: <br>
-        <a href = "https://www.jreast.co.jp/e/pass/suica.html">JREast.co.jp</a><br>
-        <a href="/info#xxbitcoin">More Info</a> </p>
-            <ul class="fa-ul">
-                <% if (step_b) { %>
-                <li><i class="fa-li fa fa-check-square-o"></i>Read Everything </li>
-                <% } else{ %>
-                <li><a href="#"  id="checkStepB" class="btn btn-small">Got it, Will Read Everything</a></li>
-                <% } %>
-            </ul>
-    </div>
-    <div class="span4 "><p><b>Step 3:</b></p><p>Update your BTC wallet (Hopefully you already have one).<br>
-        You can update your wallet info <a href="/settings">Here</a> </p><br> <br>
-        <ul class="fa-ul">
-            <% if (step_c) { %>
-            <li><i class="fa-li fa fa-check-square-o"></i>Have a BTC Wallet</li>
+<div class="row-fluid cool-font" id="rowOne">
+    <div class="span4" id="stepA" style="position: relative">
+            <p><b>Step 1:</b></p><p>Update Shipping address - so we know where to ship.</p>
+        <div class="alignBottom">
+            <% if (step_a) { %>
+            <i class="fa-li fa fa-check-square-o"></i>Profile Updated
+            <script>$('#stepA').addClass('disabled hidden-phone')</script>
             <% } else{ %>
-            <li><a href="#"  id="checkStepC" class="btn btn-small">Got a BTC Wallet</a></li>
+            <a href="#" class="btn btn-small" id="checkStepA">Update Profile </a>
             <% } %>
-        </ul>
+        </div>
+    </div>
+    <div class="span4" id="stepB" style="position: relative">
+        <p><b>Step 2:</b></p>
+        <p>Read Bitcoin Literature and get a bitcoin Wallet.  Here is something to get started: <br>
+        <a href = "https://www.jreast.co.jp/e/pass/suica.html">JREast.co.jp</a><br>
+        <a href="/info#xxbitcoin">More Info</a><br>
+        <a href="http://www.yes-tokio.es/pictures/moversextokio/Suicauserguide.pdf">Suica User's Guide</a>
+        </p><br><br>
+        <div class="alignBottom">
+            <% if (step_b) { %>
+            <i class="fa-li fa fa-check-square-o"></i>Read Everything
+            <script>$('#stepB').addClass('disabled hidden-phone')</script>
+            <% } else{ %>
+            <a href="#"  id="checkStepB" class="btn btn-small">Got it, Will Read Everything</a>
+            <% } %>
+        </div>
+    </div>
+    <div class="span4" id="stepC" style="position: relative">
+        <p><b>Step 3:</b></p><p>Update your BTC wallet (Hopefully you already have one).<br>
+        You can update your wallet info <a href="#" id="wa">Here</a></p><br> <br>
+        <div class="alignBottom">
+            <% if (step_c) { %>
+            <i class="fa-li fa fa-check-square-o"></i>Have a BTC Wallet
+            <script>$('#stepC').addClass('disabled hidden-phone')</script>
+            <% } else{ %>
+            <a href="#"  id="checkStepC" class="btn btn-small">Got a BTC Wallet</a>
+            <% } %>
+        </div>
     </div>
 </div>
 
-<div class="row-fluid cool-font">
-    <div class="span4"><p><b>Step 4:</b></p><p>Get yourself a Suica Card at our card shop.  This is a great time
-    to use Bitcoins :) </p><br><br>
-        <ul class="fa-ul">
+<div class="row-fluid cool-font" id="rowTwo">
+    <div class="span4" id="stepD" style="position: relative">
+        <p><b>Step 4:</b></p><p>Get yourself a Suica Card at our card shop.  This is a great time
+    to use Bitcoins :) Here is some info about <a href="http://www.pasmo.co.jp/en/">Passmo</a> and
+        <a href="https://en.wikipedia.org/wiki/Suica">Suica.</a> </p><br><br>
+        <div class="alignBottom">
         <% if (step_d) { %>
-            <li><i class="fa-li fa fa-check-square-o"></i>Order Placed</li>
+            <i class="fa-li fa fa-check-square-o"></i>Order Placed
+            <script>$('#stepD').addClass('disabled hidden-phone')</script>
         <% } else{ %>
-            <li><a href="#"  id="checkStepD" class="btn btn-small">Check my Orders</a></li>
+            <a href="#"  id="checkStepD" class="btn btn-small">Check my Orders</a>
         <% } %>
-        </ul>
+        </div>
     </div>
     <div class="span4 smallround" style="text-align: center">
-        <div class="row-fluid">
-
             <b>SuiMo Service Completeness</b><br>
-            <canvas id="myChart" width="120%" height="120%"></canvas>
-        </div>
+            <canvas id="myChart" width="150%" height="150%"></canvas>
+
         <div class="row-fluid" style="text-align: right">
             <a href="#" id="clearChecklist" class="btn btn-mini">reset</a>
         </div>
 
     </div>
-    <div class="span4">
-        <p><b>Step 5:</b></p><p>Receive your card.  Yep - I got it.  Or Nope - what are you guys doing, I didnt
-        get shit yet.</p> <br><br>
-        <ul class="fa-ul">
+    <div class="span4" id="stepE" style="position: relative">
+        <p><b>Step 5:</b></p><p>Receive your card.  Please let us know if you have received your card or you are still waiting.
+        Cards sent from Japan take about 2-3 weeks on average to arrive.</p> <br><br>
+        <div class="alignBottom">
         <% if (step_e) { %>
-            <li><i class="fa-li fa fa-check-square-o"></i>Card Received</li>
+            <i class="fa-li fa fa-check-square-o"></i>Card Received
+            <script>$('#stepE').addClass('disabled hidden-phone')</script>
         <% } else{ %>
-            <li><a href="#"  id="checkStepE" class="btn btn-small">Card Received</a></li>
+            <a href="#"  id="checkStepE" class="btn btn-small">Waiting on Your Card</a>
         <% } %>
-        </ul>
-    </div>
-</div> .
-
-<div class="row-fluid cool-font">
-    <div class="span4 "><p><b>Step 6:</b></p><p>Enjoy Japan.  Mail us the card back.  Yep, I mailed the card already.  Keep an eye out.
-    Waitin' for my refund now.</p>
-        <ul class="fa-ul">
-        <% if (step_f) { %>
-            <li><i class="fa-li fa fa-check-square-o"></i>My Suica/Passmo Card is Mailed</li>
-            <% } else{ %>
-            <li><a href="#"  id="checkStepF" class="btn btn-small">Card Mailed</a></li>
-        <% } %>
-        </ul>
-    </div>
-    <div class="span4"><p><b>Step 7:</b></p><p>Epic Sweet.  I got my refund back.  What am I doing now?  I'm kinda done with you guys</p>
-        <ul class="fa-ul">
-        <% if (step_g) { %>
-            <li><i class="fa-li fa fa-check-square-o"></i>Sweet, got my Refund</li>
-            <% } else{ %>
-            <li><a href="#"  id="checkStepG" class="btn btn-small">Waiting for Refund</a></li>
-        <% } %>
-        </ul>
-    </div>
-    <div class="span4 "><p><b>Step 8:</b></p><p>I guess I'm done.  Nothing left to do but to get all of my information out of your
-    servers.  Delete my account and all data NOW! </p>
-        <a href="#"  id="checkStepH" class="btn btn-small">
-            Delete Everything
-        </a>
+        </div>
     </div>
 </div>
 
+<div class="row-fluid cool-font" id="rowThree">
+    <div class="span4" id="stepF" style="position: relative">
+        <p><b>Step 6:</b></p><p>Enjoy Japan.  Here are some <a href="https://www.jreast.co.jp/e/destinations/index.html">suggestions</a>
+            from JR East Railway company.  Mail us the card when you are finished.  </p>
+        <div class="alignBottom">
+        <% if (step_f) { %>
+            <i class="fa-li fa fa-check-square-o"></i>My Suica / Passmo has been mailed.
+            <script>$('#stepF').addClass('disabled hidden-phone')</script>
+            <% } else{ %>
+            <a href="#"  id="checkStepF" class="btn btn-small">I mailed my card</a>
+        <% } %>
+        </div>
+    </div>
+    <div class="span4" id="stepG" style="position: relative">
+        <p><b>Step 7:</b></p><p>This step has to do with the refunds.  Let us know if you got your refund back.
+            You should have received an email notifying you about your refund bitcoin transaction.</p><br><br><br>
+        <div class="alignBottom">
+        <% if (step_g) { %>
+            <i class="fa-li fa fa-check-square-o"></i>Got my refund
+            <script>$('#stepG').addClass('disabled hidden-phone')</script>
+            <% } else{ %>
+            <a href="#"  id="checkStepG" class="btn btn-small">Waiting for Refund</a>
+        <% } %>
+        </div>
+    </div>
+    <div class="span4" id="stepH" style="position: relative">
+        <p><b>Step 8:</b></p>
+        <p id="Step8Paragraph">I guess I'm done.  Nothing left to do but to get all of my information out of your
+            servers.  Delete my account and all data NOW! [Please note that there is no going back!] </p>
+        <div class="alignBottom">
+        <a href="#"  id="checkStepH" class="btn btn-small"> Delete Everything </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ctx = $("#myChart").get(0).getContext("2d");
+    new Chart(ctx).Doughnut(<%- JSON.stringify(chart) %>,{segmentStrokeWidth: 3});
+</script>
+<script type="text/javascript" src="/js/home.js"></script>

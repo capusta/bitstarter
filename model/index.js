@@ -43,7 +43,7 @@ if (!global.hasOwnProperty('db')) {
             protocol: 'postgres',
             port:     port,
             host:     host,
-            logging:  true
+            logging:  false
         };
         var sq = new Sequelize(dbname, user, password, config);
     }
@@ -51,7 +51,6 @@ if (!global.hasOwnProperty('db')) {
     global.db = {
         Sequelize: Sequelize,
         sequelize: sq,
-        Order: sq.import(__dirname + '/order'),
         User: sq.import(__dirname + '/user'),
         Payment: sq.import(__dirname + '/payment'),
         Message: sq.import(__dirname + '/message'),
@@ -63,6 +62,8 @@ module.exports = global.db;
 exports.sq = sq;
 
 console.log("database  connected")
+global.db.Moneycard.belongsTo(global.db.User);
+global.db.Payment.belongsTo(global.db.User);
 global.db.User.hasMany(global.db.Payment, {as: 'Payments'});
 global.db.User.hasMany(global.db.Message, {as: "Messeges"});
 global.db.User.hasMany(global.db.Moneycard, {as: "Moneycards"});

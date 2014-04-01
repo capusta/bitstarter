@@ -1,0 +1,26 @@
+<br>
+<table class="table table-striped">
+    <thead>
+    <th>ID:</th>
+    <th>Username:</th>
+    <th>Type:</th>
+    <th>Email OK</th>
+    <th>Refund BTC OK:</th>
+    </thead>
+    <tbody>
+    <% for(var i=users.length-1; i>=0; i--) {%>
+    <tr>
+        <td><%= users[i].id %></td>
+        <td><a href="#" id="user_<%= users[i].username %>"> <%= users[i].username %> </a> </td>
+        <script>
+            $("#user_<%= users[i].username %>").click(function(e){
+                ads.emit('adminrequest user', '<%= users[i].username %>');
+                e.preventDefault();
+            });
+        </script>
+        <td><%= users[i].type %></td>
+        <td><%= users[i].email %></td>
+        <td><%= users[i].btc %></td>
+    </tr>
+    <% } %>
+</table>

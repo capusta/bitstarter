@@ -12,12 +12,16 @@ module.exports = function(sequelize, DataTypes) {
                     +cid+")"+" added !"})
                     .success(function(m){
                         u.addMessege(m);
+                        u.alert = u.alert.concat('mc');
+                        u.save();
                     })},
-             sendMessege: function(from, to, m, callback){
+              sendMessege: function(from, to, m, callback){
                   global.db.Message.create({to: to, from: from, message: m}).success(function(m){
                      global.db.User.find({ where: {username: to}}).success(function(u){
                          if (u != null) {
                              u.addMessege(m);
+                             u.alert = u.alert.concat('m');
+                             u.save();
                              callback(true)
                          }
                          else {
