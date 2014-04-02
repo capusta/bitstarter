@@ -24,7 +24,7 @@ module.exports = function(socket, user){
         var html = ""
             , resbody = ''
             , nonce = new Date().getTime()
-            , sig = require('crypto').createHmac('sha256', process.env.COINBASE_SECRET)
+            , sig = require('crypto').createHmac('sha256', process.env.COINBASE_SECRET.toString())
             , buttonCode = ''
             , button = { 'button': {
             'name': 'Verification',
