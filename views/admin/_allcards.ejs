@@ -1,0 +1,28 @@
+<table class="table table-striped">
+    <thead>
+    <th>Upper ID:</th>
+    <th>Lower ID:</th>
+    <th>Type:</th>
+    <th>Amount</th>
+    <th>Archived?</th>
+    </thead>
+    <tbody>
+    <% for(var i=cards.length-1; i>=0; i--) {%>
+    <tr>
+        <td>
+             <a href="#" id="card<%= cards[i].id %>" > <%= cards[i].id %> </a>
+            <script>
+                $("#card<%= cards[i].id %>").click(function(e){
+                    var c = {ul: "<%= cards[i].id %>", lr: "<%= cards[i].lr %>"};
+                    ads.emit('adminrequest card', c);
+                    e.preventDefault();
+                })
+            </script>
+        </td>
+        <td><%= cards[i].lr %></td>
+        <td><%= cards[i].type %></td>
+        <td><%= cards[i].amount %></td>
+        <td><%= cards[i].isArchived %></td>
+    </tr>
+    <% } %>
+</table>
