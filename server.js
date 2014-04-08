@@ -67,7 +67,6 @@ global.db.sequelize.sync({force: false}).complete(function(err) {
     } else {
         console.log("starting server authorization");
         sio.set("authorization", function (data, callback){
-            // var store = sessionStore;
             if(data.headers.cookie){
                 data.cookie = cookie.parse(data.headers.cookie);
                 data.sessionID = parseSignedCookie(data.cookie['connect.sid'], process.env.SESSION_SECRET);
@@ -85,7 +84,7 @@ global.db.sequelize.sync({force: false}).complete(function(err) {
 sio.on('connection', function(socket){
     var user = null;
     var sessionID = socket.handshake.sessionID;
-    global.sessionStore.get(sessionID, function(err, session){
+    sessionStore.get(sessionID, function(err, session){
         if(!session || err){
             console.log(' no session found ');
            return null;
