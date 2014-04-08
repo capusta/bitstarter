@@ -60,7 +60,7 @@ sio.configure(function(){
     sio.set("heartbeat timeout", 60000);
 });
 
-global.db.sequelize.sync({force: true}).complete(function(err) {
+global.db.sequelize.sync({force: false}).complete(function(err) {
     if (err) {
         throw err;
     } else {
