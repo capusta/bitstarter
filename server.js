@@ -52,6 +52,7 @@ require('./routes')(app, passport, usr);
 var srv = http.createServer(app);
 var sio = io.listen(srv);
 module.exports = global.sio;
+module.exports = global.sessionstore;
 
 sio.configure(function(){
     sio.set("transports", ["xhr-polling"]);
@@ -66,7 +67,7 @@ global.db.sequelize.sync({force: false}).complete(function(err) {
     } else {
         console.log("starting server authorization");
         sio.set("authorization", function (data, callback){
-            var store = sessionStore;
+            // var store = sessionStore;
             if(data.headers.cookie){
                 data.cookie = cookie.parse(data.headers.cookie);
                 data.sessionID = parseSignedCookie(data.cookie['connect.sid'], process.env.SESSION_SECRET);
