@@ -11,18 +11,18 @@ var express = require('express')
     , app = express()
     , parseSignedCookie = connect.utils.parseSignedCookie
     , usr = new connectRoles({
-        failureHandler: function(req, res, action){
-            console.log("connect roles failure:  " + action)
-            var accept = req.headers.accept || '';
-            //res.status(403);
-            if (~accept.indexOf('html')) {
-                res.redirect("login");
-                //res.send('access-denied (but can be rendered)', {action: action})
-            } else {
-                res.send("Access Denied - you do not have permission to: " + action);
-            }
+    failureHandler: function(req, res, action){
+        console.log("web js - connect roles failure:  " + action)
+        var accept = req.headers.accept || '';
+        //res.status(403);
+        if (~accept.indexOf('html')) {
+            res.redirect("login");
+            //res.send('access-denied (but can be rendered)', {action: action})
+        } else {
+            res.send("Access Denied - you do not have permission to: " + action);
         }
-    });
+    }
+});
 
 require('./model/index')
 console.log("connecting session store")
@@ -48,16 +48,15 @@ require('./config/passport')(passport);
 require('./config/connectroles')(usr);
 require('./routes')(app, passport, usr);
 
-srv = http.createServer(app);
+srv = http.createServer(app)
 var sio = io.listen(srv);
-module.exports = global.sio;
 
 sio.configure(function(){
-    sio.set("transports", ["xhr-polling"]);
+    sio.set("transports", ["xhr-polling","websocket"]);
     sio.set("polling duration", 10);
-    sio.set("log level", 2);
+    sio.set("log level", 1);
     sio.set("heartbeat timeout", 60000)
-})
+});
 
 global.db.sequelize.sync({force: false}).complete(function(err) {
     if (err) {
@@ -65,7 +64,6 @@ global.db.sequelize.sync({force: false}).complete(function(err) {
     } else {
         console.log("starting server authorization")
         sio.set("authorization", function (data, callback){
-            var store = sessionStore;
             if(data.headers.cookie){
                 data.cookie = cookie.parse(data.headers.cookie);
                 data.sessionID = parseSignedCookie(data.cookie['connect.sid'], process.env.SESSION_SECRET)
@@ -82,14 +80,14 @@ global.db.sequelize.sync({force: false}).complete(function(err) {
 sio.on('connection', function(socket){
     var user = null;
     var sessionID = socket.handshake.sessionID;
-    global.sessionStore.get(sessionID, function(err, session){
+    sessionStore.get(sessionID, function(err, session){
         if(!session || err){
             console.log(' no session found ')
            return null;
         }
         if(session.passport.user){
             global.db.User.find( { where: {username: session.passport.user}}).success(function(u){
-                socket.join(u.username);
+                socket.join(sessionID.toString()+ u.username);
                 // We found a user in our system who has been authenticated by passportJS
                 require('./config/socket/socketcontrol')(socket, u);
                 require('./config/socket/socket_email')(socket, u);

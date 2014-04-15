@@ -3,7 +3,6 @@ if (!global.hasOwnProperty('db')) {
     var sq = null;
     var fs = require('fs');
     var PGPASS_FILE = './.pgpass';
-<<<<<<< HEAD
     if (process.env.OPENSHIFT_POSTGRESQL_DB_USERNAME) {
         
         var user = process.env.OPENSHIFT_POSTGRESQL_DB_USERNAME;
@@ -11,23 +10,7 @@ if (!global.hasOwnProperty('db')) {
         var host = process.env.OPENSHIFT_POSTGRESQL_DB_HOST;
         var port = process.env.OPENSHIFT_POSTGRESQL_DB_PORT;
         var dbname = process.env.PGDATABASE;
-        
-=======
-    if (process.env.DATABASE_URL) {
-        /* Remote database
-           Do `heroku config` for details. We will be parsing a connection
-           string of the form:
-           postgres://bucsqywelrjenr:ffGhjpe9dR13uL7anYjuk3qzXo@\
-           ec2-54-221-204-17.compute-1.amazonaws.com:5432/d4cftmgjmremg1
-        */
-        var pgregex = /postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/;
-        var match = process.env.DATABASE_URL.match(pgregex);
-        var user = match[1];
-        var password = match[2];
-        var host = match[3];
-        var port = match[4];
-        var dbname = match[5];
->>>>>>> be08a3d36a3b36b820b21a11025ff5f625a4389f
+
         var config =  {
             dialect:  'postgres',
             protocol: 'postgres',

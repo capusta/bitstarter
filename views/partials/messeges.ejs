@@ -14,6 +14,13 @@
        data-toggle="tooltip" title="Messages"><i class="fa fa-envelope-o"> Send</i></a>
 </div>
 
+<script>
+    $('#sendbutton').click(function(){
+        socket.emit('send_message', {to: 'admin', from: "<%= user.username %>", content: $('#messegeToAdmin').val()});
+        $('#sendMyMessege').slideToggle();
+    })
+</script>
+
 <div class="row-fluid"  id="sendMyMessege">
         <form class="offset1" action="/settings/sendmessege" method="post">
             <div class="row-fluid controls controls-row">
@@ -26,11 +33,11 @@
                 <div class="row-fluid controls controls-row">
                     <div class="span3">Messege:</div>
                     <div class="span3">
-                        <textarea rows="3" name="messegeToAdmin">Message</textarea>
+                        <textarea rows="3" id="messegeToAdmin" name="messegeToAdmin">Message</textarea>
                     </div>
                 </div>
             </div>
-            <input type="submit" class="btn btn-info btn-mini" value="send">
+            <input id= "sendbutton" class="btn btn-info btn-mini" value="send">
         </form>
     </div>
 

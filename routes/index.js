@@ -24,36 +24,20 @@ module.exports = function(app, passport, usr){
     });
 
     app.get('/userhome', usr.can('access profile'), function(req, res) {
-        if(req.isAuthenticated()){
-
+        if (req.isAuthenticated()){
             res.render("userhome", { message: req.flash('info'), user: req.user})
         } else {
-            res.redirect("login")
-        }
-    });
-
-    app.post('/settings/sendmessege', usr.can('access profile'), function(req, res){
-        if(req.isAuthenticated()){
-            global.db.User.find( { where: {username: req.user.username}}).success(function(u){
-                global.db.Message.sendMessege(u.username, 'admin', req.body.messegeToAdmin,
-                    function(isOK){
-                        if(isOK){req.flash('info','messege sent')}
-                    });
-                global.db.Message.sendMessege('admin', u.username, 'Thank you, your messege has been received.', function(isOK){})
-                res.redirect("userhome")
-            })
-        } else {
-            res.redirect("login")
+            console.log("index.js - i guess request is not authenticated")
+            res.redirect("/login")
         }
     });
 
     app.get('/login', function(req, res) {
-        if (req.isAuthenticated()){
+        if(req.isAuthenticated()){
             res.redirect("userhome")
-
         } else {
-            res.render("login", {message: req.flash('error')});
-        }
+            res.render("login", {message: req.flash('error')})
+        };
 
     });
 
@@ -79,9 +63,8 @@ module.exports = function(app, passport, usr){
                 global.db.User.signup(req.body.username.toLowerCase().trim(), req.body.password1, function(err, user){
                     if(err) {
                         console.log("got errors on signup " + err)
-                        req.flash('error', "Username must be alphanumeric, " + err.message)
-                        res.redirect("signup")
-                        return
+                        req.flash('error', "Username must be alphanumeric, " + err)
+                        return;
                     };
                     if(user){
                     global.db.Message.create({to: user.username, from: "admin", message: "Welcome to Suimo! "})
@@ -90,10 +73,11 @@ module.exports = function(app, passport, usr){
                         });
                     req.login(user, function(err){
                         if(err) {
-                            return next(err); }
-                        else {
-                            res.redirect("login");
+                            console.log("index js - error logging in ");
+                            res.redirect("signup");
+                            return;
                         }
+                        res.redirect('/userhome')
                     })};
 
                 });

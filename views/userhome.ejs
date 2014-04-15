@@ -42,6 +42,12 @@
           socket.on('new mail', function(){
               $('#messegebadge').show();
           });
+          socket.on('displayerror', function(e){
+              $('#erromsg').fadeOut(function(){
+                  $('#erromsg').html(e);
+                  $('#erromsg').fadeIn();
+              });
+          });
           var opts = {
               lines: 11, // The number of lines to draw
               length: 5, // The length of each line
@@ -96,7 +102,11 @@
                  </div>
                  <div id="spinhere" style="left: 50%; position: relative; padding-top: 30%"></div>
              </div>
-             <div class="span9" style=" padding-bottom: 5px" id="customcontent">.</div>
+             <div class="row-fluid">
+                 <div class="span9" id="erromsg"></div>
+                 <div class="span9" style=" padding-bottom: 5px" id="customcontent">.</div>
+             </div>
+
          </div>
     </div>
      <script>
