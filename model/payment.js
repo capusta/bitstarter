@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
               len: [4,20]
           }
       },
-      payment_ID: {type: DataTypes.STRING, allowNull: true, default: 0,
+      payment_ID: {type: DataTypes.STRING, allowNull: true, default: "00aa",
           validate: {
               isAlphanumeric: true,
               len: [4,20]

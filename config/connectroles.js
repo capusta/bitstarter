@@ -1,17 +1,11 @@
 /* configures our authorization module */
-
-
 module.exports = function(user){
-    user.use(function(req, action){
-
-    });
-
     user.use('access profile', function(req){
         if (req.isAuthenticated()){
             return (req.user.dataValues.usertype === 'user' || req.user.dataValues.usertype === 'admin');
     }});
 
-    user.use('access admin page', '/admin', function(req){
+    user.use('access admin page', function(req){
         if (req.isAuthenticated()){
             return (req.user.dataValues.usertype === 'admin');
         } else {
@@ -19,4 +13,8 @@ module.exports = function(user){
             return false;
         }
     });
+
+    user.use(function(req){
+        return false;
+    })
 };

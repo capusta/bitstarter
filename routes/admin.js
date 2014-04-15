@@ -4,7 +4,6 @@ module.exports = function(app, passport, usr){
         if(req.isAuthenticated()) {
             global.db.User.find( { where: {username: req.user.dataValues.username.trim()}}).success(function(result){
                 if( (result !== null) & (result.usertype === 'admin')){
-                    console.log('rendering amdin page')
                 res.render('admin/cardmanage', {message: "", user: "yes"});
                 }
             });
@@ -13,18 +12,23 @@ module.exports = function(app, passport, usr){
             res.render("login", {message: "Please Login"});
         };
     });
-    app.post('/admin/addcard', function(req, res) {
-        if(req.isAuthenticated() & usr.can('access admin page')) {
-            global.db.User.find( { where: {username: req.body.username}}).success(function(u){
+    app.post('/admin/addcard', usr.can('access admin page'), function(req, res) {
+        console.log("adding card")
+
+            global.db.User.find( { where: {username: req.body.touser}}).success(function(u){
                 if(u == null) {
-                    req.flash('info', 'Error - user not found')
+                    console.log("invalid user")
+                    res.redirect("admin");
                     return
                 }
+                console.log("adding to legit user")
                 var intRegex = /^\d+$/;
                 if(!intRegex.test(req.body.cardAmount)) {
-                    req.flash('info', 'lolz, you did not enter a number')
+                    console.log("invalid amount")
+                    res.redirect("admin");
                     return
                 }
+                console.log("seems like card amount is correct")
                 global.db.Moneycard.build({
                     cardID: req.body.cardID, type: req.body.cardType,
                     amount: req.body.cardAmount, condition: req.body.cardCondition})
@@ -35,15 +39,16 @@ module.exports = function(app, passport, usr){
                         req.flash('info', 'Yay, card added to ' + u.username)
                         res.redirect("admin");
                     })
+                    .error(function(e){
+                        console.log("unable to build the card for user " + u.username + " error " + e)
+                    })
             })
 
-        } else {
-            res.redirect("login")
-        }
+
     });
 
-    app.post('/admin/swapcard', function(req, res) {
-        if(req.isAuthenticated() & usr.can('access admin page')) {
+    app.post('/admin/swapcard', usr.can('access admin page'), function(req, res) {
+        if(req.isAuthenticated()) {
 
             global.db.User.find( { where: {username: req.body.toUser}}).success(function(u_to){
                 if(u_to == null) {
@@ -83,6 +88,7 @@ module.exports = function(app, passport, usr){
 
         }
         else {
+            console.log("admin.js - error - posting to /admin/addcard needs authentication");
             res.redirect("login")
         }
     });

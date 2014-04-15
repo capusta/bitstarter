@@ -4,24 +4,24 @@ module.exports = function(sequelize, DataTypes) {
       cardID: {type: DataTypes.STRING, allowNull: false, defaultValue:0,
         validate: {
             isAlphanumeric: true,
-            len: [4,20]
+            len: [1,20]
         }      },
       cardLR: {type: DataTypes.STRING, allowNull: false, defaultValue:0,
         validate: {
             isAlphanumeric: true,
-            len: [4,20]
+            len: [1,20]
         }
       },
       type: {type: DataTypes.STRING, allowNull: true,
         validate: {
             isAlphanumeric: true,
-            len: [4,20]
+            len: [1,20]
         }
       },
       condition: {type: DataTypes.STRING, allowNull: true,
         validate: {
             isAlphanumeric: true,
-            len: [4,20]
+            len: [1,20]
         }
       },
       amount: {type: DataTypes.INTEGER, allowNull: true, defaultValue:0},
