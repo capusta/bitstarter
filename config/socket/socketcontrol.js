@@ -108,13 +108,12 @@ module.exports = function(socket, user){
                 }
             }
             socket.emit('repeat', 'get_messeges');
-            socket.emit('new mail');
         })
     });
 
     socket.on('send_message', function(data){
         var con = data.content.toString();
-        if (data.content != null && con.length >= 255) {
+        if (data.content != null & con.length >= 255) {
             socket.emit('displayerror', "Message too long");
             return;
         }
@@ -124,6 +123,8 @@ module.exports = function(socket, user){
                     if(!isOK){
                         socket.emit('displayerror', "Unable to send message securely.  Please contact site admin by other means");
                         return;
+                    } else {
+                        socket.emit('displayerror', 'Messege Sent')
                     }
                 }
             );
@@ -135,6 +136,7 @@ module.exports = function(socket, user){
                     }
                 });
             socket.emit("repeat", "get_messeges");
+            socket.emit('displayerror', 'Messege Sent')
             }
         catch(e){
             console.log('error sending messeges ' + e)
