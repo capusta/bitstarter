@@ -10,7 +10,7 @@ if (!global.hasOwnProperty('db')) {
         var host = process.env.OPENSHIFT_POSTGRESQL_DB_HOST;
         var port = process.env.OPENSHIFT_POSTGRESQL_DB_PORT;
         var dbname = process.env.PGDATABASE;
-        
+
         var config =  {
             dialect:  'postgres',
             protocol: 'postgres',

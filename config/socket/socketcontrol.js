@@ -101,10 +101,45 @@ module.exports = function(socket, user){
     socket.on('delete message', function(msgID){
         user.getMesseges({ where: {id: msgID.id }}).success(function(msg){
             if (msg != null) {
-                console.log('found ' + msg.length + ' deleting messege with id ' + msg[0].id);
-                msg[0].destroy(); }
-            socket.emit('repeat', 'get_messeges')
+                try {
+                    msg[0].destroy();
+                } catch (e){
+                    socket.emit('displayerror', "Unable to Delete Message")
+                }
+            }
+            socket.emit('repeat', 'get_messeges');
+            socket.emit('new mail');
         })
+    });
+
+    socket.on('send_message', function(data){
+        var con = data.content.toString();
+        if (data.content != null && con.length >= 255) {
+            socket.emit('displayerror', "Message too long");
+            return;
+        }
+        try {
+            global.db.Message.sendMessege(data.from, 'admin', con,
+                function(isOK){
+                    if(!isOK){
+                        socket.emit('displayerror', "Unable to send message securely.  Please contact site admin by other means");
+                        return;
+                    }
+                }
+            );
+            global.db.Message.sendMessege('admin', data.from, 'Thank you, your messege has been received.',
+                function(isOK){
+                    if(!isOK){
+                        socket.emit('displayerror', "Unable to send message securely.  Please contact site admin by other means");
+                        return;
+                    }
+                });
+            socket.emit("repeat", "get_messeges");
+            }
+        catch(e){
+            console.log('error sending messeges ' + e)
+            socket.emit('displayerror', "Unable to send message securely.  Please contact site admin by other means");
+        }
     });
 
     socket.on('get_messeges', function(){

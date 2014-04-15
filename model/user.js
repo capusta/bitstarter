@@ -7,10 +7,15 @@ module.exports = function(sequelize, DataTypes) {
             username: {type: DataTypes.STRING, unique: true, allowNull: false,
                 validate: {
                     isAlphanumeric: true,
-                    len: [4,20]
+                    len: {
+                        args: [1,20],
+                        msg: "Username too short or too long"
+                    }
                 }},
-            phash: {type: DataTypes.STRING(255), unique: false, allowNull: false},
-            salt: {type: DataTypes.STRING, unique: false, allowNull: false, defaultValue:crypto.generate()},
+            phash: {type: DataTypes.STRING(255), unique: false, allowNull: false
+            },
+            salt: {type: DataTypes.STRING, unique: false, allowNull: false, defaultValue:crypto.generate()
+            },
             usertype: {type: DataTypes.STRING, allowNull: false, defaultValue: 'user',
             set: function(v){
                 //no one is allowed to change this.
@@ -20,6 +25,9 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             name: {type: DataTypes.STRING, allowNull: true, defaultValue: 'Weary Traveler',
+                validate: {
+                    len: [1,100]
+                },
                 set: function(v){
                     n = (crypto.generate(5)).concat(v).concat(crypto.generate(5));
                     return this.setDataValue('name', crypto.encrypt(n.toString('utf8')));
@@ -30,6 +38,9 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             addressOne: {type: DataTypes.STRING, allowNull: true, defaultValue: '123 Pilsburry Drive',
+                validate: {
+                    len: [1,200]
+                },
                 set: function(v){
                     n = (crypto.generate(5)).concat(v).concat(crypto.generate(5));
                     this.setDataValue('addressOne', crypto.encrypt(n.toString('utf8')));
@@ -40,6 +51,9 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             addressTwo: {type: DataTypes.STRING, allowNull: true, defaultValue: 'City, State/Country, Zip',
+                validate: {
+                    len: [1,200]
+                },
                 set: function(v){
                     n = (crypto.generate(5)).concat(v).concat(crypto.generate(5));
                     return this.setDataValue('addressTwo', crypto.encrypt(n.toString('utf8')));
@@ -101,6 +115,9 @@ module.exports = function(sequelize, DataTypes) {
             //once a user pays, we will make sure that one of the input addresses into the blockchain matches the
             //address listed on the profile.
             paymentBTC: {type: DataTypes.STRING, allowNull: true, defaulValue: '0',
+                validate: {
+                    len: [4,50]
+                },
                 set: function(v){
                     return this.setDataValue('paymentBTC', crypto.encrypt(v.toString('utf8')));
                 },
@@ -116,6 +133,9 @@ module.exports = function(sequelize, DataTypes) {
             },
             //for password resets and stuff
             oneTimeSecret: {type: DataTypes.STRING, allowNull:true,
+                validate: {
+                    len: [1,200]
+                },
                 set: function(v){
                     //format for encoding is [random 5] + [action] + [comma] + username + [random 5]
                     n = (crypto.generate(5))+(v)+","+this.getDataValue('username')+crypto.generate(5);
@@ -127,9 +147,16 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             //tracks what the user thinks is going to happen next.
-            stepNumber: {type: DataTypes.STRING, allowNull: false, defaultValue: "0"},
+            stepNumber: {type: DataTypes.STRING, allowNull: false, defaultValue: "0",
+                validate: {
+                    len: [1,50]
+                }
+            },
             //for future use, maybe
             bitMessegeAddr: {type: DataTypes.STRING, allowNull: true, defaultValue: '',
+                validate: {
+                    len: [4,50]
+                },
                 set: function(v){
                     return this.setDataValue('bitMessegeAddr', crypto.encrypt(v.toString('utf8')));
                 },
@@ -170,12 +197,12 @@ module.exports = function(sequelize, DataTypes) {
             var s = crypto.generate();
             hash(pword, s, function(err, ret_hash){
                 if (err) {done(err, null, {message: "bad hash"})}
-
+                console.log('addming new user ' + uname + ' pass ' + pword)
                 global.db.User.build({ username: uname.toLowerCase(), phash: ret_hash.toString('base64'), salt: s}).save()
                     .success(function(u){console.log(uname + " signed up");
                         done(null, u);})
                     .error(function(err){
-                        console.log("User model got error on signup " + err.message);
+                        console.log("User model got error on signup " + err);
                         done(err, null);
                     })
             })
@@ -193,7 +220,7 @@ module.exports = function(sequelize, DataTypes) {
                             answer(false);
                      }
                      else {
-                            console.log(uname + " authenticated / logged in");
+                            console.log(uname + " password is correct");
                             answer(true);
                      }});
               },

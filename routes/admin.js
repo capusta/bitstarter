@@ -1,25 +1,28 @@
 module.exports = function(app, passport, usr){
 
-    app.get('/admin', usr.can('access admin page'), function(req, res) {
+    app.get('/admin', usr.can('access admin page'),  function(req, res) {
         if(req.isAuthenticated()) {
-            res.render('admin/cardmanage', {message: "", user: "yes"});
+            global.db.User.find( { where: {username: req.user.dataValues.username.trim()}}).success(function(result){
+                if( (result !== null) & (result.usertype === 'admin')){
+                    console.log('rendering amdin page')
+                res.render('admin/cardmanage', {message: "", user: "yes"});
+                }
+            });
         } else {
             req.flash('error');
             res.render("login", {message: "Please Login"});
         };
     });
-    app.post('/admin/addcard',  usr.can('access admin page'), function(req, res) {
-        if(req.isAuthenticated()) {
+    app.post('/admin/addcard', function(req, res) {
+        if(req.isAuthenticated() & usr.can('access admin page')) {
             global.db.User.find( { where: {username: req.body.username}}).success(function(u){
                 if(u == null) {
                     req.flash('info', 'Error - user not found')
-                    res.redirect("admin")
                     return
                 }
                 var intRegex = /^\d+$/;
                 if(!intRegex.test(req.body.cardAmount)) {
                     req.flash('info', 'lolz, you did not enter a number')
-                    res.redirect("admin")
                     return
                 }
                 global.db.Moneycard.build({
@@ -37,10 +40,10 @@ module.exports = function(app, passport, usr){
         } else {
             res.redirect("login")
         }
-    })
-    app.post('/admin/swapcard',  usr.can('access admin page'), function(req, res) {
+    });
 
-        if(req.isAuthenticated()) {
+    app.post('/admin/swapcard', function(req, res) {
+        if(req.isAuthenticated() & usr.can('access admin page')) {
 
             global.db.User.find( { where: {username: req.body.toUser}}).success(function(u_to){
                 if(u_to == null) {
@@ -78,8 +81,9 @@ module.exports = function(app, passport, usr){
                 })
             })
 
-        } else {
+        }
+        else {
             res.redirect("login")
         }
-    })
+    });
 }
