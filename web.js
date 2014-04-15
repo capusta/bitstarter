@@ -49,7 +49,7 @@ require('./config/passport')(passport);
 require('./config/connectroles')(usr);
 require('./routes')(app, passport, usr);
 
-srv = http.createServer(app)
+var srv = http.createServer(app)
 var sio = io.listen(srv);
 
 sio.configure(function(){
@@ -71,7 +71,7 @@ global.db.sequelize.sync({force: false}).complete(function(err) {
             }
             callback(null, true);
         })
-        srv.listen(app.get('port'), function() {
+        srv.listen(app.get('port'), app.get('ipaddr'), function() {
             console.log("server is listening on " + app.get('port'))
         });
     }
