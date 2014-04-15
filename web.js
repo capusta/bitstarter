@@ -27,12 +27,13 @@ var express = require('express')
 require('./model/index')
 console.log("connecting session store")
 var MemoryStore = express.session.MemoryStore
-sessionStore = new MemoryStore();
+var sessionStore = new MemoryStore();
 
 app.configure(function(){
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
-    app.set('port', process.env.PORT || 63195);
+    app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 63195);
+    app.set('ipaddr', process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1"); 
     app.use(express.static(__dirname + '/public'));
     app.use(express.bodyParser());
     app.use(express.cookieParser(process.env.COOKIE_SECRET));
