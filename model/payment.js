@@ -27,7 +27,6 @@ module.exports = function(sequelize, DataTypes) {
       refundedAmount: {type: DataTypes.INTEGER, allowNull: false, defaultValue:0},
       productName: {type: DataTypes.STRING, allowNull: false, defaultValue:"Unknown Product",
         validate: {
-            isAlphanumeric: true,
             len: [4,20]
         }
       },

@@ -113,10 +113,14 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             //once a user pays, we will make sure that one of the input addresses into the blockchain matches the
-            //address listed on the profile.
-            paymentBTC: {type: DataTypes.STRING, allowNull: true, defaulValue: '0',
+            //address listed on the profile.  if nothing matches, we will save the hash to come back to it
+            paymentBTC: {type: DataTypes.STRING, allowNull: true,
                 validate: {
-                    len: [4,50]
+                    isLength: function(v){
+                        if(!validator.isLength(crypto.decrypt(v), 27, 200)){
+                            throw  new Error("Not Valid Bitcoin Address")
+                        }
+                    }
                 },
                 set: function(v){
                     return this.setDataValue('paymentBTC', crypto.encrypt(v.toString('utf8')));
@@ -153,9 +157,13 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             //for future use, maybe
-            bitMessegeAddr: {type: DataTypes.STRING, allowNull: true, defaultValue: '',
+            bitMessegeAddr: {type: DataTypes.STRING, allowNull: true, defaultValue: 'none',
                 validate: {
-                    len: [4,50]
+                    isLength: function(v){
+                        if(!validator.isLength(crypto.decrypt(v), 4, 50)){
+                            throw  new Error("Not Valid Bit Messege Address")
+                        }
+                    }
                 },
                 set: function(v){
                     return this.setDataValue('bitMessegeAddr', crypto.encrypt(v.toString('utf8')));

@@ -34,7 +34,9 @@ module.exports = function(app, passport){
                     console.log("unable to parse blockchain hash: " + err);
                     console.log("specifically, hash " + hash);
                     u.paymentBTC = hash;
-                    u.save();
+                    u.save().error(function(e){
+                        console.log("unable to save payment hash for user " + u.username);
+                    });
                     //TODO: RUN SOMETHING LATER TO VERIFY THE ACCOUNT ONCE THE HASH IS ON THE BLOCKCHAIN
                 }
             }
@@ -63,13 +65,17 @@ module.exports = function(app, passport){
                 } else {
                     modifiedAmount = b.order.total_native.cents - 500;
                 }
-                var new_payment_instance = p.build({
+                try { var new_payment_instance = p.build({
                     time: b.order.created_at,
                     username: b.order.custom,
                     payment_ID: b.order.id,
                     amount: modifiedAmount,
                     productName: b.order.button.name
-                });
+                });} catch(e){
+                    console.log('unable to build payment instance');
+                    res.status(418).send();
+                    return;
+                }
                 //instance is built but not saved yet.  Lets find the user it belongs to.
                 global.db.User.find( { where: { username: b.order.custom}})
                     .success(function(u){
@@ -84,20 +90,34 @@ module.exports = function(app, passport){
                                 u.addPayment(i);
                                 console.log("instance " + i.payment_ID + " saved for user " + u.username);
                                 u.stepNumber = u.stepNumber.concat('d');
-                                global.db.Message.sendMessege("admin", u.username,
+                                u.save().error(function(e){
+                                    console.log("error saving payment for user " + u.username);
+                                });
+                                try {
+                                    global.db.Message.sendMessege("admin", u.username,
                                     "Order " + i.payment_ID + " for " + i.productName + " Received",function(status){});
-                                u.save();
+                                } catch (e){
+                                    Console.log("unable to send 'payment received' msg for user " + u.username);
+                                    return;
+                                }
+
                                 res.status(200).send("done");
                             }).error(function(err) {
                                     console.log("instance not saved for some reason");
                                     res.status(418).send();
                                     return;
                                 });
-                        } else {
+                        }
+                        else {
                             console.log("Found NULL user for order " + b.order.id);
-                            console.log("Order username was " + b.order.custom)
+                            console.log("Order username was " + b.order.custom);
                             //save the transaction, even though it has no users attached to it.
-                            new_payment_instance.save();
+                            try {new_payment_instance.save(); }
+                            catch(e){
+                                console.log("unable to save the payment - check validations");
+                                req.status(418).send();
+                                return;
+                            }
                             res.status(200).send();
                             return;
                         }})

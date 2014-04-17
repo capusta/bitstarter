@@ -7,9 +7,9 @@ module.exports = function(socket, user){
     socket.on('authPassChange', function(data){
         user.changepassword(data, function(isOK){
             if(isOK){
-                socket.emit('authPasswordChanged', {msg: '[password changed]'})
+                socket.emit('authPasswordChanged', '[password changed]');
             } else{
-                socket.emit('authPasswordChanged', {msg: '[error changing password]'})
+                socket.emit('authPasswordChanged', '[error changing password]');
             }
         })
     });
@@ -19,7 +19,7 @@ module.exports = function(socket, user){
            case 'name':
                user.name = data.value;
                user.save()
-                   .error(function(err){ socket.emit('displayError', {msg: "Error Saving Name"})})
+                   .error(function(err){ socket.emit('displayerror', "Error Saving Name")})
                    .success(function(){
                        console.log('new name sucessfully saved');
                        socket.emit('changeOK')});
@@ -27,45 +27,49 @@ module.exports = function(socket, user){
            case 'email':
                user.email = data.value;
                user.save()
-                   .error(function(err){ socket.emit('displayError', {msg: err.email[0]})})
+                   .error(function(err){ socket.emit('displayerror', 'Invalid email')})
                    .success(function(){ socket.emit('changeOK')})
                break;
            case 'addressOne':
                user.addressOne = data.value;
                user.save()
-                   .error(function(err){ socket.emit('displayError', {msg: err.addressOne[0]})})
+                   .error(function(err){ socket.emit('displayerror', 'Invalid address - seems to be too long')})
                    .success(function(){ socket.emit('changeOK')});
                break;
            case 'addressTwo':
                user.addressTwo = data.value;
                user.save()
-                   .error(function(err){ socket.emit('displayError', {msg: "Unable to save Address"})})
+                   .error(function(err){ socket.emit('displayerror', "Unable to save Address")})
                    .success(function(){ socket.emit('changeOK')});
                break;
            case 'bitmessege':
                user.bitMessegeAddr = data.value;
                user.save()
-                   .success(function() { socket.emit('changeOK')});
+                   .success(function() { socket.emit('changeOK')})
+                   .error(function(err){ socket.emit('displayerror', "Please make sure it is 4-20 characters")})
                break;
            case 'btcAddress':
                user.homeBTC = data.value;
                user.save()
-                   .error(function(err) { socket.emit('displayError', {msg: err.homeBTC})})
-                   .success(function(){ socket.emit('changeOK')})
+                   .error(function(err) { socket.emit('displayerror', err.homeBTC)})
+                   .success(function(){ socket.emit('changeOK')});
                break;
            case 'finished':
                //sendMessege ( from to callback)
                global.db.Message.sendMessege("admin",user.username,"Profile Successfully Updated",function(isOK){
                    if(isOK){} else {
-                       socket.emit('displayError', {msg: 'Error - unable to send messege.  Should probably notify side Admin'})}});
+                       socket.emit('displayerror', 'Error - unable to send messege.  Should probably notify side Admin')}});
                user.save()
                    .success(function() {
+                       socket.emit('push_dashboard');
                        socket.emit('new mail');
-                       socket.emit('push_dashboard')
+                   })
+                   .error(function(err){
+                       socket.emit('displayerror', 'Error - unable to save details.  Should probably notify side Admin');
                    });
                break;
            default:
-               socket.emit('displayError', {msg: 'Unable to Change the ' + data.item})
+               socket.emit('displayerror', 'Unable to Change the ' + data.item);
        }
     });
     // ---- returns all the Suica and Passmo cards a user has ----
@@ -169,6 +173,7 @@ module.exports = function(socket, user){
             return rv;
         }
         user.stepNumber = noDups(user.stepNumber);
+        user.alert = noDups(user.alert);
         user.save();
     });
     socket.on('checkStepB', function(){
