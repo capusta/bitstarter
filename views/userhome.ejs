@@ -43,6 +43,7 @@
               $('#messegebadge').show();
           });
           socket.on('displayerror', function(e){
+              setTimeout(function(){ $('#erromsg').fadeOut(); }, 5000);
               $('#erromsg').fadeOut(function(){
                   $('#erromsg').html(e);
                   $('#erromsg').fadeIn();

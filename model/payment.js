@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
       username: {type: DataTypes.STRING, allowNull: false, defaultValue:"admin",
           validate: {
               isAlphanumeric: true,
-              len: [4,20]
+              len: [1,20]
           }
       },
       payment_ID: {type: DataTypes.STRING, allowNull: true, default: "00aa",

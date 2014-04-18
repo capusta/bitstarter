@@ -4,18 +4,9 @@ ejs = require('ejs')
 
 module.exports = function(socket, user){
 
-    socket.on('authPassChange', function(data){
-        user.changepassword(data, function(isOK){
-            if(isOK){
-                socket.emit('authPasswordChanged', '[password changed]');
-            } else{
-                socket.emit('authPasswordChanged', '[error changing password]');
-            }
-        })
-    });
     socket.on('changeUserData', function(data){
         user.stepNumber = user.stepNumber.concat('a');
-       switch(data.item){
+        switch(data.item){
            case 'name':
                user.name = data.value;
                user.save()
@@ -24,6 +15,20 @@ module.exports = function(socket, user){
                        console.log('new name sucessfully saved');
                        socket.emit('changeOK')});
                break;
+            case 'password':
+                user.changepassword(data.value.toString(), function(isOK){
+                    if(isOK){
+                        console.log('socketcontrol.js - new password sucessfully saved');
+                        socket.emit('changeOK');
+                        socket.emit('displayerror', 'Password Changed');
+                    }
+                    else{
+                        console.log('socketcontrol.js - error changing password for ' + user.username);
+                        socket.emit('displayerror', 'Unable to Change password');
+                    }
+                });
+                    break;
+
            case 'email':
                user.email = data.value;
                user.save()
@@ -39,7 +44,10 @@ module.exports = function(socket, user){
            case 'addressTwo':
                user.addressTwo = data.value;
                user.save()
-                   .error(function(err){ socket.emit('displayerror', "Unable to save Address")})
+                   .error(function(err){
+                       socket.emit('displayerror', "Unable to save Address")
+                       console.log('socket.js - error saving ' + data.item + " error: " + err);
+                   })
                    .success(function(){ socket.emit('changeOK')});
                break;
            case 'bitmessege':
@@ -51,7 +59,9 @@ module.exports = function(socket, user){
            case 'btcAddress':
                user.homeBTC = data.value;
                user.save()
-                   .error(function(err) { socket.emit('displayerror', err.homeBTC)})
+                   .error(function(err) {
+                       socket.emit('displayerror', 'Invalid Bitcoin Address');
+                   })
                    .success(function(){ socket.emit('changeOK')});
                break;
            case 'finished':
@@ -66,6 +76,7 @@ module.exports = function(socket, user){
                    })
                    .error(function(err){
                        socket.emit('displayerror', 'Error - unable to save details.  Should probably notify side Admin');
+                       console.log('socket.js - error saving ' + data.item + " error: " + err);
                    });
                break;
            default:

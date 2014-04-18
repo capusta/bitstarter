@@ -1,8 +1,9 @@
 
 // Let's start with the error handling first.  We will need to do some basic error checking and be
-// able to display that, for passwords, email names, etc...
+// able to display that, for passwords, email names, etc...  this one is local, not really talking to the back end
 var showError = function(msg){
-    e = $('#displayError');
+    e = $('#erromsg');
+    setTimeout(function(){ $('#erromsg').fadeOut(); }, 5000);
     e.fadeOut(function(){
         e.html(msg).fadeIn();
     });
@@ -55,8 +56,11 @@ $('#authBTCchangePhone').click(function(e){
     e.preventDefault();
     $('#btcChangePhoneDiv').slideToggle(function(){
     });
-
-})
+});
+$('#authPassChange').click(function(e){
+    e.preventDefault();
+    $('#authpassDiv').slideToggle();
+});
 
 // This is where all the change buttons submit the inputs to socket to be written to the database
 // Code is a bit repetative, but limited and manageable.  Also allows us to add/remove fields easily
@@ -69,6 +73,27 @@ $('#authNameChangeButton').click(function(e){
     } else {
     socket.emit('changeUserData', {item: 'name', value: b.trim()});
 }});
+// Everything that has to do with password change.
+$('#authPassChangeButton').click(function(e){
+    e.preventDefault();
+    var a = $('#passOne').val();
+    var b = $('#passTwo').val();
+    if(a.length < 4){
+        showError('Passwords are too short');
+        return;
+    }
+    if(a !== b){
+        showError('Passwords do not match');
+        return;
+    }
+    //so far everything did not error out
+    socket.emit('changeUserData', {item: 'password', value: b.toString().trim()});
+});
+// socket on the back end will emit a complete event and pass the error, if happened, to us here.
+socket.on('authPasswordChanged', function(data){
+    $('#authpassDiv').html(data.msg);
+    // the above messege could be an error - which means that nothing happened on the back end.
+});
 
 $('#authEmailChangeButton').click(function(e){
     e.preventDefault();
@@ -95,9 +120,8 @@ $('#authAddressOneChangeButton').click(function(e){
 $('#authAddressTwoChangeButton').click(function(e){
     e.preventDefault();
     b = $('#newAddressTwo').val();
-    if (b === null || typeof b === 'undefined' || b.trim().length == 0){
+    if (typeof b === 'undefined'){
         showError('Invalid Address');
-        return;
     } else {
         socket.emit('changeUserData', {item: 'addressTwo', value: b.trim()});
     }
@@ -111,30 +135,27 @@ $('#authChangeBTCaddressButton').click(function(e){
     e.preventDefault();
     b = $('#newBTC').val();
     if (badBTC(b)){
-        showError('Invalid Bitcoin Address')
-        return;
+        showError('Invalid Bitcoin Address');
     } else {
         socket.emit('changeUserData', {item: 'btcAddress', value: b.trim()});
     }
-})
+});
 
 $('#authChangeBTCaddressPhoneButton').click(function(e){
     e.preventDefault();
     b = $('#new_phone_BTC').val();
     if(badBTC(b)){
-        showError('Invalid Bitcoin Address')
-        return;
+        showError('Invalid Bitcoin Address');
     } else {
         socket.emit('changeUserData', {item: 'btcAddress', value: b.trim()});
     }
-})
+});
 
 $('#authBitmessageButton').click(function(e){
     e.preventDefault();
     b = $('#newBitMessageVal').val();
     if (typeof b === 'undefined'){
         showError('Invalid BitMessage Address');
-        return;
     } else {
         socket.emit('changeUserData', {item: 'bitmessege', value: b.trim()});
     }
@@ -162,33 +183,6 @@ socket.on('renderVerification', function(data){
 $('#btcDiv_phone').html( '<a href="https://coinbase.com/checkouts/' + buttonCode + '" target="_blank"> ' +
     '<img alt="Pay With Bitcoin" src="https://coinbase.com/assets/buttons/buy_now_small.png"></a>' );
 });
-
-// Everything that has to do with password change.
-$('#authPassChangeButton').click(function(e){
-    e.preventDefault();
-    var a = $('#passOne').val();
-    var b = $('#passTwo').val();
-    if(a.length < 4){
-    showError('Passwords are too short');
-    return;
-    }
-if(a !== b){
-    showError('Passwords do not match');
-    return;
-    }
-    //so far everything did not error out
-    socket.emit('authPassChange', a);
-});
-    // socket on the back end will emit a complete event and pass the error, if happened, to us here.
-socket.on('authPasswordChanged', function(data){
-    $('#authpassDiv').html(data.msg);
-    // the above messege could be an error - which means that nothing happened on the back end.
-    });
-$('#authPassChange').click(function(e){
-    e.preventDefault();
-    $('#authpassDiv').slideToggle();
-    })
-
 
 // Misc tooltips to make thie page less shitty
 $('#profileLabel').tooltip({ animation: true, html: true});

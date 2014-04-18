@@ -20,7 +20,12 @@ var iterations = 12000;
 
 module.exports = function (pwd, salt, fn) {
     if (3 == arguments.length) {
-        crypto.pbkdf2(pwd, salt, iterations, len, fn);
+        try {
+            crypto.pbkdf2(pwd, salt, iterations, len, fn); }
+        catch(e) {
+            console.log("hash.js - unable to hash password " + e);
+            fn(e, null, null);
+        }
     } else {
         fn = salt;
         crypto.randomBytes(len, function(err, salt){

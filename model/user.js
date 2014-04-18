@@ -1,4 +1,4 @@
-hash = require('../config/hash.js'),
+var hash = require('../config/hash.js'),
 crypto = require('../config/mycrypto.js'),
 validator = require('validator');
 
@@ -52,7 +52,7 @@ module.exports = function(sequelize, DataTypes) {
             },
             addressTwo: {type: DataTypes.STRING, allowNull: true, defaultValue: 'City, State/Country, Zip',
                 validate: {
-                    len: [1,200]
+                    len: [0,200]
                 },
                 set: function(v){
                     n = (crypto.generate(5)).concat(v).concat(crypto.generate(5));
@@ -142,7 +142,7 @@ module.exports = function(sequelize, DataTypes) {
                 },
                 set: function(v){
                     //format for encoding is [random 5] + [action] + [comma] + username + [random 5]
-                    n = (crypto.generate(5))+(v)+","+this.getDataValue('username')+crypto.generate(5);
+                    var n = (crypto.generate(5))+(v)+","+this.getDataValue('username')+crypto.generate(5);
                     return this.setDataValue('oneTimeSecret', crypto.encrypt(n.toString('utf8')));
                 },
                 get: function(){
@@ -160,7 +160,7 @@ module.exports = function(sequelize, DataTypes) {
             bitMessegeAddr: {type: DataTypes.STRING, allowNull: true, defaultValue: 'none',
                 validate: {
                     isLength: function(v){
-                        if(!validator.isLength(crypto.decrypt(v), 4, 50)){
+                        if(!validator.isLength(crypto.decrypt(v), 0, 50)){
                             throw  new Error("Not Valid Bit Messege Address")
                         }
                     }
@@ -225,6 +225,7 @@ module.exports = function(sequelize, DataTypes) {
                      hash(pword, s, function (err, ret_hash) {
                         if (err) {answer(false); return;}
                         if (ret_hash.toString('base64') !== myhash) {
+                            console.log(uname + " password is INcorrect");
                             answer(false);
                      }
                      else {
@@ -244,9 +245,14 @@ module.exports = function(sequelize, DataTypes) {
                              callback(false)
                          }
                     else {
-                        console.log("password changed for " + usr.username);
-                        usr.updateAttributes({phash: ret_hash.toString('base64'), salt: s});
-                        callback(true);
+                        try {
+                            usr.updateAttributes({phash: ret_hash.toString('base64'), salt: s});
+                            console.log("password changed for " + usr.username);
+                            callback(true);
+                        } catch (e) {
+                            console.log("user.js - unable to change password for " + usr.username)
+                            callback(false);
+                        }
                     }
                 })
             },

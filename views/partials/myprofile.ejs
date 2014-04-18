@@ -99,8 +99,10 @@
                             <img src="https://blockchain.info/qr?data=<%= btc %>&size=100">
                         </a> <%if (user.BTCverified) {%>
                             <i class="fa fa-check-circle-o" id="btcVerifiedPhone"
-                               data-toggle="tooltip" title="Verified BTC Address"></i> <%}%>
-                            <script>$('#details').hide(); </script>
+                               data-toggle="tooltip" title="Verified BTC Address"></i>
+                        <script>$('#details').hide(); </script>
+                        <%}%>
+
 
                         <% if (!user.BTCverified) {%>
                         <div id="btcDiv_phone">
