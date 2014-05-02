@@ -229,7 +229,6 @@ module.exports = function(sequelize, DataTypes) {
                             answer(false);
                      }
                      else {
-                            console.log(uname + " password is correct");
                             answer(true);
                      }});
               },

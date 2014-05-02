@@ -14,6 +14,12 @@ module.exports = function(app, passport, usr){
         res.render("_index");
     });
 
+    app.get('/privacy', function(req, res){
+        res.render("privacy.ejs");
+    });
+    app.get('/cookiepolicy', function(req, res){
+        res.render("cookiepolicy.ejs");
+    });
     app.get('/info', function(req, res){
         res.render("info", {user: req.user});
     });

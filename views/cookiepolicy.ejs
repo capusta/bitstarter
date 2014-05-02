@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include _headers.ejs %>
+    <style type="text/css">
+
+        @media (min-width: 980px) {
+            body {
+                padding-top: 60px;
+                padding-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<% include _navbar.ejs %>
+<div class="container-fluid" id="cf">
+<div class="row-fluid cool-font" id="rf">
+    <p><b>How cookies are used on this site</b></p>
+    <p>
+        Our website uses cookies, as almost all websites do, to help provide you with the best experience we can.
+        Cookies are small text files that are placed on your computer or mobile phone when you browse websites.
+    </p>
+    <p><b>Our cookies help us only to track your session ID.</b></p>
+    <p><b>We do not use cookies to:</b></p>
+    <ul>
+        <li> Collect any personal identifiable information.</li>
+        <li> Collect any sensitive information</li>
+        <li> Pass any peronally identifiable data to third parites.</li>
+    </ul>
+    <p>By using our site, you are grating us permisison to use cookies.  We use the Express framework for Node JS and
+    without cookies this site will not function.  We only use cookies to keep track of your signed session ID.</p>
+    <p><b>Analytics</b></p>
+    <p>
+    <ul>
+        <li>We use Google analytics to track user trends and compile statistics..  Specifically, how many people used
+            to visit our site, what type of
+        technology they are using (Mac / Windows), source traffic (i.e. referrers) etc.  This helps us improve our website. </li>
+        <li>We do not use analytics to identify any user or sell any analytics information to any third parties.</li>
+    </ul>
+    </p>
+    <p><b> We do not belong to or use any affiliate networks. </b></p>
+</div>
+
+</div>
+<div class="navbar navbar-fixed-bottom">
+    <div class="container-fluid">
+        <% include _footer.ejs %>
+    </div>
+</div>
+
+
+
+</body>
+</html>

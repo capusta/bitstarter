@@ -75,6 +75,11 @@ div.row {
     background-color: #1e1e1e;
     text-align: center;
     color: #b6b4bb;
+
+}
+#footer a:link {
+    color: #b6b4bb;
+    text-decoration:none;
 }
 .video-container {
     position: relative; /* keeps the aspect ratio */
@@ -121,6 +126,10 @@ div.row {
     height:100%;
     margin:0 auto -25px auto;
     text-align: center;
+}
+#wrapper {
+    min-height: 100%;
+    position: relative;
 }
 h3.jumbo.cool-font{
     color: #8A8A8A;

@@ -37,7 +37,7 @@ app.configure(function(){
     app.use(express.static(__dirname + '/public'));
     app.use(express.bodyParser());
     app.use(express.cookieParser(process.env.COOKIE_SECRET));
-    app.use(express.session({ secret: process.env.SESSION_SECRET, key: 'connect.sid', store: sessionStore}));
+    app.use(express.session({ secret: process.env.SESSION_SECRET, key: 'express.sid', store: sessionStore}));
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(flash());
@@ -64,13 +64,13 @@ global.db.sequelize.sync({force: false}).complete(function(err) {
         throw err;
     } else {
         console.log("starting server authorization")
-        sio.set("authorization", function (data, callback){
-            if(data.headers.cookie){
-                data.cookie = cookie.parse(data.headers.cookie);
-                data.sessionID = parseSignedCookie(data.cookie['connect.sid'], process.env.SESSION_SECRET)
+        sio.set("authorization", function (handshakeData, accept){
+            if(handshakeData.headers.cookie){
+                handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
+                handshakeData.sessionID = parseSignedCookie(handshakeData.cookie['express.sid'], process.env.SESSION_SECRET)
             }
-            callback(null, true);
-        })
+            accept(null, true);
+        });
         srv.listen(app.get('port'), app.get('ipaddr'), function() {
             console.log("server is listening on " + app.get('port'))
         });
@@ -90,6 +90,7 @@ sio.on('connection', function(socket){
             global.db.User.find( { where: {username: session.passport.user}}).success(function(u){
                 socket.join(sessionID.toString()+ u.username);
                 // We found a user in our system who has been authenticated by passportJS
+                console.log("session joined to " + sessionID.toString()+ u.username)
                 require('./config/socket/socketcontrol')(socket, u);
                 require('./config/socket/socket_email')(socket, u);
                 require("./config/socket/socket_store")(socket, u);
